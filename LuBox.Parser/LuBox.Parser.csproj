@@ -8,8 +8,8 @@
     <ProjectGuid>{26510FBD-D343-460B-AB86-562824CBCF9C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuBox.Parser</RootNamespace>
-    <AssemblyName>NuBox.Parser</AssemblyName>
+    <RootNamespace>LuBox.Parser</RootNamespace>
+    <AssemblyName>LuBox.Parser</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>2751c727</NuGetPackageImportStamp>

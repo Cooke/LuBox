@@ -6,8 +6,8 @@
     <ProjectGuid>{1EC944A5-D491-441D-B3DF-7AC9A2C868DD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuTest</RootNamespace>
-    <AssemblyName>NuTest</AssemblyName>
+    <RootNamespace>LuBox.Test</RootNamespace>
+    <AssemblyName>LuBox.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -52,12 +52,13 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ArithmeticTests.cs" />
+    <Compile Include="EnvironmentTests.cs" />
+    <Compile Include="FunctionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MethodAndPropertiesTests.cs" />
-    <Compile Include="UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NuBox\NuBox.csproj">
+    <ProjectReference Include="..\LuBox\LuBox.csproj">
       <Project>{BA0D0859-8331-4E87-A8AF-FCDB5CA85C17}</Project>
       <Name>NuBox</Name>
     </ProjectReference>

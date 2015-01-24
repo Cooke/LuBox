@@ -5,36 +5,6 @@ using NuBox.Compiler;
 namespace NuTest
 {
     [TestClass]
-    public class FunctionTests
-    {
-        private NuEngine _nuEngine;
-
-        [TestInitialize]
-        public void Initialize()
-        {
-            _nuEngine = new NuEngine();
-        }
-
-        [TestMethod]
-        public void DefineFunction()
-        {
-            _nuEngine.Execute("function() ");
-        }
-    }
-
-    [TestClass]
-    public class EnvironmentTests
-    {
-        private NuEngine _nuEngine;
-
-        [TestInitialize]
-        public void Initialize()
-        {
-            _nuEngine = new NuEngine();
-        }
-    }
-
-    [TestClass]
     public class MethodAndPropertiesTests
     {
         private NuEngine _nuEngine;

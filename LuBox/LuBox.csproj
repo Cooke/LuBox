@@ -7,8 +7,8 @@
     <ProjectGuid>{BA0D0859-8331-4E87-A8AF-FCDB5CA85C17}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuBox</RootNamespace>
-    <AssemblyName>NuBox</AssemblyName>
+    <RootNamespace>LuBox</RootNamespace>
+    <AssemblyName>LuBox</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
