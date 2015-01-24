@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuBox", "NuBox\NuBox.csproj", "{BA0D0859-8331-4E87-A8AF-FCDB5CA85C17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuBox.Parser", "NuBox.Parser\NuBox.Parser.csproj", "{26510FBD-D343-460B-AB86-562824CBCF9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuTest", "NuTest\NuTest.csproj", "{1EC944A5-D491-441D-B3DF-7AC9A2C868DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuBox.Console", "NuBox.Console\NuBox.Console.csproj", "{D37E3A10-6D55-4190-92CC-A0FBA80DAE7B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA0D0859-8331-4E87-A8AF-FCDB5CA85C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA0D0859-8331-4E87-A8AF-FCDB5CA85C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA0D0859-8331-4E87-A8AF-FCDB5CA85C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA0D0859-8331-4E87-A8AF-FCDB5CA85C17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26510FBD-D343-460B-AB86-562824CBCF9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26510FBD-D343-460B-AB86-562824CBCF9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26510FBD-D343-460B-AB86-562824CBCF9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26510FBD-D343-460B-AB86-562824CBCF9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EC944A5-D491-441D-B3DF-7AC9A2C868DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EC944A5-D491-441D-B3DF-7AC9A2C868DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EC944A5-D491-441D-B3DF-7AC9A2C868DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EC944A5-D491-441D-B3DF-7AC9A2C868DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D37E3A10-6D55-4190-92CC-A0FBA80DAE7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D37E3A10-6D55-4190-92CC-A0FBA80DAE7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D37E3A10-6D55-4190-92CC-A0FBA80DAE7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D37E3A10-6D55-4190-92CC-A0FBA80DAE7B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

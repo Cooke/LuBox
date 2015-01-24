@@ -1,0 +1,8 @@
+*.suo
+/TestResults
+/packages
+bin
+obj
+*.exe
+*.pdb
+*.user
