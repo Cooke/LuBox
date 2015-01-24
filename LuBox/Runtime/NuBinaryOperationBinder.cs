@@ -1,7 +1,7 @@
 ﻿using System.Dynamic;
 using System.Linq.Expressions;
 
-namespace NuBox.Compiler
+namespace LuBox.Runtime
 {
     internal class NuBinaryOperationBinder : BinaryOperationBinder
     {

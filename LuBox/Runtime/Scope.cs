@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 
-namespace NuBox.Compiler
+namespace LuBox.Runtime
 {
-    public class NuScope
+    internal class Scope
     {
         private readonly IDictionary<object, object> _env;
 
-        public NuScope(IDictionary<object, object> env)
+        public Scope(IDictionary<object, object> env)
         {
             _env = env;
         }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Development\NuBox\NuBox.Parser\Nu.g4 by ANTLR 4.3
+// Generated from C:\Development\NuBox\LuBox.Parser\Nu.g4 by ANTLR 4.3
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -17,7 +17,7 @@
 // Missing XML comment for publicly visible type or member '...'
 #pragma warning disable 1591
 
-namespace NuBox.Parser {
+namespace LuBox.Parser {
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Misc;
@@ -25,7 +25,7 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.3")]
 [System.CLSCompliant(false)]
-public partial class LuaLexer : Lexer {
+public partial class NuLexer : Lexer {
 	public const int
 		T__48=1, T__47=2, T__46=3, T__45=4, T__44=5, T__43=6, T__42=7, T__41=8, 
 		T__40=9, T__39=10, T__38=11, T__37=12, T__36=13, T__35=14, T__34=15, T__33=16, 
@@ -65,7 +65,7 @@ public partial class LuaLexer : Lexer {
 	};
 
 
-	public LuaLexer(ICharStream input)
+	public NuLexer(ICharStream input)
 		: base(input)
 	{
 		_interp = new LexerATNSimulator(this,_ATN);
@@ -316,4 +316,4 @@ public partial class LuaLexer : Lexer {
 	public static readonly ATN _ATN =
 		new ATNDeserializer().Deserialize(_serializedATN.ToCharArray());
 }
-} // namespace NuBox.Parser
+} // namespace LuBox.Parser

@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NuBox.Compiler;
 
-namespace NuTest
+namespace LuBox.Test
 {
     [TestClass]
     public class FunctionTests

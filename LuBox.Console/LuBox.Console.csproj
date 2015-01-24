@@ -50,7 +50,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LuBox\LuBox.csproj">
       <Project>{BA0D0859-8331-4E87-A8AF-FCDB5CA85C17}</Project>
-      <Name>NuBox</Name>
+      <Name>LuBox</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

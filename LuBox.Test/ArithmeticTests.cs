@@ -1,8 +1,7 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NuBox.Compiler;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using LuBox.Compiler;
 
-namespace NuTest
+namespace LuBox.Test
 {
     [TestClass]
     public class ArithmeticTests

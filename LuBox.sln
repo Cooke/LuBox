@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuBox", "LuBox\LuBox.csproj", "{BA0D0859-8331-4E87-A8AF-FCDB5CA85C17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuBox.Parser", "LuBox.Parser\LuBox.Parser.csproj", "{26510FBD-D343-460B-AB86-562824CBCF9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuBox.ParserGenerator", "LuBox.Parser\LuBox.ParserGenerator.csproj", "{26510FBD-D343-460B-AB86-562824CBCF9C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuBox.Console", "LuBox.Console\LuBox.Console.csproj", "{D37E3A10-6D55-4190-92CC-A0FBA80DAE7B}"
 EndProject

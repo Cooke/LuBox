@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Development\NuBox\NuBox.Parser\Nu.g4 by ANTLR 4.3
+// Generated from C:\Development\NuBox\LuBox.Parser\Nu.g4 by ANTLR 4.3
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -17,7 +17,7 @@
 // Missing XML comment for publicly visible type or member '...'
 #pragma warning disable 1591
 
-namespace NuBox.Parser {
+namespace LuBox.Parser {
 
 using Antlr4.Runtime.Misc;
 using IErrorNode = Antlr4.Runtime.Tree.IErrorNode;
@@ -488,4 +488,4 @@ public partial class NuBaseListener : INuListener {
 	/// <remarks>The default implementation does nothing.</remarks>
 	public virtual void VisitErrorNode([NotNull] IErrorNode node) { }
 }
-} // namespace NuBox.Parser
+} // namespace LuBox.Parser

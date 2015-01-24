@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NuBox.Compiler;
+using LuBox.Compiler;
 
-namespace NuTest
+namespace LuBox.Test
 {
     [TestClass]
     public class EnvironmentTests

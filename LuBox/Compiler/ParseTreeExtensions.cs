@@ -1,7 +1,7 @@
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 
-namespace NuBox.Compiler
+namespace LuBox.Compiler
 {
     internal static class ParseTreeExtensions
     {

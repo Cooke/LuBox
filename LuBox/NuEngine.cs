@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Antlr4.Runtime;
-using NuBox.Parser;
+using LuBox.Compiler;
+using LuBox.Parser;
+using LuBox.Runtime;
 
-namespace NuBox.Compiler
+namespace LuBox
 {
     public class NuEngine
     {
         private readonly IDictionary<object, object> _globals = new Dictionary<object, object>();
-        private readonly ParameterExpression _globalParameter = Expression.Variable(typeof(NuScope));
+        private readonly ParameterExpression _globalParameter = Expression.Variable(typeof(Scope));
         private readonly DynamicDictionaryWrapper _globalsDynamic;
 
         public NuEngine()
@@ -31,10 +33,10 @@ namespace NuBox.Compiler
         {
             var lexer = new NuLexer(new AntlrInputStream(expression));
             var parser = new NuParser(new CommonTokenStream(lexer));
-            var visitor = new NuVisitor(_globalParameter);
+            var visitor = new Visitor(_globalParameter);
 
             Expression visit = visitor.Visit(parser.exp());
-            object foo = Expression.Lambda(visit, _globalParameter).Compile().DynamicInvoke(new NuScope(_globals));
+            object foo = Expression.Lambda(visit, _globalParameter).Compile().DynamicInvoke(new Scope(_globals));
 
             return (T)Convert.ChangeType(foo, typeof(T));
         }
@@ -48,10 +50,10 @@ namespace NuBox.Compiler
         {
             var lexer = new NuLexer(new AntlrInputStream(code));
             var parser = new NuParser(new CommonTokenStream(lexer));
-            var visitor = new NuVisitor(_globalParameter);
+            var visitor = new Visitor(_globalParameter);
 
             Expression visit = visitor.Visit(parser.chunk());
-            Expression.Lambda<Action<NuScope>>(visit, _globalParameter).Compile()(new NuScope(_globals));
+            Expression.Lambda<Action<Scope>>(visit, _globalParameter).Compile()(new Scope(_globals));
         }
 
         public void SetGlobal(object key, object value)

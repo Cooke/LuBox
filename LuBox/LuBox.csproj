@@ -42,29 +42,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compiler\DynamicDictionaryWrapper.cs" />
-    <Compile Include="Compiler\NuBinaryOperationBinder.cs" />
-    <Compile Include="Compiler\NuEngine.cs" />
-    <Compile Include="Compiler\NuInvokeMemberBinder.cs" />
-    <Compile Include="Compiler\NuPropertyMemberBinder.cs" />
-    <Compile Include="Compiler\NuScope.cs" />
-    <Compile Include="Compiler\NuVisitor.cs" />
+    <Compile Include="Utils\DynamicDictionaryWrapper.cs" />
+    <Compile Include="Runtime\NuBinaryOperationBinder.cs" />
+    <Compile Include="NuEngine.cs" />
+    <Compile Include="Runtime\NuInvokeMemberBinder.cs" />
+    <Compile Include="Runtime\NuPropertyMemberBinder.cs" />
+    <Compile Include="Runtime\Scope.cs" />
+    <Compile Include="Compiler\Visitor.cs" />
     <Compile Include="Compiler\ParseTreeExtensions.cs" />
-    <Compile Include="Compiler\PrintVisitor.cs" />
-    <Compile Include="Compiler\RuntimeHelpers.cs" />
-    <Compile Include="Extensions\NumberContext.cs" />
-    <Compile Include="Parser\LuaLexer.cs" />
-    <Compile Include="Parser\NuBaseListener.cs" />
-    <Compile Include="Parser\NuBaseVisitor.cs" />
-    <Compile Include="Parser\NuLexer.cs" />
-    <Compile Include="Parser\NuListener.cs" />
-    <Compile Include="Parser\NuParser.cs" />
-    <Compile Include="Parser\NuVisitor.cs" />
+    <Compile Include="Runtime\RuntimeHelpers.cs" />
+    <Compile Include="GeneratedParserBase\NuBaseListener.cs" />
+    <Compile Include="GeneratedParserBase\NuBaseVisitor.cs" />
+    <Compile Include="GeneratedParserBase\NuLexer.cs" />
+    <Compile Include="GeneratedParserBase\NuListener.cs" />
+    <Compile Include="GeneratedParserBase\NuParser.cs" />
+    <Compile Include="GeneratedParserBase\NuVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

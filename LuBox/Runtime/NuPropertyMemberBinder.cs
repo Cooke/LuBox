@@ -3,8 +3,9 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using LuBox.Compiler;
 
-namespace NuBox.Compiler
+namespace LuBox.Runtime
 {
     internal class NuPropertyMemberBinder : InvokeMemberBinder
     {
@@ -36,11 +37,13 @@ namespace NuBox.Compiler
             var restrictions = target.Restrictions.Merge(BindingRestrictions.Combine(args))
                 .Merge(BindingRestrictions.GetTypeRestriction(
                     target.Expression, target.LimitType));
+
             foreach (var result in args.Select(x => BindingRestrictions.GetTypeRestriction(
                 x.Expression, x.LimitType)))
             {
                 restrictions = restrictions.Merge(result);
             }
+
             return restrictions;
         }
 

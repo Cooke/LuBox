@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Development\NuBox\NuBox.Parser\Nu.g4 by ANTLR 4.3
+// Generated from C:\Development\NuBox\LuBox.Parser\Nu.g4 by ANTLR 4.3
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -17,7 +17,7 @@
 // Missing XML comment for publicly visible type or member '...'
 #pragma warning disable 1591
 
-namespace NuBox.Parser {
+namespace LuBox.Parser {
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IToken = Antlr4.Runtime.IToken;
@@ -268,4 +268,4 @@ public interface INuVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitExplist([NotNull] NuParser.ExplistContext context);
 }
-} // namespace NuBox.Parser
+} // namespace LuBox.Parser

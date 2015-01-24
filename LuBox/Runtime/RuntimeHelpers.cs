@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace NuBox.Compiler
+namespace LuBox.Runtime
 {
     internal class RuntimeHelpers
     {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Development\NuBox\NuBox.Parser\Nu.g4 by ANTLR 4.3
+// Generated from C:\Development\NuBox\LuBox.Parser\Nu.g4 by ANTLR 4.3
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -17,7 +17,7 @@
 // Missing XML comment for publicly visible type or member '...'
 #pragma warning disable 1591
 
-namespace NuBox.Parser {
+namespace LuBox.Parser {
 using Antlr4.Runtime;
 using Antlr4.Runtime.Atn;
 using Antlr4.Runtime.Misc;
@@ -2665,4 +2665,4 @@ public partial class NuParser : Parser {
 	public static readonly ATN _ATN =
 		new ATNDeserializer().Deserialize(_serializedATN.ToCharArray());
 }
-} // namespace NuBox.Parser
+} // namespace LuBox.Parser

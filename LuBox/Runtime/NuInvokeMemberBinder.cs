@@ -4,8 +4,9 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using LuBox.Compiler;
 
-namespace NuBox.Compiler
+namespace LuBox.Runtime
 {
     internal class NuInvokeMemberBinder : InvokeMemberBinder
     {

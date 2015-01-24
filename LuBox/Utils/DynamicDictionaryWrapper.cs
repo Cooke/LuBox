@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Dynamic;
 
-namespace NuBox.Compiler
+namespace LuBox.Compiler
 {
     internal class DynamicDictionaryWrapper : DynamicObject
     {

@@ -5,15 +5,16 @@ using System.Linq;
 using System.Linq.Expressions;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
-using NuBox.Parser;
+using LuBox.Parser;
+using LuBox.Runtime;
 
-namespace NuBox.Compiler
+namespace LuBox.Compiler
 {
-    internal class NuVisitor : NuBaseVisitor<Expression>
+    internal class Visitor : NuBaseVisitor<Expression>
     {
         private readonly ParameterExpression _environmentVariable;
 
-        public NuVisitor(ParameterExpression environmentVariable)
+        public Visitor(ParameterExpression environmentVariable)
         {
             _environmentVariable = environmentVariable;
         }
@@ -22,7 +23,7 @@ namespace NuBox.Compiler
         {
             if (context.INT() != null)
             {
-                return Expression.Constant((int)context.AsInt());
+                return Expression.Constant(int.Parse(context.INT().GetText()));
             }
             else if (context.FLOAT() != null)
             {
@@ -75,7 +76,7 @@ namespace NuBox.Compiler
 
         public override Expression VisitVar(NuParser.VarContext context)
         {
-            Expression methodCallExpression = Expression.Call(_environmentVariable, typeof(NuScope).GetMethod("Get"), Expression.Constant(context.NAME().GetText()));
+            Expression methodCallExpression = Expression.Call(_environmentVariable, typeof(Scope).GetMethod("Get"), Expression.Constant(context.NAME().GetText()));
             foreach (var suffix in context.varSuffix())
             {
                 // TODO support more than just properties (methods, events, ...)
