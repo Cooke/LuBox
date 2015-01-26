@@ -8,13 +8,13 @@ using LuBox.Runtime;
 
 namespace LuBox
 {
-    public class NuEngine
+    public class LuScriptEngine
     {
         private readonly IDictionary<object, object> _globals = new Dictionary<object, object>();
-        private readonly ParameterExpression _globalParameter = Expression.Variable(typeof(Scope));
+        private readonly ParameterExpression _globalParameter = Expression.Variable(typeof(InternalEnvironment));
         private readonly DynamicDictionaryWrapper _globalsDynamic;
 
-        public NuEngine()
+        public LuScriptEngine()
         {
             _globalsDynamic = new DynamicDictionaryWrapper(_globals);
         }
@@ -33,10 +33,10 @@ namespace LuBox
         {
             var lexer = new NuLexer(new AntlrInputStream(expression));
             var parser = new NuParser(new CommonTokenStream(lexer));
-            var visitor = new Visitor(_globalParameter);
+            var visitor = new Visitor(new Scope(_globalParameter));
 
             Expression visit = visitor.Visit(parser.exp());
-            object foo = Expression.Lambda(visit, _globalParameter).Compile().DynamicInvoke(new Scope(_globals));
+            object foo = Expression.Lambda(visit, _globalParameter).Compile().DynamicInvoke(new InternalEnvironment(_globals));
 
             return (T)Convert.ChangeType(foo, typeof(T));
         }
@@ -50,10 +50,10 @@ namespace LuBox
         {
             var lexer = new NuLexer(new AntlrInputStream(code));
             var parser = new NuParser(new CommonTokenStream(lexer));
-            var visitor = new Visitor(_globalParameter);
+            var visitor = new Visitor(new Scope(_globalParameter));
 
             Expression visit = visitor.Visit(parser.chunk());
-            Expression.Lambda<Action<Scope>>(visit, _globalParameter).Compile()(new Scope(_globals));
+            Expression.Lambda<Action<InternalEnvironment>>(visit, _globalParameter).Compile()(new InternalEnvironment(_globals));
         }
 
         public void SetGlobal(object key, object value)

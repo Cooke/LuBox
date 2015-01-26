@@ -5,18 +5,18 @@ namespace LuBox.Test
     [TestClass]
     public class FunctionTests
     {
-        private NuEngine _nuEngine;
+        private LuScriptEngine _luScriptEngine;
 
         [TestInitialize]
         public void Initialize()
         {
-            _nuEngine = new NuEngine();
+            _luScriptEngine = new LuScriptEngine();
         }
 
         [TestMethod]
         public void DefineFunction()
         {
-            _nuEngine.Execute("function() ");
+            _luScriptEngine.Execute("function() ");
         }
     }
 }

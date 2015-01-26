@@ -24,7 +24,7 @@ namespace LuBox.Runtime
 
             var restrictions = GetRestrictions(target, args);
             var property = target.LimitType.GetProperty(Name, BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public);
-
+            
             return
                 new DynamicMetaObject(
                     RuntimeHelpers.EnsureObjectResult(

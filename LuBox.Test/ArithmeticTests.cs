@@ -6,12 +6,12 @@ namespace LuBox.Test
     [TestClass]
     public class ArithmeticTests
     {
-        private NuEngine _nuEngine;
+        private LuScriptEngine _luScriptEngine;
 
         [TestInitialize]
         public void Initialize()
         {
-            _nuEngine = new NuEngine();
+            _luScriptEngine = new LuScriptEngine();
         }
 
         [TestMethod]
@@ -155,13 +155,13 @@ namespace LuBox.Test
         [TestMethod]
         public void TestObjectResult()
         {
-            object o = _nuEngine.Evaluate("3 + 3");
+            object o = _luScriptEngine.Evaluate("3 + 3");
             Assert.AreEqual(6, o);
         }
 
         private void AssertEval<T>(T expected, string expression)
         {
-            Assert.AreEqual(expected, _nuEngine.Evaluate<T>(expression));
+            Assert.AreEqual(expected, _luScriptEngine.Evaluate<T>(expression));
         }
     }
 }

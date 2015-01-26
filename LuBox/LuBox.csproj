@@ -42,12 +42,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Runtime\NuGetMemberBinder.cs" />
+    <Compile Include="Runtime\NuSetMemberBinder.cs" />
     <Compile Include="Utils\DynamicDictionaryWrapper.cs" />
     <Compile Include="Runtime\NuBinaryOperationBinder.cs" />
-    <Compile Include="NuEngine.cs" />
+    <Compile Include="LuScriptEngine.cs" />
     <Compile Include="Runtime\NuInvokeMemberBinder.cs" />
     <Compile Include="Runtime\NuPropertyMemberBinder.cs" />
-    <Compile Include="Runtime\Scope.cs" />
+    <Compile Include="Runtime\InternalEnvironment.cs" />
     <Compile Include="Compiler\Visitor.cs" />
     <Compile Include="Compiler\ParseTreeExtensions.cs" />
     <Compile Include="Runtime\RuntimeHelpers.cs" />

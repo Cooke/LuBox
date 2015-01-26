@@ -7,20 +7,20 @@ namespace LuBox.Test
     [TestClass]
     public class MethodAndPropertiesTests
     {
-        private NuEngine _nuEngine;
+        private LuScriptEngine _luScriptEngine;
 
         [TestInitialize]
         public void Initialize()
         {
-            _nuEngine = new NuEngine();
+            _luScriptEngine = new LuScriptEngine();
         }
 
         [TestMethod]
         public void CallMember()
         {
             var getter = new CallReceiver();
-            _nuEngine.Globals.callReceiver = getter;
-            _nuEngine.Execute("callReceiver:Call()");
+            _luScriptEngine.Globals.callReceiver = getter;
+            _luScriptEngine.Execute("callReceiver:Call()");
             Assert.AreEqual("Call", getter.Called);
         }
 
@@ -28,8 +28,8 @@ namespace LuBox.Test
         public void CallMemberVoid()
         {
             var getter = new CallReceiver();
-            _nuEngine.SetGlobal("callReceiver", getter);
-            _nuEngine.Execute("callReceiver:CallVoid()");
+            _luScriptEngine.SetGlobal("callReceiver", getter);
+            _luScriptEngine.Execute("callReceiver:CallVoid()");
             Assert.AreEqual("CallVoid", getter.Called);
         }
 
@@ -37,8 +37,8 @@ namespace LuBox.Test
         public void CallMemberVoidString()
         {
             var getter = new CallReceiver();
-            _nuEngine.SetGlobal("callReceiver", getter);
-            _nuEngine.Execute("callReceiver:CallVoid(\"Hello\")");
+            _luScriptEngine.SetGlobal("callReceiver", getter);
+            _luScriptEngine.Execute("callReceiver:CallVoid(\"Hello\")");
             Assert.AreEqual("CallVoid(messages)", getter.Called);
             Assert.AreEqual(1, getter.Counter);
         }
@@ -47,8 +47,8 @@ namespace LuBox.Test
         public void CallMemberParams()
         {
             var getter = new CallReceiver();
-            _nuEngine.SetGlobal("callReceiver", getter);
-            _nuEngine.Execute("callReceiver:CallVoidParams(\"Hello\", 123, 456, 0.3)");
+            _luScriptEngine.SetGlobal("callReceiver", getter);
+            _luScriptEngine.Execute("callReceiver:CallVoidParams(\"Hello\", 123, 456, 0.3)");
             Assert.AreEqual("CallVoidParams", getter.Called);
         }
 
@@ -56,8 +56,8 @@ namespace LuBox.Test
         public void GetProperty()
         {
             var getter = new CallReceiver();
-            _nuEngine.SetGlobal("callReceiver", getter);
-            var propValue = _nuEngine.Evaluate<string>("callReceiver.Property");
+            _luScriptEngine.SetGlobal("callReceiver", getter);
+            var propValue = _luScriptEngine.Evaluate<string>("callReceiver.Property");
             Assert.AreEqual("value", propValue);
         }
 
@@ -65,16 +65,16 @@ namespace LuBox.Test
         public void GetPropertyThenCall()
         {
             var getter = new CallReceiver();
-            _nuEngine.SetGlobal("callReceiver", getter);
-            var propValue = _nuEngine.Evaluate<string>("callReceiver.Property:ToString()");
+            _luScriptEngine.SetGlobal("callReceiver", getter);
+            var propValue = _luScriptEngine.Evaluate<string>("callReceiver.Property:ToString()");
             Assert.AreEqual("value", propValue);
         }
 
         [TestMethod]
         public void UseGlobalVariable()
         {
-            _nuEngine.SetGlobal("factor", 3);
-            var result = _nuEngine.Evaluate<int>("factor * 3");
+            _luScriptEngine.SetGlobal("factor", 3);
+            var result = _luScriptEngine.Evaluate<int>("factor * 3");
             Assert.AreEqual(9, result);
         }
 
@@ -82,8 +82,8 @@ namespace LuBox.Test
         public void ChainProperties()
         {
             var getter = new CallReceiver();
-            _nuEngine.SetGlobal("callReceiver", getter);
-            var propValue = _nuEngine.Evaluate<CallReceiver>("callReceiver.Self.Self.Self");
+            _luScriptEngine.SetGlobal("callReceiver", getter);
+            var propValue = _luScriptEngine.Evaluate<CallReceiver>("callReceiver.Self.Self.Self");
             Assert.AreSame(getter, propValue);
         }
 
@@ -91,8 +91,8 @@ namespace LuBox.Test
         public void ChainMethods()
         {
             var getter = new CallReceiver();
-            _nuEngine.SetGlobal("callReceiver", getter);
-            var propValue = _nuEngine.Evaluate<CallReceiver>("callReceiver:GetSelf():GetSelf():GetSelf()");
+            _luScriptEngine.SetGlobal("callReceiver", getter);
+            var propValue = _luScriptEngine.Evaluate<CallReceiver>("callReceiver:GetSelf():GetSelf():GetSelf()");
             Assert.AreSame(getter, propValue);
             Assert.AreEqual(3, getter.Counter);
         }
@@ -101,8 +101,8 @@ namespace LuBox.Test
         public void ChainMethodAndProperties()
         {
             var getter = new CallReceiver();
-            _nuEngine.SetGlobal("callReceiver", getter);
-            var propValue = _nuEngine.Evaluate<String>("callReceiver:GetSelf().Property:ToUpper()");
+            _luScriptEngine.SetGlobal("callReceiver", getter);
+            var propValue = _luScriptEngine.Evaluate<String>("callReceiver:GetSelf().Property:ToUpper()");
             Assert.AreEqual(getter.Property.ToUpper(), propValue);
         }
 
