@@ -33,10 +33,13 @@ namespace LuBox
         {
             var lexer = new NuLexer(new AntlrInputStream(expression));
             var parser = new NuParser(new CommonTokenStream(lexer));
-            var visitor = new Visitor(new Scope(_globalParameter));
+            var scope = new Scope(_globalParameter);
+            var visitor = new Visitor(scope);
 
-            Expression visit = visitor.Visit(parser.exp());
-            object foo = Expression.Lambda(visit, _globalParameter).Compile().DynamicInvoke(new InternalEnvironment(_globals));
+            Expression content = visitor.Visit(parser.chunk());
+            Expression body = Expression.Block(scope.LocalParameterExpression, content);
+
+            object foo = Expression.Lambda(body, _globalParameter).Compile().DynamicInvoke(new InternalEnvironment(_globals));
 
             return (T)Convert.ChangeType(foo, typeof(T));
         }
@@ -50,10 +53,13 @@ namespace LuBox
         {
             var lexer = new NuLexer(new AntlrInputStream(code));
             var parser = new NuParser(new CommonTokenStream(lexer));
-            var visitor = new Visitor(new Scope(_globalParameter));
+            var scope = new Scope(_globalParameter);
+            var visitor = new Visitor(scope);
 
-            Expression visit = visitor.Visit(parser.chunk());
-            Expression.Lambda<Action<InternalEnvironment>>(visit, _globalParameter).Compile()(new InternalEnvironment(_globals));
+            Expression content = visitor.Visit(parser.chunk());
+            Expression body = Expression.Block(scope.LocalParameterExpression, content);
+
+            Expression.Lambda<Action<InternalEnvironment>>(body, _globalParameter).Compile()(new InternalEnvironment(_globals));
         }
 
         public void SetGlobal(object key, object value)

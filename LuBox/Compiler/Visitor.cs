@@ -168,10 +168,33 @@ namespace LuBox.Compiler
             {
                 return VisitAssignments(context);
             }
+            else if (context.GetChild(0).GetText() == "local")
+            {
+                return CreateLocalAssignmentExpression(context);
+            }
             else
             {
                 return Expression.Block(VisitFunctioncall(context.functioncall()));
             }
+        }
+
+        private BlockExpression CreateLocalAssignmentExpression(NuParser.StatContext context)
+        {
+            var varExpressions = context.namelist().NAME().Select(x => _scope.CreateLocal(x.GetText())).ToArray();
+            var expExpressions = context.explist().exp().Select(VisitExp).ToArray();
+
+            var assignmentExpression = new List<Expression>();
+            for (int index = 0; index < varExpressions.Length; index++)
+            {
+                var varExpression = varExpressions[index];
+                var expExpression = expExpressions.Length <= index
+                    ? Expression.Constant(null, typeof (object))
+                    : expExpressions[index];
+                assignmentExpression.Add(Expression.Assign(varExpression, expExpression));
+            }
+
+            return Expression.Block(
+                assignmentExpression);
         }
 
         private BlockExpression VisitAssignments(NuParser.StatContext context)
@@ -184,13 +207,13 @@ namespace LuBox.Compiler
             {
                 var varContext = context.varlist().var(index);
                 var expExpression = expExpressions.Length <= index ? Expression.Constant(null, typeof (object)) : expExpressions[index];
-                assignmentExpression.Add(VisitAssignVar(varContext, expExpression));
+                assignmentExpression.Add(CreateAssignmentExpression(varContext, expExpression));
             }
 
             return Expression.Block(assignmentExpression);
         }
 
-        private Expression VisitAssignVar(NuParser.VarContext context, Expression expExpression)
+        private Expression CreateAssignmentExpression(NuParser.VarContext context, Expression expExpression)
         {
             var scopeVariable = _scope.GetOrCreate(context.NAME().GetText());
 
