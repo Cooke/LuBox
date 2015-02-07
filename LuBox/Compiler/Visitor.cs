@@ -12,9 +12,9 @@ namespace LuBox.Compiler
 {
     internal class Visitor : NuBaseVisitor<Expression>
     {
-        private readonly Scope _scope;
+        private IScope _scope;
 
-        public Visitor(Scope scope)
+        public Visitor(IScope scope)
         {
             _scope = scope;
         }
@@ -59,16 +59,24 @@ namespace LuBox.Compiler
         {
             foreach (var nameAndArgsContext in nameAndArgsList)
             {
-                string memberName = nameAndArgsContext.NAME().GetText();
+                string memberName = nameAndArgsContext.NAME() != null ? nameAndArgsContext.NAME().GetText() : null;
+
                 IEnumerable<Expression> args = new[] {leftExp};
                 if (nameAndArgsContext.args().explist() != null)
                 {
                     args = args.Concat(nameAndArgsContext.args().explist().exp().Select(VisitExp));
                 }
 
-                leftExp = Expression.Dynamic(
-                    new NuInvokeMemberBinder(memberName, false, new CallInfo(nameAndArgsContext.args().ChildCount)),
-                    typeof (object), args);
+                if (memberName != null)
+                {
+                    leftExp = Expression.Dynamic(
+                        new NuInvokeMemberBinder(memberName, false, new CallInfo(nameAndArgsContext.args().ChildCount)),
+                        typeof (object), args);
+                }
+                else
+                {
+                    leftExp = Expression.Dynamic(new NuInvokeBinder(new CallInfo(args.Count())), typeof (object), args);
+                }
             }
 
             return leftExp;
@@ -76,16 +84,16 @@ namespace LuBox.Compiler
 
         public override Expression VisitVar(NuParser.VarContext context)
         {            
-            Expression methodCallExpression = _scope.GetOrCreate(context.NAME().GetText()).GetExpression;
+            Expression valueExpression = _scope.Get(context.NAME().GetText());
             foreach (var suffix in context.varSuffix())
             {
                 // TODO support more than just properties (methods, events, ...)
-                methodCallExpression =
-                    Expression.Dynamic(new NuPropertyMemberBinder(suffix.NAME().GetText(), false, new CallInfo(0)),
-                        typeof(object), methodCallExpression);
+                valueExpression =
+                    Expression.Dynamic(new NuGetMemberBinder(suffix.NAME().GetText()), 
+                        typeof(object), valueExpression);
             }
 
-            return methodCallExpression;
+            return valueExpression;
         }
 
         public override Expression VisitExp(NuParser.ExpContext context)
@@ -161,6 +169,27 @@ namespace LuBox.Compiler
             }
         }
 
+        public override Expression VisitFuncbody(NuParser.FuncbodyContext context)
+        {
+            _scope = new Scope(_scope);
+
+            var parameters = new List<ParameterExpression>();
+            if (context.parlist() != null)
+            {
+                foreach (var paraName in context.parlist().namelist().NAME().Select(x => x.GetText()))
+                {
+                    var parameterExpression = _scope.CreateLocal(paraName);
+                    parameters.Add(parameterExpression);
+                }
+            }
+
+            var block = VisitBlock(context.block());
+            _scope = _scope.Parent;
+
+            return Expression.New(typeof (LuFunction).GetConstructor(new[] {typeof (Delegate)}),
+                Expression.Lambda(block, parameters));
+            //return Expression.Lambda(block, parameters);
+        }
 
         public override Expression VisitStat(NuParser.StatContext context)
         {
@@ -168,13 +197,18 @@ namespace LuBox.Compiler
             {
                 return VisitAssignments(context);
             }
-            else if (context.GetChild(0).GetText() == "local")
+            else if (context.ChildCount > 0 && context.GetChild(0).GetText() == "local")
             {
                 return CreateLocalAssignmentExpression(context);
             }
+            else if (context.funcname() != null)
+            {
+                var function = VisitFuncbody(context.funcbody());
+                return _scope.Set(context.funcname().NAME(0).GetText(), function);
+            }
             else
             {
-                return Expression.Block(VisitFunctioncall(context.functioncall()));
+                return VisitFunctioncall(context.functioncall());
             }
         }
 
@@ -190,7 +224,7 @@ namespace LuBox.Compiler
                 var expExpression = expExpressions.Length <= index
                     ? Expression.Constant(null, typeof (object))
                     : expExpressions[index];
-                assignmentExpression.Add(Expression.Assign(varExpression, expExpression));
+                assignmentExpression.Add(Expression.Assign(varExpression, Expression.Convert(expExpression, typeof(object))));
             }
 
             return Expression.Block(
@@ -215,11 +249,9 @@ namespace LuBox.Compiler
 
         private Expression CreateAssignmentExpression(NuParser.VarContext context, Expression expExpression)
         {
-            var scopeVariable = _scope.GetOrCreate(context.NAME().GetText());
-
             if (context.varSuffix().Any())
             {
-                Expression getExpression = scopeVariable.GetExpression;
+                Expression getExpression = _scope.Get(context.NAME().GetText());
                 for (int i = 0; i < context.varSuffix().Count - 1; i++)
                 {
                     var suffix = context.varSuffix(i);
@@ -233,7 +265,7 @@ namespace LuBox.Compiler
             }
             else
             {
-                return scopeVariable.SetExpressionGenerator(expExpression);
+                return _scope.Set(context.NAME().GetText(), expExpression);
             }
         }
 
@@ -252,10 +284,13 @@ namespace LuBox.Compiler
             return ProcessNameAndArgs(context.nameAndArgs(), leftExp);
         }
 
-
         public override Expression VisitBlock(NuParser.BlockContext context)
         {
-            return Expression.Block(context.children.Select(Visit));
+            _scope = new Scope(_scope);
+            var stats = context.children.Select(Visit);
+            var blockExpression = Expression.Block(_scope.LocalParameterExpression, stats);
+            _scope = _scope.Parent;
+            return blockExpression;
         }
 
         public override Expression VisitChunk(NuParser.ChunkContext context)

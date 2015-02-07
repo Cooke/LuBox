@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="ArithmeticTests.cs" />
     <Compile Include="EnvironmentTests.cs" />
+    <Compile Include="EventTest.cs" />
     <Compile Include="FunctionTests.cs" />
     <Compile Include="LocalVariableTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

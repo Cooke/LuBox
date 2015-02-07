@@ -16,49 +16,12 @@ namespace LuBox.Runtime
 
         public object Get(string key)
         {
-            return _env[key];
+            return _env.ContainsKey(key) ? _env[key] : null;
         }
 
         public object Set(string key, object value)
         {
             return _env[key] = value;
-        }
-    }
-
-    internal class Scope
-    {
-        private readonly ParameterExpression _globalParameter;
-        private readonly Dictionary<string, ParameterExpression> _locals = new Dictionary<string, ParameterExpression>();
-        private readonly List<ParameterExpression> _allLocals = new List<ParameterExpression>();
-
-        public Scope(ParameterExpression globalParameter)
-        {
-            _globalParameter = globalParameter;
-        }
-
-        public IEnumerable<ParameterExpression> LocalParameterExpression
-        {
-            get { return _allLocals; }
-        }
-
-        public ScopeVariable GetOrCreate(string key)
-        {
-            if (_locals.ContainsKey(key))
-            {
-                return new ScopeVariable(_locals[key], x => Expression.Assign(_locals[key], x));
-            }
-
-            return new ScopeVariable(
-                Expression.Call(_globalParameter, typeof(InternalEnvironment).GetMethod("Get"), Expression.Constant(key)),
-                x => Expression.Call(_globalParameter, typeof(InternalEnvironment).GetMethod("Set"), Expression.Constant(key), x));
-        }
-
-        public ParameterExpression CreateLocal(string name)
-        {
-            var parameterExpression = Expression.Variable(typeof (object), name);
-            _allLocals.Add(parameterExpression);
-            _locals[name] = parameterExpression;
-            return parameterExpression;
         }
     }
 

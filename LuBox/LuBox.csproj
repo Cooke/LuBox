@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Runtime\NuGetMemberBinder.cs" />
     <Compile Include="Runtime\NuSetMemberBinder.cs" />
+    <Compile Include="Runtime\Scope.cs" />
     <Compile Include="Utils\DynamicDictionaryWrapper.cs" />
     <Compile Include="Runtime\NuBinaryOperationBinder.cs" />
     <Compile Include="LuScriptEngine.cs" />
