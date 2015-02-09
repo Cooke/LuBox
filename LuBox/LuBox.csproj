@@ -42,6 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Runtime\LuConvertBinder.cs" />
+    <Compile Include="Runtime\LuEventWrapper.cs" />
+    <Compile Include="Runtime\LuEventWrapperMetaObject.cs" />
+    <Compile Include="Runtime\LuFunction.cs" />
+    <Compile Include="Runtime\LuFunctionMetaObject.cs" />
     <Compile Include="Runtime\NuGetMemberBinder.cs" />
     <Compile Include="Runtime\NuSetMemberBinder.cs" />
     <Compile Include="Runtime\Scope.cs" />

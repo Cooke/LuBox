@@ -50,6 +50,11 @@ namespace LuBox
 
         public void Execute(string code)
         {
+            Compile(code)();
+        }
+
+        public Action Compile(string code)
+        {
             var lexer = new NuLexer(new AntlrInputStream(code));
             var parser = new NuParser(new CommonTokenStream(lexer));
             var globalScope = new GlobalScope(_globalParameter);
@@ -57,7 +62,8 @@ namespace LuBox
 
             Expression content = visitor.Visit(parser.chunk());
 
-            Expression.Lambda<Action<InternalEnvironment>>(content, _globalParameter).Compile()(new InternalEnvironment(_globals));
+            Action<InternalEnvironment> compile = Expression.Lambda<Action<InternalEnvironment>>(content, _globalParameter).Compile();
+            return () => compile(new InternalEnvironment(_globals));
         }
 
         public void SetGlobal(object key, object value)
