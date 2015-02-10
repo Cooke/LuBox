@@ -25,7 +25,7 @@ namespace LuBox.Runtime
 
         public static IEnumerable<Expression> GetCallArguments(DynamicMetaObject[] args, MemberInfo memberInfo)
         {
-            IEnumerable<Expression> callArguments = args.Select(x => x.Expression);
+            IEnumerable<Expression> callArguments = args.Select(x => Expression.Convert(x.Expression, x.LimitType));
             var methodInfo = memberInfo as MethodInfo;
             if (methodInfo != null)
             {
@@ -45,6 +45,7 @@ namespace LuBox.Runtime
                                         });
                 }
             }
+
             return callArguments;
         }
     }

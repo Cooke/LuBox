@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="ArithmeticTests.cs" />
     <Compile Include="EnvironmentTests.cs" />
+    <Compile Include="ExamplesTests.cs" />
     <Compile Include="SandboxTests.cs" />
     <Compile Include="EventTest.cs" />
     <Compile Include="FunctionTests.cs" />
