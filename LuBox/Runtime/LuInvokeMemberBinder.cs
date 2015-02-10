@@ -1,81 +1,16 @@
 using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using LuBox.Compiler;
 
 namespace LuBox.Runtime
 {
-    internal class NuInvokeHelper
+    using LuBox.Utils;
+
+    internal class LuInvokeMemberBinder : InvokeMemberBinder
     {
-        public static BindingRestrictions GetRestrictions(DynamicMetaObject target, DynamicMetaObject[] args)
-        {
-            var restrictions = target.Restrictions.Merge(BindingRestrictions.Combine(args))
-                .Merge(BindingRestrictions.GetTypeRestriction(
-                    target.Expression, target.LimitType));
-            foreach (var result in args.Select(x => BindingRestrictions.GetTypeRestriction(
-                x.Expression, x.LimitType)))
-            {
-                restrictions = restrictions.Merge(result);
-            }
-
-            return restrictions;
-        }
-
-        public static IEnumerable<Expression> GetCallArguments(DynamicMetaObject[] args, MemberInfo memberInfo)
-        {
-            IEnumerable<Expression> callArguments = args.Select(x => x.Expression);
-            var methodInfo = memberInfo as MethodInfo;
-            if (methodInfo != null)
-            {
-                ParameterInfo paramsParameterInfo =
-                    methodInfo.GetParameters().FirstOrDefault(x => x.GetCustomAttribute<ParamArrayAttribute>() != null);
-                if (paramsParameterInfo != null)
-                {
-                    var paramsIndex = Array.IndexOf(methodInfo.GetParameters(), paramsParameterInfo);
-                    Type elementType = paramsParameterInfo.ParameterType.GetElementType();
-                    callArguments =
-                        args.Select(x => x.Expression)
-                            .Take(paramsIndex)
-                            .Concat(new Expression[]
-                            {
-                                Expression.NewArrayInit(elementType,
-                                    args.Select(x => Expression.Convert(x.Expression, elementType)).Skip(paramsIndex))
-                            });
-                }
-            }
-            return callArguments;
-        }
-    }
-
-    internal class NuInvokeBinder : InvokeBinder
-    {
-        public NuInvokeBinder(CallInfo callInfo) : base(callInfo)
-        {
-        }
-
-        public override DynamicMetaObject FallbackInvoke(DynamicMetaObject target, DynamicMetaObject[] args, DynamicMetaObject errorSuggestion)
-        {
-            if (!target.HasValue || !args.All(x => x.HasValue))
-            {
-                return Defer(target, args);
-            }
-
-            var restrictions = NuInvokeHelper.GetRestrictions(target, args);
-            
-            return
-                new DynamicMetaObject(
-                    RuntimeHelpers.EnsureObjectResult(
-                        Expression.Invoke(Expression.Convert(target.Expression, target.LimitType), args.Select(x => Expression.Convert(x.Expression, typeof(object))))),
-                    restrictions);
-        }
-    }
-
-    internal class NuInvokeMemberBinder : InvokeMemberBinder
-    {
-        public NuInvokeMemberBinder(string name, bool ignoreCase, CallInfo callInfo) : base(name, ignoreCase, callInfo)
+        public LuInvokeMemberBinder(string name, bool ignoreCase, CallInfo callInfo) : base(name, ignoreCase, callInfo)
         {
         }
 
@@ -87,9 +22,13 @@ namespace LuBox.Runtime
                 return Defer(target, args);
             }
 
+            Sandboxer.ThrowIfReflectionType(target.LimitType);
+
             var restrictions = GetRestrictions(target, args);
             var memberInfo = GetMemberInfo(target, args);
             var callArguments = NuInvokeHelper.GetCallArguments(args, memberInfo);
+
+            Sandboxer.ThrowIfReflectionMember(memberInfo);
 
             return
                 new DynamicMetaObject(
@@ -117,8 +56,6 @@ namespace LuBox.Runtime
             }
             return restrictions;
         }
-
-        
 
         private static bool IsSignatureMatch(DynamicMetaObject[] args, MemberInfo memberInfo)
         {

@@ -23,16 +23,27 @@ namespace LuBox.Runtime
                 throw new ArgumentException("Invalid number of arguments");    
             }
 
-            if (binder.Name == "Add")
+            if (string.Equals(binder.Name, "Add", StringComparison.InvariantCultureIgnoreCase))
             {
-                BindingRestrictions eventRestriction = BindingRestrictions.GetInstanceRestriction(Expression.Property(Expression.Convert(Expression, typeof(LuEventWrapper)), "EventInfo"), _eventInfo);
-                UnaryExpression instanceExpression = Expression.Convert(Expression.Property(Expression.Convert(Expression, typeof(LuEventWrapper)), "Instance"), _eventInfo.DeclaringType);
-                DynamicMetaObject onlyArgument = args.Single();
-                Expression argExpression = Expression.Dynamic(new LuConvertBinder(_eventInfo.EventHandlerType, false), _eventInfo.EventHandlerType, onlyArgument.Expression);
-                return new DynamicMetaObject(RuntimeHelpers.EnsureObjectResult(Expression.Call(instanceExpression, _eventInfo.AddMethod, argExpression)), eventRestriction);
+                var addMethodInfo = _eventInfo.AddMethod;
+                return CreateDynamicEventOperation(args, addMethodInfo);
+            }
+            else if (string.Equals(binder.Name, "Remove", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var addMethodInfo = _eventInfo.RemoveMethod;
+                return CreateDynamicEventOperation(args, addMethodInfo);
             }
 
             throw new NotImplementedException();
+        }
+
+        private DynamicMetaObject CreateDynamicEventOperation(DynamicMetaObject[] args, MethodInfo methodInfo)
+        {
+            BindingRestrictions eventRestriction = BindingRestrictions.GetInstanceRestriction(Expression.Property(Expression.Convert(Expression, typeof(LuEventWrapper)), "EventInfo"), _eventInfo);
+            UnaryExpression instanceExpression = Expression.Convert(Expression.Property(Expression.Convert(Expression, typeof(LuEventWrapper)), "Instance"), _eventInfo.DeclaringType);
+            DynamicMetaObject onlyArgument = args.Single();
+            Expression argExpression = Expression.Dynamic(new LuConvertBinder(_eventInfo.EventHandlerType, false), _eventInfo.EventHandlerType, onlyArgument.Expression);
+            return new DynamicMetaObject(RuntimeHelpers.EnsureObjectResult(Expression.Call(instanceExpression, methodInfo, argExpression)), eventRestriction);
         }
     }
 }

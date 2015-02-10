@@ -6,6 +6,8 @@ using System.Reflection.Emit;
 
 namespace LuBox.Runtime
 {
+    using LuBox.Utils;
+
     internal class NuGetMemberBinder : GetMemberBinder
     {
         public NuGetMemberBinder(string name) : base(name, false)
@@ -27,6 +29,8 @@ namespace LuBox.Runtime
             }
             
             var member = members[0];
+            Sandboxer.ThrowIfReflectionMember(member);
+
 
             if (member.MemberType == MemberTypes.Event)
             {

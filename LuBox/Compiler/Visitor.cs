@@ -70,7 +70,7 @@ namespace LuBox.Compiler
                 if (memberName != null)
                 {
                     leftExp = Expression.Dynamic(
-                        new NuInvokeMemberBinder(memberName, false, new CallInfo(nameAndArgsContext.args().ChildCount)),
+                        new LuInvokeMemberBinder(memberName, false, new CallInfo(nameAndArgsContext.args().ChildCount)),
                         typeof (object), args);
                 }
                 else
@@ -84,16 +84,17 @@ namespace LuBox.Compiler
 
         public override Expression VisitVar(NuParser.VarContext context)
         {            
-            Expression valueExpression = _scope.Get(context.NAME().GetText());
+            Expression left = _scope.Get(context.NAME().GetText());
             foreach (var suffix in context.varSuffix())
             {
-                // TODO support more than just properties (methods, events, ...)
-                valueExpression =
+                left = ProcessNameAndArgs(suffix.nameAndArgs(), left);
+
+                left =
                     Expression.Dynamic(new NuGetMemberBinder(suffix.NAME().GetText()), 
-                        typeof(object), valueExpression);
+                        typeof(object), left);
             }
 
-            return valueExpression;
+            return left;
         }
 
         public override Expression VisitExp(NuParser.ExpContext context)
@@ -251,17 +252,19 @@ namespace LuBox.Compiler
         {
             if (context.varSuffix().Any())
             {
-                Expression getExpression = _scope.Get(context.NAME().GetText());
+                Expression left = _scope.Get(context.NAME().GetText());
                 for (int i = 0; i < context.varSuffix().Count - 1; i++)
                 {
                     var suffix = context.varSuffix(i);
-                    getExpression = Expression.Dynamic(new NuGetMemberBinder(suffix.NAME().GetText()), typeof (object),
-                        getExpression);
+
+                    left = ProcessNameAndArgs(suffix.nameAndArgs(), left);
+                    left = Expression.Dynamic(new NuGetMemberBinder(suffix.NAME().GetText()), typeof (object),
+                        left);
                 }
 
                 var lastSuffix = context.varSuffix(context.varSuffix().Count - 1);
                 return Expression.Dynamic(new NuSetMemberBinder(lastSuffix.NAME().GetText()), typeof (object),
-                    getExpression, expExpression);
+                    left, expExpression);
             }
             else
             {

@@ -35,9 +35,6 @@ namespace LuBox.Runtime
         public override DynamicMetaObject BindConvert(ConvertBinder binder)
         {
             Type targetType = binder.Type;
-            MethodInfo targetMethodInfo = binder.Type.GetMethod("Invoke");
-            MethodInfo sourceMethodInfo = _delegateType.GetMethod("Invoke");
-
             Expression delegateExpression = Expression.Property(Expression.Convert(Expression, typeof(LuFunction)), "Delegate");
 
             // TODO improve restriction
@@ -45,28 +42,46 @@ namespace LuBox.Runtime
 
             if (!targetType.IsAssignableFrom(_delegateType))
             {
-                ParameterInfo[] targetParameters = targetMethodInfo.GetParameters();
-                ParameterInfo[] sourceParameters = sourceMethodInfo.GetParameters();
-
-                ParameterExpression[] targetParameterExpressions = targetParameters.Select(x => Expression.Parameter(x.ParameterType)).ToArray();
-                IEnumerable<Expression> sourceParameterExpressions;
-                if (targetParameters.Length > sourceParameters.Length)
-                {
-                    sourceParameterExpressions = targetParameterExpressions.Take(sourceParameters.Length);
-                }
-                else
-                {
-                    var extraParaExpressions = Enumerable.Repeat(Expression.Constant(null, typeof(object)), sourceParameters.Length - targetParameters.Length);
-                    sourceParameterExpressions = targetParameterExpressions.Concat<Expression>(extraParaExpressions);
-                }
-
-                LambdaExpression lambdaExpression = Expression.Lambda(targetType, Expression.Invoke(Expression.Convert(delegateExpression, _delegateType), sourceParameterExpressions.Select(x => Expression.Convert(x, typeof(object)))), targetParameterExpressions);
-                return new DynamicMetaObject(lambdaExpression, restriction);
+                var tryGetCompatibleSignatureMethodInfo = typeof(LuFunction).GetMethod("TryGetCompatibleSignature");
+                var resultSignature = Expression.Parameter(typeof(Delegate));
+                var tryGetSignature = Expression.Call(Expression.Convert(Expression, typeof(LuFunction)), tryGetCompatibleSignatureMethodInfo, Expression.Constant(targetType), resultSignature);
+                var lambdaExpression = CreateFace(binder, targetType, delegateExpression);
+                var addSignatureMethodInfo = typeof(LuFunction).GetMethod("AddSignature");
+                var addSignatureExpression = Expression.Convert(Expression.Call(Expression.Convert(Expression, typeof(LuFunction)), addSignatureMethodInfo, lambdaExpression), targetType);
+                var getOrAddExpression = Expression.Condition(tryGetSignature, Expression.Convert(resultSignature, targetType), addSignatureExpression);
+                var blockExpression = Expression.Block(new[] { resultSignature }, getOrAddExpression);
+                return new DynamicMetaObject(blockExpression, restriction);
             }
             else
             {
                 return new DynamicMetaObject(Expression.Convert(delegateExpression, targetType), restriction);
             }
+        }
+
+        private LambdaExpression CreateFace(ConvertBinder binder, Type targetType, Expression delegateExpression)
+        {
+            MethodInfo targetMethodInfo = binder.Type.GetMethod("Invoke");
+            MethodInfo sourceMethodInfo = _delegateType.GetMethod("Invoke");
+            ParameterInfo[] targetParameters = targetMethodInfo.GetParameters();
+            ParameterInfo[] sourceParameters = sourceMethodInfo.GetParameters();
+
+            ParameterExpression[] targetParameterExpressions = targetParameters.Select(x => Expression.Parameter(x.ParameterType)).ToArray();
+            IEnumerable<Expression> sourceParameterExpressions;
+            if (targetParameters.Length > sourceParameters.Length)
+            {
+                sourceParameterExpressions = targetParameterExpressions.Take(sourceParameters.Length);
+            }
+            else
+            {
+                var extraParaExpressions = Enumerable.Repeat(Expression.Constant(null, typeof(object)), sourceParameters.Length - targetParameters.Length);
+                sourceParameterExpressions = targetParameterExpressions.Concat<Expression>(extraParaExpressions);
+            }
+
+            LambdaExpression lambdaExpression = Expression.Lambda(
+                targetType,
+                Expression.Invoke(Expression.Convert(delegateExpression, _delegateType), sourceParameterExpressions.Select(x => Expression.Convert(x, typeof(object)))),
+                targetParameterExpressions);
+            return lambdaExpression;
         }
     }
 }

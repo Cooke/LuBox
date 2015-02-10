@@ -42,19 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LuSandboxException.cs" />
     <Compile Include="Runtime\LuConvertBinder.cs" />
     <Compile Include="Runtime\LuEventWrapper.cs" />
     <Compile Include="Runtime\LuEventWrapperMetaObject.cs" />
     <Compile Include="Runtime\LuFunction.cs" />
     <Compile Include="Runtime\LuFunctionMetaObject.cs" />
     <Compile Include="Runtime\NuGetMemberBinder.cs" />
+    <Compile Include="Runtime\NuInvokeBinder.cs" />
+    <Compile Include="Runtime\NuInvokeHelper.cs" />
     <Compile Include="Runtime\NuSetMemberBinder.cs" />
     <Compile Include="Runtime\Scope.cs" />
     <Compile Include="Utils\DynamicDictionaryWrapper.cs" />
     <Compile Include="Runtime\NuBinaryOperationBinder.cs" />
     <Compile Include="LuScriptEngine.cs" />
-    <Compile Include="Runtime\NuInvokeMemberBinder.cs" />
-    <Compile Include="Runtime\NuPropertyMemberBinder.cs" />
+    <Compile Include="Runtime\LuInvokeMemberBinder.cs" />
     <Compile Include="Runtime\InternalEnvironment.cs" />
     <Compile Include="Compiler\Visitor.cs" />
     <Compile Include="Compiler\ParseTreeExtensions.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="GeneratedParserBase\NuParser.cs" />
     <Compile Include="GeneratedParserBase\NuVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Sandboxer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -90,6 +90,25 @@ test.Event3:Add(HandleEvent)
             Assert.IsNull(_luScriptEngine.Globals.msg);
         }
 
+        [TestMethod]
+        public void ShallRemoveEventHandler()
+        {
+            var test = new Test();
+            _luScriptEngine.Globals.test = test;
+
+            _luScriptEngine.Execute(@"
+                function HandleEvent() 
+                    called = 1
+                end
+
+                test.Event:Add(HandleEvent)
+                test.Event:Remove(HandleEvent)
+                ");
+
+            test.OnEvent();
+            Assert.IsFalse(_luScriptEngine.GlobalDictionary.ContainsKey("called"));
+        }
+
         private class Test
         {
             public event Func<string, object> Event;
