@@ -43,18 +43,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LuSandboxException.cs" />
+    <Compile Include="Runtime\LuBoolConvertBinder.cs" />
     <Compile Include="Runtime\LuConvertBinder.cs" />
     <Compile Include="Runtime\LuEventWrapper.cs" />
     <Compile Include="Runtime\LuEventWrapperMetaObject.cs" />
     <Compile Include="Runtime\LuFunction.cs" />
     <Compile Include="Runtime\LuFunctionMetaObject.cs" />
-    <Compile Include="Runtime\NuGetMemberBinder.cs" />
-    <Compile Include="Runtime\NuInvokeBinder.cs" />
-    <Compile Include="Runtime\NuInvokeHelper.cs" />
-    <Compile Include="Runtime\NuSetMemberBinder.cs" />
+    <Compile Include="Runtime\LuGetMemberBinder.cs" />
+    <Compile Include="Runtime\LuInvokeBinder.cs" />
+    <Compile Include="Runtime\LuInvokeHelper.cs" />
+    <Compile Include="Runtime\LuSetMemberBinder.cs" />
     <Compile Include="Runtime\Scope.cs" />
     <Compile Include="Utils\DynamicDictionaryWrapper.cs" />
-    <Compile Include="Runtime\NuBinaryOperationBinder.cs" />
+    <Compile Include="Runtime\LuBinaryOperationBinder.cs" />
     <Compile Include="LuScriptEngine.cs" />
     <Compile Include="Runtime\LuInvokeMemberBinder.cs" />
     <Compile Include="Runtime\InternalEnvironment.cs" />

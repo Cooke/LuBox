@@ -5,9 +5,9 @@ using System.Reflection;
 
 namespace LuBox.Runtime
 {
-    internal class NuSetMemberBinder : SetMemberBinder
+    internal class LuSetMemberBinder : SetMemberBinder
     {
-        public NuSetMemberBinder(string name) : base(name, false)
+        public LuSetMemberBinder(string name) : base(name, false)
         {
         }
 

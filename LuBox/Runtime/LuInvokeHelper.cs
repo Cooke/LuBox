@@ -7,7 +7,7 @@ namespace LuBox.Runtime
     using System.Linq.Expressions;
     using System.Reflection;
 
-    internal class NuInvokeHelper
+    internal class LuInvokeHelper
     {
         public static BindingRestrictions GetRestrictions(DynamicMetaObject target, DynamicMetaObject[] args)
         {

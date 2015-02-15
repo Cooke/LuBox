@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -75,7 +76,7 @@ namespace LuBox.Compiler
                 }
                 else
                 {
-                    leftExp = Expression.Dynamic(new NuInvokeBinder(new CallInfo(args.Count())), typeof (object), args);
+                    leftExp = Expression.Dynamic(new LuInvokeBinder(new CallInfo(args.Count())), typeof (object), args);
                 }
             }
 
@@ -90,7 +91,7 @@ namespace LuBox.Compiler
                 left = ProcessNameAndArgs(suffix.nameAndArgs(), left);
 
                 left =
-                    Expression.Dynamic(new NuGetMemberBinder(suffix.NAME().GetText()), 
+                    Expression.Dynamic(new LuGetMemberBinder(suffix.NAME().GetText()), 
                         typeof(object), left);
             }
 
@@ -115,19 +116,43 @@ namespace LuBox.Compiler
 
         private Expression VisitSingleChildExp(NuParser.ExpContext context)
         {
-            var parseTree = context.GetChild(0);
-            var ruleIndex = parseTree.GetRuleIndex();
-            switch (ruleIndex)
+            var childTree = context.GetChild(0);
+
+            var terminalNodeImpl = childTree as TerminalNodeImpl;
+            if (terminalNodeImpl == null)
             {
-                case NuParser.RULE_prefixexp:
-                    return VisitPrefixexp(context.prefixexp());
-                case NuParser.RULE_number:
-                    return VisitNumber(context.number());
-                case NuParser.RULE_string:
-                    return VisitString(context.@string());
-                default:
-                    throw new ParseCanceledException("Invalid expression");
+                var ruleIndex = childTree.GetRuleIndex();
+                switch (ruleIndex)
+                {
+                    case NuParser.RULE_prefixexp:
+                        return VisitPrefixexp(context.prefixexp());
+                    case NuParser.RULE_number:
+                        return VisitNumber(context.number());
+                    case NuParser.RULE_string:
+                        return VisitString(context.@string());
+                    default:
+                        throw new ParseCanceledException("Invalid expression");
+                }
             }
+            else
+            {
+                return VisitTerminalExp(context);
+            }
+        }
+
+        private static Expression VisitTerminalExp(NuParser.ExpContext context)
+        {
+            var text = context.GetText();
+            if (bool.TrueString.Equals(text, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Expression.Constant(true);
+            }
+            else if (bool.FalseString.Equals(text, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Expression.Constant(false);
+            }
+
+            throw new ParseCanceledException("Invalid expression");
         }
 
         private Expression VisitUnaryOperatorExp(NuParser.ExpContext context)
@@ -138,6 +163,8 @@ namespace LuBox.Compiler
             {
                 case "-":
                     return Expression.Negate(VisitExp(exp));
+                case "not":
+                    return Expression.Not(Expression.Dynamic(new LuBoolConvertBinder(), typeof(bool), VisitExp(exp)));
                 default:
                     throw new ParseCanceledException("Invalid expression");
             }
@@ -148,23 +175,48 @@ namespace LuBox.Compiler
             Expression left = VisitExp(context.exp(0));
             IParseTree oper = context.GetChild(1);
             Expression right = VisitExp(context.exp(1));
-            
-            var ruleIndex = oper.GetRuleIndex();
-            switch (ruleIndex)
+
+            if (oper.GetText() == "and")
             {
-                case NuParser.RULE_operatorMulDivMod:
-                    return
-                        Expression.Dynamic(
-                            new NuBinaryOperationBinder(oper.GetText() == "*"
-                                ? ExpressionType.Multiply
-                                : ExpressionType.Divide), typeof(object), left, right);
-                case NuParser.RULE_operatorAddSub:
-                    return
-                        Expression.Dynamic(
-                            new NuBinaryOperationBinder(oper.GetText() == "+"
-                                ? ExpressionType.Add
-                                : ExpressionType.Subtract), typeof (object),
-                            left, right);
+                DynamicExpression test = Expression.Dynamic(new LuBoolConvertBinder(), typeof (bool), left);
+                return Expression.Condition(test, Expression.Convert(right, typeof(object)), Expression.Convert(left, typeof(object)));
+            }
+            else if (oper.GetText() == "or")
+            {
+                DynamicExpression test = Expression.Dynamic(new LuBoolConvertBinder(), typeof(bool), left);
+                return Expression.Condition(test, Expression.Convert(left, typeof(object)), Expression.Convert(right, typeof(object)));
+            }
+            else
+            {
+                ExpressionType operatorType = GetOperatorType(oper);
+                return Expression.Dynamic(new LuBinaryOperationBinder(operatorType), typeof (object), left, right);
+            }
+        }
+
+        private static ExpressionType GetOperatorType(IParseTree oper)
+        {
+            switch (oper.GetText())
+            {
+                case "+":
+                    return ExpressionType.Add;
+                case "-":
+                    return ExpressionType.Subtract;
+                case "/":
+                    return ExpressionType.Divide;
+                case "*":
+                    return ExpressionType.Multiply;
+                case ">":
+                    return ExpressionType.GreaterThan;
+                case ">=":
+                    return ExpressionType.GreaterThanOrEqual;
+                case "<":
+                    return ExpressionType.LessThan;
+                case "<=":
+                    return ExpressionType.LessThanOrEqual;
+                case "==":
+                    return ExpressionType.Equal;
+                case "~=":
+                    return ExpressionType.NotEqual;
                 default:
                     throw new ParseCanceledException("Invalid operator");
             }
@@ -207,9 +259,48 @@ namespace LuBox.Compiler
                 var function = VisitFuncbody(context.funcbody());
                 return _scope.Set(context.funcname().NAME(0).GetText(), function);
             }
+            else if (context.ChildCount > 0 && context.GetChild(0).GetText() == "if")
+            {
+                return CreateIfExpression(context);
+            }
             else
             {
                 return VisitFunctioncall(context.functioncall());
+            }
+        }
+
+        private Expression CreateIfExpression(NuParser.StatContext context)
+        {
+            var expExpressions = context.exp().Select(x => VisitIfExp(x)).ToArray();
+            var blockExpressions = context.block().Select(VisitBlock).ToArray();
+
+            return VisitIfPart(expExpressions, blockExpressions);
+        }
+
+        private Expression VisitIfExp(NuParser.ExpContext expContext)
+        {
+            Expression visitExp = VisitExp(expContext);
+            return Expression.Dynamic(new LuBoolConvertBinder(), typeof (bool), visitExp);
+        }
+
+        private Expression VisitIfPart(IEnumerable<Expression> expExpressions, IEnumerable<Expression> blockExpressions)
+        {
+            Expression firstExp = expExpressions.First();
+            Expression firstBlock = blockExpressions.First();
+
+            if (expExpressions.Count() > 1)
+            {
+                return Expression.IfThenElse(firstExp, firstBlock,
+                    VisitIfPart(expExpressions.Skip(1), blockExpressions.Skip(1)));
+            }
+            else if (blockExpressions.Count() > 1)
+            {
+                // Block expressions must the be 2
+                return Expression.IfThenElse(firstExp, firstBlock, blockExpressions.Last());
+            }
+            else
+            {
+                return Expression.IfThen(firstExp, firstBlock);
             }
         }
 
@@ -258,12 +349,12 @@ namespace LuBox.Compiler
                     var suffix = context.varSuffix(i);
 
                     left = ProcessNameAndArgs(suffix.nameAndArgs(), left);
-                    left = Expression.Dynamic(new NuGetMemberBinder(suffix.NAME().GetText()), typeof (object),
+                    left = Expression.Dynamic(new LuGetMemberBinder(suffix.NAME().GetText()), typeof (object),
                         left);
                 }
 
                 var lastSuffix = context.varSuffix(context.varSuffix().Count - 1);
-                return Expression.Dynamic(new NuSetMemberBinder(lastSuffix.NAME().GetText()), typeof (object),
+                return Expression.Dynamic(new LuSetMemberBinder(lastSuffix.NAME().GetText()), typeof (object),
                     left, expExpression);
             }
             else

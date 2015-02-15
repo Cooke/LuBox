@@ -3,11 +3,10 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using LuBox.Sandboxing;
 
 namespace LuBox.Runtime
 {
-    using LuBox.Utils;
-
     internal class LuInvokeMemberBinder : InvokeMemberBinder
     {
         public LuInvokeMemberBinder(string name, bool ignoreCase, CallInfo callInfo) : base(name, ignoreCase, callInfo)
@@ -26,7 +25,7 @@ namespace LuBox.Runtime
 
             var restrictions = GetRestrictions(target, args);
             var memberInfo = GetMemberInfo(target, args);
-            var callArguments = NuInvokeHelper.GetCallArguments(args, memberInfo);
+            var callArguments = LuInvokeHelper.GetCallArguments(args, memberInfo);
 
             Sandboxer.ThrowIfReflectionMember(memberInfo);
 

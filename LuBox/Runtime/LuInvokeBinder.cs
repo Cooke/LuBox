@@ -1,14 +1,14 @@
+using LuBox.Sandboxing;
+
 namespace LuBox.Runtime
 {
     using System.Dynamic;
     using System.Linq;
     using System.Linq.Expressions;
 
-    using LuBox.Utils;
-
-    internal class NuInvokeBinder : InvokeBinder
+    internal class LuInvokeBinder : InvokeBinder
     {
-        public NuInvokeBinder(CallInfo callInfo) : base(callInfo)
+        public LuInvokeBinder(CallInfo callInfo) : base(callInfo)
         {
         }
 
@@ -21,7 +21,7 @@ namespace LuBox.Runtime
 
             Sandboxer.ThrowIfReflectionType(target.LimitType);
 
-            var restrictions = NuInvokeHelper.GetRestrictions(target, args);
+            var restrictions = LuInvokeHelper.GetRestrictions(target, args);
             
             return
                 new DynamicMetaObject(

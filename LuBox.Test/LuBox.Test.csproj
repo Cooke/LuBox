@@ -51,7 +51,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BinaryOperatorTests.cs" />
+    <Compile Include="UnaryOperatorTests.cs" />
     <Compile Include="ArithmeticTests.cs" />
+    <Compile Include="ConditionalTests.cs" />
     <Compile Include="EnvironmentTests.cs" />
     <Compile Include="ExamplesTests.cs" />
     <Compile Include="SandboxTests.cs" />

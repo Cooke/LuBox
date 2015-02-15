@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Reflection;
 
-namespace LuBox.Utils
+namespace LuBox.Sandboxing
 {
-    using System.Reflection;
-
     public static class Sandboxer
     {
         public static bool IsReflectionType(Type type)

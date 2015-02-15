@@ -13,6 +13,11 @@ namespace LuBox.Runtime
 
         public override DynamicMetaObject FallbackConvert(DynamicMetaObject target, DynamicMetaObject errorSuggestion)
         {
+            if (!target.HasValue)
+            {
+                return Defer(target);
+            }
+
             return new DynamicMetaObject(Expression.Convert(target.Expression, Type), BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
         }
     }
