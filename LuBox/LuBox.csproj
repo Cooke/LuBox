@@ -52,6 +52,7 @@
     <Compile Include="Runtime\LuGetMemberBinder.cs" />
     <Compile Include="Runtime\LuInvokeBinder.cs" />
     <Compile Include="Runtime\LuInvokeHelper.cs" />
+    <Compile Include="LuRuntimeException.cs" />
     <Compile Include="Runtime\LuSetMemberBinder.cs" />
     <Compile Include="Runtime\Scope.cs" />
     <Compile Include="Utils\DynamicDictionaryWrapper.cs" />

@@ -17,17 +17,29 @@ namespace LuBox.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(LuSandboxException))]
+        [ExpectedException(typeof (LuSandboxException))]
         public void ThrowSandboxExceptionWhenUsingGetType()
         {
             var test = new Test();
             _luScriptEngine.Globals.test = test;
-            
+
             _luScriptEngine.Execute(@"typeName = test:GetType().Name");
+
+        }
+
+        [TestMethodAttribute]
+        [ExpectedException(typeof(LuSandboxException))]
+        public void ShallThrowWhenUsingTypeProperty()
+        {
+            var test = new Test();
+            _luScriptEngine.Globals.test = test;
+            
+            _luScriptEngine.Execute(@"type = test.Prop");
         }
 
         private class Test
         {
+            public Type Prop { get { return GetType(); } }
         }
     }
 }

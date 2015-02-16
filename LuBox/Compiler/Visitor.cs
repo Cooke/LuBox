@@ -14,6 +14,7 @@ namespace LuBox.Compiler
     internal class Visitor : NuBaseVisitor<Expression>
     {
         private IScope _scope;
+        private System.Collections.Generic.Stack<LabelTarget> returnTargets = new Stack<LabelTarget>(); 
 
         public Visitor(IScope scope)
         {
@@ -90,9 +91,22 @@ namespace LuBox.Compiler
             {
                 left = ProcessNameAndArgs(suffix.nameAndArgs(), left);
 
-                left =
-                    Expression.Dynamic(new LuGetMemberBinder(suffix.NAME().GetText()), 
-                        typeof(object), left);
+                if (suffix.NAME() != null)
+                {
+                    left =
+                        Expression.Dynamic(new LuGetMemberBinder(suffix.NAME().GetText()),
+                            typeof (object), left);
+                }
+                else if (suffix.exp() != null)
+                {
+                    left =
+                        Expression.Dynamic(new LuGetIndexBinder(new CallInfo(1)),
+                            typeof(object), left, VisitExp(suffix.exp()));
+                }
+                else
+                {
+                    throw new ParseCanceledException();
+                }
             }
 
             return left;
@@ -150,6 +164,10 @@ namespace LuBox.Compiler
             else if (bool.FalseString.Equals(text, StringComparison.InvariantCultureIgnoreCase))
             {
                 return Expression.Constant(false);
+            }
+            else if ("nil".Equals(text, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return Expression.Constant(null, typeof (object));
             }
 
             throw new ParseCanceledException("Invalid expression");
@@ -236,8 +254,11 @@ namespace LuBox.Compiler
                 }
             }
 
-            var block = VisitBlock(context.block());
+            var returnLabel = Expression.Label(typeof(object));
+            returnTargets.Push(returnLabel);
+            var block = Expression.Block(new[] { VisitBlock(context.block()), Expression.Label(returnLabel, Expression.Constant(null, typeof(object))) });
             _scope = _scope.Parent;
+            returnTargets.Pop();
 
             return Expression.New(typeof (LuFunction).GetConstructor(new[] {typeof (Delegate)}),
                 Expression.Lambda(block, parameters));
@@ -263,10 +284,100 @@ namespace LuBox.Compiler
             {
                 return CreateIfExpression(context);
             }
-            else
+            else if (context.ChildCount > 0 && context.GetChild(0).GetText() == "for")
+            {
+                if (context.NAME() != null)
+                {
+                    return VisitNumericFor(context);
+                }
+                else
+                {
+                    return VisitGenericFor(context);
+                }
+            }
+            else if (context.functioncall() != null)
             {
                 return VisitFunctioncall(context.functioncall());
             }
+            else if (context.GetText() == ";")
+            {
+                return Expression.Empty();
+            }
+            else
+            {
+                throw new ParseCanceledException();
+            }
+        }
+
+        private Expression VisitGenericFor(NuParser.StatContext context)
+        {
+            _scope = new Scope(_scope);
+
+            Expression fValueExp = VisitExp(context.explist().exp(0));
+            Expression sValueExp = context.explist().ChildCount > 1 ? VisitExp(context.explist().exp(1)) : Expression.Constant(null, typeof(object));
+            Expression vValueExp = context.explist().ChildCount > 2 ? VisitExp(context.explist().exp(2)) : Expression.Constant(null, typeof(object));
+
+            ParameterExpression f = Expression.Variable(fValueExp.Type);
+            ParameterExpression s = Expression.Variable(sValueExp.Type);
+            ParameterExpression v = Expression.Variable(vValueExp.Type);
+
+            IEnumerable<ParameterExpression> varList = context.namelist().NAME().Select(x => _scope.CreateLocal(x.GetText(), typeof(object))).ToArray();
+            
+            Expression innerBlock = VisitBlock(context.block(0));
+            LabelTarget breakLabel = Expression.Label("break");
+
+            BlockExpression forBlock = Expression.Block(
+                new[] {f, s, v},
+                Expression.Assign(f, fValueExp),
+                Expression.Assign(s, sValueExp),
+                Expression.Assign(v, vValueExp),
+                Expression.Loop(
+                    Expression.Block(
+                        varList.Take(1), // only support 1 var now
+                        Expression.Assign(varList.First(),
+                            Expression.Dynamic(new LuInvokeBinder(new CallInfo(2)), typeof (object), f, s, v)),
+                        Expression.Assign(v, varList.First()),
+                        Expression.IfThenElse(
+                            Expression.Dynamic(new LuBoolConvertBinder(), typeof (bool), varList.First()), 
+                            innerBlock,
+                            Expression.Break(breakLabel))),
+                    breakLabel));
+
+            _scope = _scope.Parent;
+            return forBlock;
+        }
+
+        private Expression VisitNumericFor(NuParser.StatContext context)
+        {
+            _scope = new Scope(_scope);
+
+            Expression varValueExp = VisitExp(context.exp(0));
+            Expression limitValueExp = VisitExp(context.exp(1));
+            Expression stepValueExp = context.exp(2) != null ? VisitExp(context.exp(2)) : Expression.Constant(1);
+
+            ParameterExpression var = _scope.CreateLocal(context.NAME().GetText(), varValueExp.Type);
+            ParameterExpression limit = Expression.Variable(limitValueExp.Type);
+            ParameterExpression step = Expression.Variable(stepValueExp.Type);
+
+            Expression innerBlock = VisitBlock(context.block(0));
+            LabelTarget breakLabel = Expression.Label("break");
+
+            BlockExpression forBlock = Expression.Block(
+                new[] {limit, step}.Concat(_scope.LocalParameterExpression),
+                Expression.Assign(var, varValueExp),
+                Expression.Assign(limit, limitValueExp),
+                Expression.Assign(step, stepValueExp),
+                Expression.Loop(
+                    Expression.Block(
+                        Expression.IfThenElse(
+                            Expression.Convert(
+                                Expression.Dynamic(new LuBinaryOperationBinder(ExpressionType.LessThanOrEqual), typeof (object),
+                                    var, limit), typeof (bool)), innerBlock, Expression.Break(breakLabel)),
+                        Expression.AddAssign(var, step)),
+                    breakLabel));
+
+            _scope = _scope.Parent;
+            return forBlock;
         }
 
         private Expression CreateIfExpression(NuParser.StatContext context)
@@ -385,6 +496,12 @@ namespace LuBox.Compiler
             var blockExpression = Expression.Block(_scope.LocalParameterExpression, stats);
             _scope = _scope.Parent;
             return blockExpression;
+        }
+
+        public override Expression VisitRetstat(NuParser.RetstatContext context)
+        {
+            var returnExp = VisitExp(context.explist().exp(0));
+            return Expression.Return(returnTargets.Peek(), returnExp);
         }
 
         public override Expression VisitChunk(NuParser.ChunkContext context)

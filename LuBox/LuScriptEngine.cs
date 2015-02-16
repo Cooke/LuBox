@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Antlr4.Runtime;
@@ -16,6 +17,11 @@ namespace LuBox
 
         public LuScriptEngine()
         {
+            _globals["iter"] = new Func<IEnumerable, Func<object>>(x =>
+            {
+                var enumerator = x.GetEnumerator();
+                return (() => enumerator.MoveNext() ? enumerator.Current : null);
+            });
             _globalsDynamic = new DynamicDictionaryWrapper(_globals);
         }
 

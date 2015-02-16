@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace LuBox.Runtime
@@ -10,6 +11,7 @@ namespace LuBox.Runtime
         IScope Parent { get; }
         IEnumerable<ParameterExpression> LocalParameterExpression { get; }
         ParameterExpression CreateLocal(string name);
+        ParameterExpression CreateLocal(string name, Type type);
     }
 
     internal class GlobalScope : IScope
@@ -38,6 +40,11 @@ namespace LuBox.Runtime
         public ParameterExpression CreateLocal(string name)
         {
             throw new System.NotImplementedException();
+        }
+
+        public ParameterExpression CreateLocal(string name, Type type)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -84,7 +91,12 @@ namespace LuBox.Runtime
 
         public ParameterExpression CreateLocal(string name)
         {
-            var parameterExpression = Expression.Variable(typeof (object), name);
+            return CreateLocal(name, typeof (object));
+        }
+
+        public ParameterExpression CreateLocal(string name, Type type)
+        {
+            var parameterExpression = Expression.Variable(type, name);
             _allLocals.Add(parameterExpression);
             _locals[name] = parameterExpression;
             return parameterExpression;

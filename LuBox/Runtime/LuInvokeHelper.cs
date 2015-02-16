@@ -11,10 +11,9 @@ namespace LuBox.Runtime
     {
         public static BindingRestrictions GetRestrictions(DynamicMetaObject target, DynamicMetaObject[] args)
         {
-            var restrictions = target.Restrictions.Merge(BindingRestrictions.Combine(args))
-                .Merge(BindingRestrictions.GetTypeRestriction(
-                    target.Expression, target.LimitType));
-            foreach (var result in args.Select(x => BindingRestrictions.GetTypeRestriction(
+            var restrictions = BindingRestrictions.GetTypeRestriction(
+                target.Expression, target.LimitType);
+            foreach (var result in args.Select(x => x.Value == null ? BindingRestrictions.GetInstanceRestriction(x.Expression, null) : BindingRestrictions.GetTypeRestriction(
                 x.Expression, x.LimitType)))
             {
                 restrictions = restrictions.Merge(result);
@@ -25,15 +24,16 @@ namespace LuBox.Runtime
 
         public static IEnumerable<Expression> GetCallArguments(DynamicMetaObject[] args, MemberInfo memberInfo)
         {
-            IEnumerable<Expression> callArguments = args.Select(x => Expression.Convert(x.Expression, x.LimitType));
+            IEnumerable<Expression> callArguments = args.Select(x => x.Expression);
             var methodInfo = memberInfo as MethodInfo;
             if (methodInfo != null)
             {
+                var parameterInfos = methodInfo.GetParameters();
                 ParameterInfo paramsParameterInfo =
-                    methodInfo.GetParameters().FirstOrDefault(x => x.GetCustomAttribute<ParamArrayAttribute>() != null);
+                    parameterInfos.FirstOrDefault(x => x.GetCustomAttribute<ParamArrayAttribute>() != null);
                 if (paramsParameterInfo != null)
                 {
-                    var paramsIndex = Array.IndexOf(methodInfo.GetParameters(), paramsParameterInfo);
+                    var paramsIndex = Array.IndexOf(parameterInfos, paramsParameterInfo);
                     Type elementType = paramsParameterInfo.ParameterType.GetElementType();
                     callArguments =
                         args.Select(x => x.Expression)
@@ -44,6 +44,20 @@ namespace LuBox.Runtime
                                                 args.Select(x => Expression.Convert(x.Expression, elementType)).Skip(paramsIndex))
                                         });
                 }
+
+                if (parameterInfos.Length > args.Length)
+                {
+                    callArguments =
+                        callArguments.Concat(Enumerable.Repeat(Expression.Constant(null, typeof (object)),
+                            parameterInfos.Length - args.Length));
+                }
+                else
+                {
+                    callArguments = callArguments.Take(parameterInfos.Length);
+                }
+
+
+                callArguments = callArguments.Select((x, i) => Expression.Convert(x, parameterInfos[i].ParameterType));
             }
 
             return callArguments;
