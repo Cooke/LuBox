@@ -10,9 +10,10 @@ namespace LuBox.Test
         public void CallMember()
         {
             var scriptEngine = new LuScriptEngine();
-            scriptEngine.Globals.myVariable = "Hello";
-            scriptEngine.Execute("myVariable = myVariable:ToUpper()");
-            Console.WriteLine(scriptEngine.Globals.myVariable);  // Output: HELLO
+            var environment = new LuEnvironment();
+            environment.Variables.myVariable = "Hello";
+            scriptEngine.Execute("myVariable = myVariable:ToUpper()", environment);
+            Console.WriteLine(environment.Variables.myVariable);  // Output: HELLO
         }
 
         public class Foo
@@ -29,16 +30,17 @@ namespace LuBox.Test
         public void RegisteringToEvents()
         {
             var scriptEngine = new LuScriptEngine();
+            var environment = new LuEnvironment();
             Foo foo = new Foo();
-            scriptEngine.Globals.foo = foo;
-            scriptEngine.Globals.console = Console.Out;
+            environment.Variables.foo = foo;
+            environment.Variables.console = Console.Out;
             scriptEngine.Execute(
                 @"
                 function handleBar(text)
                     console:WriteLine(text)
                 end
 
-                foo.BarFired:Add(handleBar)");
+                foo.BarFired:Add(handleBar)", environment);
              foo.FireBar(); // Output: BAR!
         }
     }

@@ -9,18 +9,20 @@ namespace LuBox.Test
     public class EventTests
     {
         private LuScriptEngine _luScriptEngine;
+        private LuEnvironment _environment;
 
         [TestInitialize]
         public void Initialize()
         {
             _luScriptEngine = new LuScriptEngine();
+            _environment = new LuEnvironment();
         }
 
         [TestMethod]
         public void HandleEvent()
         {
             var test = new Test();
-            _luScriptEngine.Globals.test = test;
+            _environment.Variables.test = test;
 
             _luScriptEngine.Execute(@"
 function HandleEvent(args) 
@@ -28,18 +30,18 @@ function HandleEvent(args)
 end
 
 test.Event:Add(HandleEvent)
-");
-            
-            Assert.IsFalse(_luScriptEngine.GlobalDictionary.ContainsKey("out"));
+", _environment);
+
+            Assert.IsFalse(_environment.Dictionary.ContainsKey("out"));
             test.OnEvent();
-            Assert.AreEqual(33, _luScriptEngine.Globals.@out);
+            Assert.AreEqual(33, _environment.Variables.@out);
         }
 
         [TestMethod]
         public void HandleEventDifferentReturnType()
         {
             var test = new Test();
-            _luScriptEngine.Globals.test = test;
+            _environment.Variables.test = test;
 
             _luScriptEngine.Execute(@"
 function HandleEvent(args) 
@@ -47,18 +49,18 @@ function HandleEvent(args)
 end
 
 test.Event2:Add(HandleEvent)
-");
+", _environment);
 
-            Assert.IsFalse(_luScriptEngine.GlobalDictionary.ContainsKey("out"));
+            Assert.IsFalse(_environment.Dictionary.ContainsKey("out"));
             test.OnEvent2();
-            Assert.AreEqual(33, _luScriptEngine.Globals.@out);
+            Assert.AreEqual(33, _environment.Variables.@out);
         }
 
         [TestMethod]
         public void HandleEventWithFewerArguments()
         {
             var test = new Test();
-            _luScriptEngine.Globals.test = test;
+            _environment.Variables.test = test;
 
             _luScriptEngine.Execute(@"
 function HandleEvent(str) 
@@ -66,17 +68,17 @@ function HandleEvent(str)
 end
 
 test.Event3:Add(HandleEvent)
-");
+", _environment);
 
             test.OnEvent3();
-            Assert.AreEqual("string", _luScriptEngine.Globals.msg);
+            Assert.AreEqual("string", _environment.Variables.msg);
         }
 
         [TestMethod]
         public void HandleEventWithMoreArguments()
         {
             var test = new Test();
-            _luScriptEngine.Globals.test = test;
+            _environment.Variables.test = test;
 
             _luScriptEngine.Execute(@"
 function HandleEvent(str, number, test, dic, anotherArg, additionalArg) 
@@ -84,17 +86,17 @@ function HandleEvent(str, number, test, dic, anotherArg, additionalArg)
 end
 
 test.Event3:Add(HandleEvent)
-");
+", _environment);
 
             test.OnEvent3();
-            Assert.IsNull(_luScriptEngine.Globals.msg);
+            Assert.IsNull(_environment.Variables.msg);
         }
 
         [TestMethod]
         public void ShallRemoveEventHandler()
         {
             var test = new Test();
-            _luScriptEngine.Globals.test = test;
+            _environment.Variables.test = test;
 
             _luScriptEngine.Execute(@"
                 function HandleEvent() 
@@ -103,10 +105,10 @@ test.Event3:Add(HandleEvent)
 
                 test.Event:Add(HandleEvent)
                 test.Event:Remove(HandleEvent)
-                ");
+                ", _environment);
 
             test.OnEvent();
-            Assert.IsFalse(_luScriptEngine.GlobalDictionary.ContainsKey("called"));
+            Assert.IsFalse(_environment.Dictionary.ContainsKey("called"));
         }
 
         private class Test

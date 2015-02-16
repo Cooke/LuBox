@@ -7,21 +7,22 @@ namespace LuBox.Runtime
 {
     internal class InternalEnvironment
     {
-        private readonly IDictionary<object, object> _env;
+        private readonly LuEnvironment _env;
 
-        public InternalEnvironment(IDictionary<object, object> env)
+        public InternalEnvironment(LuEnvironment env)
         {
             _env = env;
         }
 
         public object Get(string key)
         {
-            return _env.ContainsKey(key) ? _env[key] : null;
+            return _env.Get(key);
         }
 
         public object Set(string key, object value)
         {
-            return _env[key] = value;
+            _env.Set(key, value);
+            return value;
         }
     }
 

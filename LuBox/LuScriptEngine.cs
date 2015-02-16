@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using Antlr4.Runtime;
 using LuBox.Compiler;
@@ -11,31 +9,14 @@ namespace LuBox
 {
     public class LuScriptEngine
     {
-        private readonly IDictionary<object, object> _globals = new Dictionary<object, object>();
         private readonly ParameterExpression _globalParameter = Expression.Variable(typeof(InternalEnvironment));
-        private readonly DynamicDictionaryWrapper _globalsDynamic;
-
-        public LuScriptEngine()
-        {
-            _globals["iter"] = new Func<IEnumerable, Func<object>>(x =>
-            {
-                var enumerator = x.GetEnumerator();
-                return (() => enumerator.MoveNext() ? enumerator.Current : null);
-            });
-            _globalsDynamic = new DynamicDictionaryWrapper(_globals);
-        }
-
-        public IDictionary<object, object> GlobalDictionary
-        {
-            get { return _globals; }
-        }
-
-        public dynamic Globals
-        {
-            get { return _globalsDynamic; }
-        }
 
         public T Evaluate<T>(string expression)
+        {
+            return Evaluate<T>(expression, new LuEnvironment());
+        }
+
+        public T Evaluate<T>(string expression, LuEnvironment environment)
         {
             var lexer = new NuLexer(new AntlrInputStream(expression));
             var parser = new NuParser(new CommonTokenStream(lexer));
@@ -44,22 +25,27 @@ namespace LuBox
 
             Expression content = visitor.VisitExp(parser.exp());
 
-            object foo = Expression.Lambda(content, _globalParameter).Compile().DynamicInvoke(new InternalEnvironment(_globals));
+            object foo = Expression.Lambda(content, _globalParameter).Compile().DynamicInvoke(new InternalEnvironment(environment));
 
             return (T)Convert.ChangeType(foo, typeof(T));
         }
 
         public object Evaluate(string expression)
         {
-            return Evaluate<object>(expression);
+            return Evaluate(expression, new LuEnvironment());
         }
 
-        public void Execute(string code)
+        public object Evaluate(string expression, LuEnvironment environment)
         {
-            Compile(code)();
+            return Evaluate<object>(expression, environment);
         }
 
-        public Action Compile(string code)
+        public void Execute(string code, LuEnvironment environment)
+        {
+            Compile(code)(environment);
+        }
+
+        public Action<LuEnvironment> Compile(string code)
         {
             var lexer = new NuLexer(new AntlrInputStream(code));
             var parser = new NuParser(new CommonTokenStream(lexer));
@@ -68,23 +54,8 @@ namespace LuBox
 
             Expression content = visitor.Visit(parser.chunk());
 
-            Action<InternalEnvironment> compile = Expression.Lambda<Action<InternalEnvironment>>(content, _globalParameter).Compile();
-            return () => compile(new InternalEnvironment(_globals));
-        }
-
-        public void SetGlobal(object key, object value)
-        {
-            _globals[key] = value;
-        }
-
-        public object GetGlobal(object key)
-        {
-            return _globals[key];
-        }
-
-        public void ClearGlobals()
-        {
-            _globals.Clear();
+            var compiled = Expression.Lambda<Action<InternalEnvironment>>(content, _globalParameter).Compile();
+            return env => compiled(new InternalEnvironment(env));
         }
     }
 }

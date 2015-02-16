@@ -6,11 +6,13 @@ namespace LuBox.Test
     public class FunctionTests
     {
         private LuScriptEngine _luScriptEngine;
+        private LuEnvironment _environment;
 
         [TestInitialize]
         public void Initialize()
         {
             _luScriptEngine = new LuScriptEngine();
+            _environment = new LuEnvironment();
         }
 
         [TestMethod]
@@ -20,7 +22,7 @@ namespace LuBox.Test
 function func() 
     out = 33
 end
-");
+", _environment);
         }
 
         [TestMethod]
@@ -32,9 +34,9 @@ function func()
 end
 
 func()
-");
+", _environment);
 
-            Assert.AreEqual(33, _luScriptEngine.Globals.@out);
+            Assert.AreEqual(33, _environment.Variables.@out);
         }
 
         [TestMethod]
@@ -46,9 +48,9 @@ function func()
 end
 
 func()
-");
+", _environment);
 
-            Assert.IsFalse(_luScriptEngine.GlobalDictionary.ContainsKey("out"));
+            Assert.IsFalse(_environment.Dictionary.ContainsKey("out"));
         }
 
         [TestMethod]
@@ -62,9 +64,9 @@ end
 func()
 
 glob = out
-");
+", _environment);
 
-            Assert.AreNotEqual(33, _luScriptEngine.Globals.glob);
+            Assert.AreNotEqual(33, _environment.Variables.glob);
         }
 
         [TestMethod]
@@ -76,9 +78,9 @@ function add(left, right)
 end
 
 add(3, 4)
-");
+", _environment);
 
-            Assert.AreEqual(7, _luScriptEngine.Globals.@out);
+            Assert.AreEqual(7, _environment.Variables.@out);
         }
 
         [TestMethod]
@@ -90,9 +92,9 @@ function add(left, right)
 end
 
 out = add(3, 9)
-");
+", _environment);
 
-            Assert.AreEqual(12, _luScriptEngine.Globals.@out);
+            Assert.AreEqual(12, _environment.Variables.@out);
         }
     }
 }

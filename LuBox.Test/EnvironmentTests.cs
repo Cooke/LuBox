@@ -8,18 +8,20 @@ namespace LuBox.Test
     public class EnvironmentTests
     {
         private LuScriptEngine _luScriptEngine;
+        private LuEnvironment _environment;
 
         [TestInitialize]
         public void Initialize()
         {
             _luScriptEngine = new LuScriptEngine();
+            _environment = new LuEnvironment();
         }
 
         [TestMethod]
         public void SetPublicVariable()
         {
-            _luScriptEngine.Execute("result = 3 * 4");
-            Assert.AreEqual(12, _luScriptEngine.Globals.result);
+            _luScriptEngine.Execute("result = 3 * 4", _environment);
+            Assert.AreEqual(12, _environment.Variables.result);
         }
 
         [TestMethod]
@@ -28,16 +30,16 @@ namespace LuBox.Test
             _luScriptEngine.Execute(@"
 result = 3 * 4
 result2 = result * 2
-");
-            Assert.AreEqual(24, _luScriptEngine.Globals.result2);
+", _environment);
+            Assert.AreEqual(24, _environment.Variables.result2);
         }
 
         [TestMethod]
         public void SetMemberOfGlobal()
         {
             var box = new VariableBox();
-            _luScriptEngine.Globals.box = box;
-            _luScriptEngine.Execute(@"box.Prop1 = 12");
+            _environment.Variables.box = box;
+            _luScriptEngine.Execute(@"box.Prop1 = 12", _environment);
             Assert.AreEqual(12, box.Prop1);
         }
 
@@ -45,8 +47,8 @@ result2 = result * 2
         public void SetMemberOfMemberOfGlobal()
         {
             var box = new VariableBox();
-            _luScriptEngine.Globals.box = box;
-            _luScriptEngine.Execute(@"box.NestedBox.Prop1 = 10");
+            _environment.Variables.box = box;
+            _luScriptEngine.Execute(@"box.NestedBox.Prop1 = 10", _environment);
             Assert.AreEqual(10, box.NestedBox.Prop1);
         }
 
@@ -55,8 +57,8 @@ result2 = result * 2
         public void SetFieldMemberOfGlobal()
         {
             var box = new VariableBox();
-            _luScriptEngine.Globals.box = box;
-            _luScriptEngine.Execute(@"box.Field1 = ""12""");
+            _environment.Variables.box = box;
+            _luScriptEngine.Execute(@"box.Field1 = ""12""", _environment);
             Assert.AreEqual("12", box.Field1);
         }
 
@@ -64,8 +66,8 @@ result2 = result * 2
         public void SetFieldMemberOfMemberOfGlobal()
         {
             var box = new VariableBox();
-            _luScriptEngine.Globals.box = box;
-            _luScriptEngine.Execute(@"box.NestedBox.Field1 = ""10""");
+            _environment.Variables.box = box;
+            _luScriptEngine.Execute(@"box.NestedBox.Field1 = ""10""", _environment);
             Assert.AreEqual("10", box.NestedBox.Field1);
         }
 

@@ -9,11 +9,13 @@ namespace LuBox.Test
     public class SandboxTests
     {
         private LuScriptEngine _luScriptEngine;
+        private LuEnvironment _environment;
 
         [TestInitialize]
         public void Initialize()
         {
             _luScriptEngine = new LuScriptEngine();
+            _environment = new LuEnvironment();
         }
 
         [TestMethod]
@@ -21,9 +23,9 @@ namespace LuBox.Test
         public void ThrowSandboxExceptionWhenUsingGetType()
         {
             var test = new Test();
-            _luScriptEngine.Globals.test = test;
+            _environment.Variables.test = test;
 
-            _luScriptEngine.Execute(@"typeName = test:GetType().Name");
+            _luScriptEngine.Execute(@"typeName = test:GetType().Name", _environment);
 
         }
 
@@ -32,9 +34,9 @@ namespace LuBox.Test
         public void ShallThrowWhenUsingTypeProperty()
         {
             var test = new Test();
-            _luScriptEngine.Globals.test = test;
+            _environment.Variables.test = test;
             
-            _luScriptEngine.Execute(@"type = test.Prop");
+            _luScriptEngine.Execute(@"type = test.Prop", _environment);
         }
 
         private class Test
