@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using LuBox.Compiler;
+using LuBox.Runtime;
 
 namespace LuBox
 {
@@ -38,6 +39,18 @@ namespace LuBox
         public object Get(object key)
         {
             return _variables.ContainsKey(key) ? _variables[key] : null;
+        }
+
+        public void SetType(Type type)
+        {
+            if (type.IsEnum)
+            {
+                Set(type.Name, new LuEnumWrapper(type));
+            }
+            else
+            {
+                throw new ArgumentException("The specified type is not allowed");
+            }
         }
 
         public void Clear()

@@ -46,6 +46,7 @@
     <Compile Include="LuSandboxException.cs" />
     <Compile Include="Runtime\LuBoolConvertBinder.cs" />
     <Compile Include="Runtime\LuConvertBinder.cs" />
+    <Compile Include="Runtime\LuEnumWrapper.cs" />
     <Compile Include="Runtime\LuEventWrapper.cs" />
     <Compile Include="Runtime\LuEventWrapperMetaObject.cs" />
     <Compile Include="Runtime\LuFunction.cs" />

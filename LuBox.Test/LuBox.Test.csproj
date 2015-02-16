@@ -52,6 +52,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BinaryOperatorTests.cs" />
+    <Compile Include="EnumTest.cs" />
     <Compile Include="LoopTests.cs" />
     <Compile Include="UnaryOperatorTests.cs" />
     <Compile Include="ArithmeticTests.cs" />

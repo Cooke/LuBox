@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using LuBox.Sandboxing;
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace LuBox.Runtime
 {
@@ -26,7 +27,7 @@ namespace LuBox.Runtime
             var members = target.LimitType.GetMember(Name, flags);
             if (members.Length != 1)
             {
-                throw new NotSupportedException();
+                throw new LuRuntimeException("Failed to find exactly one member with name " + Name);
             }
             
             var member = members[0];
