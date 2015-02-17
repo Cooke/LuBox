@@ -9,19 +9,19 @@ namespace LuBox.Test
     public class EnumTests
     {
         private LuScriptEngine _luScriptEngine;
-        private LuEnvironment _environment;
+        private LuTable _environment;
 
         [TestInitialize]
         public void Initialize()
         {
             _luScriptEngine = new LuScriptEngine();
-            _environment = new LuEnvironment();
+            _environment = new LuTable();
         }
 
         [TestMethod]
         public void EventTest()
         {
-            _environment.SetType(typeof(Number));
+            _environment.AddEnum(typeof(Number));
             var o = _luScriptEngine.Evaluate<Number>("Number.One", _environment);
             Assert.AreEqual(Number.One, o);
         }

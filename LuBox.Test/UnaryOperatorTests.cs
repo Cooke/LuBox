@@ -7,13 +7,13 @@ namespace LuBox.Test
     public class UnaryOperatorTests
     {
         private LuScriptEngine _luScriptEngine;
-        private LuEnvironment _environment;
+        private LuTable _environment;
 
         [TestInitialize]
         public void Initialize()
         {
             _luScriptEngine = new LuScriptEngine();
-            _environment = new LuEnvironment();
+            _environment = new LuTable();
         }
 
         [TestMethod]
@@ -31,14 +31,14 @@ namespace LuBox.Test
         [TestMethod]
         public void NotTrueVariableShallBeFalse()
         {
-            _environment.Variables.var = true;
+            _environment.Dynamic.var = true;
             AssertEval(false, "not var");
         }
 
         [TestMethod]
         public void NotFalseVariableShallBeTrue()
         {
-            _environment.Variables.var = false;
+            _environment.Dynamic.var = false;
             AssertEval(true, "not false");
         }
 

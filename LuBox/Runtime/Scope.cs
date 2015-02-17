@@ -9,33 +9,35 @@ namespace LuBox.Runtime
         Expression Set(string key, Expression exp);
         Expression Get(string key);
         IScope Parent { get; }
-        IEnumerable<ParameterExpression> LocalParameterExpression { get; }
+        IEnumerable<ParameterExpression> Locals { get; }
         ParameterExpression CreateLocal(string name);
         ParameterExpression CreateLocal(string name, Type type);
     }
 
     internal class GlobalScope : IScope
     {
-        private readonly ParameterExpression _globalParameter;
+        private readonly ParameterExpression _environmentParameter;
 
-        public GlobalScope(ParameterExpression globalParameter)
+        public GlobalScope(ParameterExpression environmentParameter)
         {
-            _globalParameter = globalParameter;
+            _environmentParameter = environmentParameter;
         }
 
         public Expression Set(string key, Expression exp)
         {
-            return Expression.Call(_globalParameter, typeof(InternalEnvironment).GetMethod("Set"), Expression.Constant(key), Expression.Convert(exp, typeof(object)));
+            // TODO add support for _ENV
+            return Expression.Call(_environmentParameter, typeof(InternalEnvironment).GetMethod("Set"), Expression.Constant(key), Expression.Convert(exp, typeof(object)));
         }
 
         public Expression Get(string key)
         {
-            return Expression.Call(_globalParameter, typeof(InternalEnvironment).GetMethod("Get"), Expression.Constant(key));
+            // TODO add support for _ENV
+            return Expression.Call(_environmentParameter, typeof(InternalEnvironment).GetMethod("Get"), Expression.Constant(key));
         }
 
         public IScope Parent { get { return null; } }
 
-        public IEnumerable<ParameterExpression> LocalParameterExpression { get { return null; } }
+        public IEnumerable<ParameterExpression> Locals { get { return null; } }
 
         public ParameterExpression CreateLocal(string name)
         {
@@ -51,8 +53,8 @@ namespace LuBox.Runtime
     internal class Scope : IScope
     {
         private readonly IScope _scope;
-        private readonly Dictionary<string, ParameterExpression> _locals = new Dictionary<string, ParameterExpression>();
-        private readonly List<ParameterExpression> _allLocals = new List<ParameterExpression>();
+        private readonly Dictionary<string, ParameterExpression> _localsByName = new Dictionary<string, ParameterExpression>();
+        private readonly List<ParameterExpression> _locals = new List<ParameterExpression>();
 
         public Scope(IScope scope)
         {
@@ -64,16 +66,16 @@ namespace LuBox.Runtime
             get { return _scope; }
         }
 
-        public IEnumerable<ParameterExpression> LocalParameterExpression
+        public IEnumerable<ParameterExpression> Locals
         {
-            get { return _allLocals; }
+            get { return _locals; }
         }
 
         public Expression Set(string key, Expression exp)
         {
-            if (_locals.ContainsKey(key))
+            if (_localsByName.ContainsKey(key))
             {
-                return Expression.Assign(_locals[key], exp);
+                return Expression.Assign(_localsByName[key], exp);
             }
 
             return _scope.Set(key, exp);
@@ -81,9 +83,9 @@ namespace LuBox.Runtime
 
         public Expression Get(string key)
         {
-            if (_locals.ContainsKey(key))
+            if (_localsByName.ContainsKey(key))
             {
-                return _locals[key];
+                return _localsByName[key];
             }
 
             return _scope.Get(key);
@@ -97,8 +99,8 @@ namespace LuBox.Runtime
         public ParameterExpression CreateLocal(string name, Type type)
         {
             var parameterExpression = Expression.Variable(type, name);
-            _allLocals.Add(parameterExpression);
-            _locals[name] = parameterExpression;
+            _locals.Add(parameterExpression);
+            _localsByName[name] = parameterExpression;
             return parameterExpression;
         }
     }

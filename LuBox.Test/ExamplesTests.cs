@@ -10,10 +10,10 @@ namespace LuBox.Test
         public void CallMember()
         {
             var scriptEngine = new LuScriptEngine();
-            var environment = new LuEnvironment();
-            environment.Variables.myVariable = "Hello";
+            var environment = new LuTable();
+            environment.Dynamic.myVariable = "Hello";
             scriptEngine.Execute("myVariable = myVariable:ToUpper()", environment);
-            Console.WriteLine(environment.Variables.myVariable);  // Output: HELLO
+            Console.WriteLine(environment.Dynamic.myVariable);  // Output: HELLO
         }
 
         public class Foo
@@ -30,10 +30,10 @@ namespace LuBox.Test
         public void RegisteringToEvents()
         {
             var scriptEngine = new LuScriptEngine();
-            var environment = new LuEnvironment();
+            var environment = new LuTable();
             Foo foo = new Foo();
-            environment.Variables.foo = foo;
-            environment.Variables.console = Console.Out;
+            environment.Dynamic.foo = foo;
+            environment.Dynamic.console = Console.Out;
             scriptEngine.Execute(
                 @"
                 function handleBar(text)

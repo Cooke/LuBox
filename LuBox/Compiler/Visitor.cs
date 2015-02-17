@@ -363,7 +363,7 @@ namespace LuBox.Compiler
             LabelTarget breakLabel = Expression.Label("break");
 
             BlockExpression forBlock = Expression.Block(
-                new[] {limit, step}.Concat(_scope.LocalParameterExpression),
+                new[] {limit, step}.Concat(_scope.Locals),
                 Expression.Assign(var, varValueExp),
                 Expression.Assign(limit, limitValueExp),
                 Expression.Assign(step, stepValueExp),
@@ -493,7 +493,7 @@ namespace LuBox.Compiler
         {
             _scope = new Scope(_scope);
             var stats = context.children.Select(Visit);
-            var blockExpression = Expression.Block(_scope.LocalParameterExpression, stats);
+            var blockExpression = Expression.Block(_scope.Locals, stats);
             _scope = _scope.Parent;
             return blockExpression;
         }

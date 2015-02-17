@@ -8,20 +8,20 @@ namespace LuBox.Test
     public class MethodAndPropertiesTests
     {
         private LuScriptEngine _engine;
-        private LuEnvironment _environment;
+        private LuTable _environment;
 
         [TestInitialize]
         public void Initialize()
         {
             _engine = new LuScriptEngine();
-            _environment = new LuEnvironment();
+            _environment = new LuTable();
         }
 
         [TestMethod]
         public void CallMember()
         {
             var getter = new CallReceiver();
-            _environment.Variables.callReceiver = getter;
+            _environment.Dynamic.callReceiver = getter;
             _engine.Execute("callReceiver:Call()", _environment);
             Assert.AreEqual("Call", getter.Called);
         }
@@ -30,7 +30,7 @@ namespace LuBox.Test
         public void CallMemberVoid()
         {
             var getter = new CallReceiver();
-            _environment.Set("callReceiver", getter);
+            _environment.SetField("callReceiver", getter);
             _engine.Execute("callReceiver:CallVoid()", _environment);
             Assert.AreEqual("CallVoid", getter.Called);
         }
@@ -39,7 +39,7 @@ namespace LuBox.Test
         public void CallMemberVoidString()
         {
             var getter = new CallReceiver();
-            _environment.Set("callReceiver", getter);
+            _environment.SetField("callReceiver", getter);
             _engine.Execute("callReceiver:CallVoid(\"Hello\")", _environment);
             Assert.AreEqual("CallVoid(messages)", getter.Called);
             Assert.AreEqual(1, getter.Counter);
@@ -49,7 +49,7 @@ namespace LuBox.Test
         public void CallMemberParams()
         {
             var getter = new CallReceiver();
-            _environment.Set("callReceiver", getter);
+            _environment.SetField("callReceiver", getter);
             _engine.Execute("callReceiver:CallVoidParams(\"Hello\", 123, 456, 0.3)", _environment);
             Assert.AreEqual("CallVoidParams", getter.Called);
         }
@@ -58,7 +58,7 @@ namespace LuBox.Test
         public void GetProperty()
         {
             var getter = new CallReceiver();
-            _environment.Set("callReceiver", getter);
+            _environment.SetField("callReceiver", getter);
             var propValue = _engine.Evaluate<string>("callReceiver.Property", _environment);
             Assert.AreEqual("value", propValue);
         }
@@ -67,7 +67,7 @@ namespace LuBox.Test
         public void GetPropertyThenCall()
         {
             var getter = new CallReceiver();
-            _environment.Set("callReceiver", getter);
+            _environment.SetField("callReceiver", getter);
             var propValue = _engine.Evaluate<string>("callReceiver.Property:ToString()", _environment);
             Assert.AreEqual("value", propValue);
         }
@@ -75,7 +75,7 @@ namespace LuBox.Test
         [TestMethod]
         public void UseGlobalVariable()
         {
-            _environment.Set("factor", 3);
+            _environment.SetField("factor", 3);
             var result = _engine.Evaluate<int>("factor * 3", _environment);
             Assert.AreEqual(9, result);
         }
@@ -84,7 +84,7 @@ namespace LuBox.Test
         public void ChainProperties()
         {
             var getter = new CallReceiver();
-            _environment.Set("callReceiver", getter);
+            _environment.SetField("callReceiver", getter);
             var propValue = _engine.Evaluate<CallReceiver>("callReceiver.Self.Self.Self", _environment);
             Assert.AreSame(getter, propValue);
         }
@@ -93,7 +93,7 @@ namespace LuBox.Test
         public void ChainMethods()
         {
             var getter = new CallReceiver();
-            _environment.Set("callReceiver", getter);
+            _environment.SetField("callReceiver", getter);
             var propValue = _engine.Evaluate<CallReceiver>("callReceiver:GetSelf():GetSelf():GetSelf()", _environment);
             Assert.AreSame(getter, propValue);
             Assert.AreEqual(3, getter.Counter);
@@ -103,7 +103,7 @@ namespace LuBox.Test
         public void ChainMethodAndProperties()
         {
             var getter = new CallReceiver();
-            _environment.Set("callReceiver", getter);
+            _environment.SetField("callReceiver", getter);
             var propValue = _engine.Evaluate<String>("callReceiver:GetSelf().Property:ToUpper()", _environment);
             Assert.AreEqual(getter.Property.ToUpper(), propValue);
         }

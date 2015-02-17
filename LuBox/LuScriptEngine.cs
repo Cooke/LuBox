@@ -13,10 +13,10 @@ namespace LuBox
 
         public T Evaluate<T>(string expression)
         {
-            return Evaluate<T>(expression, new LuEnvironment());
+            return Evaluate<T>(expression, new LuTable());
         }
 
-        public T Evaluate<T>(string expression, LuEnvironment environment)
+        public T Evaluate<T>(string expression, LuTable environment)
         {
             var lexer = new NuLexer(new AntlrInputStream(expression));
             var parser = new NuParser(new CommonTokenStream(lexer));
@@ -32,20 +32,20 @@ namespace LuBox
 
         public object Evaluate(string expression)
         {
-            return Evaluate(expression, new LuEnvironment());
+            return Evaluate(expression, new LuTable());
         }
 
-        public object Evaluate(string expression, LuEnvironment environment)
+        public object Evaluate(string expression, LuTable environment)
         {
             return Evaluate<object>(expression, environment);
         }
 
-        public void Execute(string code, LuEnvironment environment)
+        public void Execute(string code, LuTable environment)
         {
             Compile(code)(environment);
         }
 
-        public Action<LuEnvironment> Compile(string code)
+        public Action<LuTable> Compile(string code)
         {
             var lexer = new NuLexer(new AntlrInputStream(code));
             var parser = new NuParser(new CommonTokenStream(lexer));

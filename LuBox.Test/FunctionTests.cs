@@ -6,13 +6,13 @@ namespace LuBox.Test
     public class FunctionTests
     {
         private LuScriptEngine _luScriptEngine;
-        private LuEnvironment _environment;
+        private LuTable _environment;
 
         [TestInitialize]
         public void Initialize()
         {
             _luScriptEngine = new LuScriptEngine();
-            _environment = new LuEnvironment();
+            _environment = new LuTable();
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@ end
 func()
 ", _environment);
 
-            Assert.AreEqual(33, _environment.Variables.@out);
+            Assert.AreEqual(33, _environment.Dynamic.@out);
         }
 
         [TestMethod]
@@ -50,7 +50,7 @@ end
 func()
 ", _environment);
 
-            Assert.IsFalse(_environment.Dictionary.ContainsKey("out"));
+            Assert.IsFalse(_environment.HasField("out"));
         }
 
         [TestMethod]
@@ -66,7 +66,7 @@ func()
 glob = out
 ", _environment);
 
-            Assert.AreNotEqual(33, _environment.Variables.glob);
+            Assert.AreNotEqual(33, _environment.Dynamic.glob);
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ end
 add(3, 4)
 ", _environment);
 
-            Assert.AreEqual(7, _environment.Variables.@out);
+            Assert.AreEqual(7, _environment.Dynamic.@out);
         }
 
         [TestMethod]
@@ -94,7 +94,7 @@ end
 out = add(3, 9)
 ", _environment);
 
-            Assert.AreEqual(12, _environment.Variables.@out);
+            Assert.AreEqual(12, _environment.Dynamic.@out);
         }
     }
 }

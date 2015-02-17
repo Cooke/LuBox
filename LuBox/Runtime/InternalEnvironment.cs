@@ -7,21 +7,21 @@ namespace LuBox.Runtime
 {
     internal class InternalEnvironment
     {
-        private readonly LuEnvironment _env;
+        private readonly LuTable _env;
 
-        public InternalEnvironment(LuEnvironment env)
+        public InternalEnvironment(LuTable env)
         {
             _env = env;
         }
 
         public object Get(string key)
         {
-            return _env.Get(key);
+            return _env.GetField(key);
         }
 
         public object Set(string key, object value)
         {
-            _env.Set(key, value);
+            _env.SetField(key, value);
             return value;
         }
     }

@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LuEnvironment.cs" />
+    <Compile Include="LuTable.cs" />
     <Compile Include="LuSandboxException.cs" />
     <Compile Include="Runtime\LuBoolConvertBinder.cs" />
     <Compile Include="Runtime\LuConvertBinder.cs" />

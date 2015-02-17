@@ -6,13 +6,13 @@ namespace LuBox.Test
     public class LocalVariableTests
     {
         private LuScriptEngine _luScriptEngine;
-        private LuEnvironment _environment;
+        private LuTable _environment;
 
         [TestInitialize]
         public void Initialize()
         {
             _luScriptEngine = new LuScriptEngine();
-            _environment = new LuEnvironment();
+            _environment = new LuTable();
         }
 
         [TestMethod]
@@ -22,8 +22,8 @@ namespace LuBox.Test
 local result= 3 * 4
 global = result * 2
 ", _environment);
-            Assert.IsFalse(_environment.Dictionary.ContainsKey("result"));
-            Assert.AreEqual(24, _environment.Variables.global);
+            Assert.IsFalse(_environment.HasField("result"));
+            Assert.AreEqual(24, _environment.Dynamic.global);
         }
     }
 }

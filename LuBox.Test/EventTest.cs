@@ -9,20 +9,20 @@ namespace LuBox.Test
     public class EventTests
     {
         private LuScriptEngine _luScriptEngine;
-        private LuEnvironment _environment;
+        private LuTable _environment;
 
         [TestInitialize]
         public void Initialize()
         {
             _luScriptEngine = new LuScriptEngine();
-            _environment = new LuEnvironment();
+            _environment = new LuTable();
         }
 
         [TestMethod]
         public void HandleEvent()
         {
             var test = new Test();
-            _environment.Variables.test = test;
+            _environment.Dynamic.test = test;
 
             _luScriptEngine.Execute(@"
 function HandleEvent(args) 
@@ -32,16 +32,16 @@ end
 test.Event:Add(HandleEvent)
 ", _environment);
 
-            Assert.IsFalse(_environment.Dictionary.ContainsKey("out"));
+            Assert.IsFalse(_environment.HasField("out"));
             test.OnEvent();
-            Assert.AreEqual(33, _environment.Variables.@out);
+            Assert.AreEqual(33, _environment.Dynamic.@out);
         }
 
         [TestMethod]
         public void HandleEventDifferentReturnType()
         {
             var test = new Test();
-            _environment.Variables.test = test;
+            _environment.Dynamic.test = test;
 
             _luScriptEngine.Execute(@"
 function HandleEvent(args) 
@@ -51,16 +51,16 @@ end
 test.Event2:Add(HandleEvent)
 ", _environment);
 
-            Assert.IsFalse(_environment.Dictionary.ContainsKey("out"));
+            Assert.IsFalse(_environment.HasField("out"));
             test.OnEvent2();
-            Assert.AreEqual(33, _environment.Variables.@out);
+            Assert.AreEqual(33, _environment.Dynamic.@out);
         }
 
         [TestMethod]
         public void HandleEventWithFewerArguments()
         {
             var test = new Test();
-            _environment.Variables.test = test;
+            _environment.Dynamic.test = test;
 
             _luScriptEngine.Execute(@"
 function HandleEvent(str) 
@@ -71,14 +71,14 @@ test.Event3:Add(HandleEvent)
 ", _environment);
 
             test.OnEvent3();
-            Assert.AreEqual("string", _environment.Variables.msg);
+            Assert.AreEqual("string", _environment.Dynamic.msg);
         }
 
         [TestMethod]
         public void HandleEventWithMoreArguments()
         {
             var test = new Test();
-            _environment.Variables.test = test;
+            _environment.Dynamic.test = test;
 
             _luScriptEngine.Execute(@"
 function HandleEvent(str, number, test, dic, anotherArg, additionalArg) 
@@ -89,14 +89,14 @@ test.Event3:Add(HandleEvent)
 ", _environment);
 
             test.OnEvent3();
-            Assert.IsNull(_environment.Variables.msg);
+            Assert.IsNull(_environment.Dynamic.msg);
         }
 
         [TestMethod]
         public void ShallRemoveEventHandler()
         {
             var test = new Test();
-            _environment.Variables.test = test;
+            _environment.Dynamic.test = test;
 
             _luScriptEngine.Execute(@"
                 function HandleEvent() 
@@ -108,7 +108,7 @@ test.Event3:Add(HandleEvent)
                 ", _environment);
 
             test.OnEvent();
-            Assert.IsFalse(_environment.Dictionary.ContainsKey("called"));
+            Assert.IsFalse(_environment.HasField("called"));
         }
 
         private class Test
