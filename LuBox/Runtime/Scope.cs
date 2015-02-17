@@ -14,42 +14,6 @@ namespace LuBox.Runtime
         ParameterExpression CreateLocal(string name, Type type);
     }
 
-    internal class GlobalScope : IScope
-    {
-        private readonly ParameterExpression _environmentParameter;
-
-        public GlobalScope(ParameterExpression environmentParameter)
-        {
-            _environmentParameter = environmentParameter;
-        }
-
-        public Expression Set(string key, Expression exp)
-        {
-            // TODO add support for _ENV
-            return Expression.Call(_environmentParameter, typeof(InternalEnvironment).GetMethod("Set"), Expression.Constant(key), Expression.Convert(exp, typeof(object)));
-        }
-
-        public Expression Get(string key)
-        {
-            // TODO add support for _ENV
-            return Expression.Call(_environmentParameter, typeof(InternalEnvironment).GetMethod("Get"), Expression.Constant(key));
-        }
-
-        public IScope Parent { get { return null; } }
-
-        public IEnumerable<ParameterExpression> Locals { get { return null; } }
-
-        public ParameterExpression CreateLocal(string name)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public ParameterExpression CreateLocal(string name, Type type)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     internal class Scope : IScope
     {
         private readonly IScope _scope;

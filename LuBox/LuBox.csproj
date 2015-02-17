@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="LuTable.cs" />
     <Compile Include="LuSandboxException.cs" />
+    <Compile Include="Runtime\EnvironmentScope.cs" />
     <Compile Include="Runtime\LuBoolConvertBinder.cs" />
     <Compile Include="Runtime\LuConvertBinder.cs" />
     <Compile Include="Runtime\LuEnumWrapper.cs" />
@@ -62,7 +63,6 @@
     <Compile Include="Runtime\LuBinaryOperationBinder.cs" />
     <Compile Include="LuScriptEngine.cs" />
     <Compile Include="Runtime\LuInvokeMemberBinder.cs" />
-    <Compile Include="Runtime\InternalEnvironment.cs" />
     <Compile Include="Compiler\Visitor.cs" />
     <Compile Include="Compiler\ParseTreeExtensions.cs" />
     <Compile Include="Runtime\RuntimeHelpers.cs" />
