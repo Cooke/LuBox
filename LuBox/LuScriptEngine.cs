@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Antlr4.Runtime;
 using LuBox.Compiler;
+using LuBox.Library;
 using LuBox.Parser;
 using LuBox.Runtime;
 
@@ -10,10 +13,33 @@ namespace LuBox
     public class LuScriptEngine
     {
         private readonly ParameterExpression _environmentParameter = Expression.Variable(typeof(LuTable));
+        private readonly LuTable _defaultEnvironment;
+
+        public LuScriptEngine()
+        {
+            _defaultEnvironment = CreateStandardEnvironment();
+        }
+
+        public LuTable DefaultEnvironment
+        {
+            get { return _defaultEnvironment; }
+        }
+
+        public LuTable CreateStandardEnvironment()
+        {
+            var standardEnvironment = LuBasicLibrary.Create();
+            standardEnvironment.SetField("math", LuMathLibrary.Create());
+            return standardEnvironment;
+        }
+
+        public LuTable CreateEmptyEnvironment()
+        {
+            return new LuTable();
+        }
 
         public T Evaluate<T>(string expression)
         {
-            return Evaluate<T>(expression, new LuTable());
+            return Evaluate<T>(expression, _defaultEnvironment);
         }
 
         public T Evaluate<T>(string expression, LuTable environment)
@@ -32,7 +58,7 @@ namespace LuBox
 
         public object Evaluate(string expression)
         {
-            return Evaluate(expression, new LuTable());
+            return Evaluate(expression, _defaultEnvironment);
         }
 
         public object Evaluate(string expression, LuTable environment)
@@ -40,9 +66,26 @@ namespace LuBox
             return Evaluate<object>(expression, environment);
         }
 
+        public void Execute(string code)
+        {
+            Compile(code)(_defaultEnvironment);
+        }
+
+
         public void Execute(string code, LuTable environment)
         {
             Compile(code)(environment);
+        }
+
+        public Action CompileBind(string code)
+        {
+            return CompileBind(code, _defaultEnvironment);
+        }
+
+        public Action CompileBind(string code, LuTable environment)
+        {
+            var action = Compile(code);
+            return () => action(environment);
         }
 
         public Action<LuTable> Compile(string code)

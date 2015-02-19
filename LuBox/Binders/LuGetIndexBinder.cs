@@ -1,3 +1,4 @@
+using System;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -21,6 +22,12 @@ namespace LuBox.Runtime
             if (indexes.Length != 1)
             {
                 throw new LuRuntimeException("Only one indexer is allowed");
+            }
+
+            // TODO add support for more types of arrays
+            if (target.LimitType != typeof(int[]))
+            {
+                throw new LuRuntimeException("Only arrays of type int[] are allowed");
             }
 
             var getMethodIfo = target.LimitType.GetMethod("GetValue", new[] {typeof (int)});

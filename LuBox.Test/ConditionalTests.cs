@@ -14,7 +14,7 @@ namespace LuBox.Test
         public void Initialize()
         {
             _luScriptEngine = new LuScriptEngine();
-            _environment = new LuTable();
+            _environment = _luScriptEngine.CreateStandardEnvironment();
         }
 
         [TestMethod]

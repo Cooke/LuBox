@@ -42,30 +42,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\LuSetIndexBinder.cs" />
+    <Compile Include="Library\LuBasicLibrary.cs" />
+    <Compile Include="Library\LuMathLibrary.cs" />
+    <Compile Include="InternalTypes\LuOverloadWrapper.cs" />
     <Compile Include="LuTable.cs" />
     <Compile Include="LuSandboxException.cs" />
-    <Compile Include="Runtime\EnvironmentScope.cs" />
-    <Compile Include="Runtime\LuBoolConvertBinder.cs" />
-    <Compile Include="Runtime\LuConvertBinder.cs" />
-    <Compile Include="Runtime\LuEnumWrapper.cs" />
-    <Compile Include="Runtime\LuEventWrapper.cs" />
-    <Compile Include="Runtime\LuEventWrapperMetaObject.cs" />
-    <Compile Include="Runtime\LuFunction.cs" />
-    <Compile Include="Runtime\LuFunctionMetaObject.cs" />
-    <Compile Include="Runtime\LuGetIndexBinder.cs" />
-    <Compile Include="Runtime\LuGetMemberBinder.cs" />
-    <Compile Include="Runtime\LuInvokeBinder.cs" />
-    <Compile Include="Runtime\LuInvokeHelper.cs" />
+    <Compile Include="Compilation\EnvironmentScope.cs" />
+    <Compile Include="Binders\LuBoolConvertBinder.cs" />
+    <Compile Include="Binders\LuConvertBinder.cs" />
+    <Compile Include="InternalTypes\LuEnumWrapper.cs" />
+    <Compile Include="InternalTypes\LuEventWrapper.cs" />
+    <Compile Include="Binders\LuEventWrapperMetaObject.cs" />
+    <Compile Include="InternalTypes\LuFunction.cs" />
+    <Compile Include="Binders\LuFunctionMetaObject.cs" />
+    <Compile Include="Binders\LuGetIndexBinder.cs" />
+    <Compile Include="Binders\LuGetMemberBinder.cs" />
+    <Compile Include="Binders\LuInvokeBinder.cs" />
+    <Compile Include="Binders\LuInvokeHelper.cs" />
     <Compile Include="LuRuntimeException.cs" />
-    <Compile Include="Runtime\LuSetMemberBinder.cs" />
-    <Compile Include="Runtime\Scope.cs" />
+    <Compile Include="Binders\LuSetMemberBinder.cs" />
+    <Compile Include="Compilation\Scope.cs" />
     <Compile Include="Utils\DynamicDictionaryWrapper.cs" />
-    <Compile Include="Runtime\LuBinaryOperationBinder.cs" />
+    <Compile Include="Binders\LuBinaryOperationBinder.cs" />
     <Compile Include="LuScriptEngine.cs" />
-    <Compile Include="Runtime\LuInvokeMemberBinder.cs" />
-    <Compile Include="Compiler\Visitor.cs" />
-    <Compile Include="Compiler\ParseTreeExtensions.cs" />
-    <Compile Include="Runtime\RuntimeHelpers.cs" />
+    <Compile Include="Binders\LuInvokeMemberBinder.cs" />
+    <Compile Include="Compilation\Visitor.cs" />
+    <Compile Include="Compilation\ParseTreeExtensions.cs" />
+    <Compile Include="Binders\RuntimeHelpers.cs" />
     <Compile Include="GeneratedParserBase\NuBaseListener.cs" />
     <Compile Include="GeneratedParserBase\NuBaseVisitor.cs" />
     <Compile Include="GeneratedParserBase\NuLexer.cs" />
@@ -78,9 +82,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Library\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

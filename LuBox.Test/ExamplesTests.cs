@@ -31,7 +31,7 @@ namespace LuBox.Test
         {
             var scriptEngine = new LuScriptEngine();
             var environment = new LuTable();
-            Foo foo = new Foo();
+            var foo = new Foo();
             environment.Dynamic.foo = foo;
             environment.Dynamic.console = Console.Out;
             scriptEngine.Execute(

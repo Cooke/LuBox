@@ -11,41 +11,29 @@ namespace LuBox.Runtime
     {
         private readonly Type _delegateType;
 
-        public LuFunctionMetaObject(Expression expression, BindingRestrictions restrictions, object instance, Type delegateType) : base(expression, restrictions, instance)
+        public LuFunctionMetaObject(Expression expression, BindingRestrictions restrictions, object instance, Type delegateType)
+            : base(expression, restrictions, instance)
         {
-            this._delegateType = delegateType;
+            _delegateType = delegateType;
         }
 
         public override DynamicMetaObject BindInvoke(InvokeBinder binder, DynamicMetaObject[] args)
         {
-            Expression delegateExpression = Expression.Convert(Expression.Property(Expression.Convert(Expression, typeof(LuFunction)), "Delegate"), _delegateType);
-            var callExpression = Expression.Dynamic(new LuInvokeBinder(new CallInfo(args.Length)), typeof (object),
-                new [] { delegateExpression }.Concat(args.Select(x => x.Expression)));
+            var delegateExpression = Expression.Convert(Expression.Property(Expression.Convert(Expression, typeof(LuFunction)), "Delegate"), _delegateType);
+            var callExpression = Expression.Dynamic(new LuInvokeBinder(new CallInfo(args.Length)), typeof(object),
+                new[] { delegateExpression }.Concat(args.Select(x => x.Expression)));
 
-            var restrictions = BindingRestrictions.GetTypeRestriction(
-                delegateExpression, _delegateType);
-            foreach (var result in args.Select(x => x.Value == null ? BindingRestrictions.GetInstanceRestriction(x.Expression, null) : BindingRestrictions.GetTypeRestriction(
-                x.Expression, x.LimitType)))
-            {
-                restrictions = restrictions.Merge(result);
-            }
-
+            var restrictions = BindingRestrictions.GetTypeRestriction(delegateExpression, _delegateType);
             return new DynamicMetaObject(callExpression, restrictions);
 
             //var funcType = Expression.GetFuncType(Enumerable.Repeat(typeof (object), args.Length + 1).ToArray());
             //Expression delegateExpression = Expression.Convert(Expression.Property(Expression.Convert(Expression, typeof(LuFunction)), "Delegate"), _delegateType);
 
-            //var signature = GetSignature(funcType, delegateExpression);
+            //var signature = GetOrCreateSignature(funcType, delegateExpression);
             //Expression invokeExpression = Expression.Invoke(signature, args.Select(x => RuntimeHelpers.EnsureObjectResult(x.Expression)));
             //var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
 
             //return new DynamicMetaObject(invokeExpression, bindingRestrictions);
-        }
-
-        public override DynamicMetaObject BindUnaryOperation(UnaryOperationBinder binder)
-        {
-            bool b = binder.Operation == ExpressionType.Convert;
-            return base.BindUnaryOperation(binder);
         }
 
         public override DynamicMetaObject BindConvert(ConvertBinder binder)
@@ -55,27 +43,27 @@ namespace LuBox.Runtime
 
             BindingRestrictions restriction = BindingRestrictions.GetTypeRestriction(Expression, typeof(LuFunction));
 
-            var signature = GetSignature(targetType, delegateExpression);
+            var signature = GetOrCreateSignature(targetType, delegateExpression);
             return new DynamicMetaObject(signature, restriction);
         }
 
-        private Expression GetSignature(Type targetType, Expression delegateExpression)
+        private Expression GetOrCreateSignature(Type targetType, Expression delegateExpression)
         {
             if (!targetType.IsAssignableFrom(_delegateType))
             {
-                var tryGetCompatibleSignatureMethodInfo = typeof (LuFunction).GetMethod("TryGetCompatibleSignature");
-                var resultSignature = Expression.Parameter(typeof (Delegate));
-                var tryGetSignature = Expression.Call(Expression.Convert(Expression, typeof (LuFunction)),
+                var tryGetCompatibleSignatureMethodInfo = typeof(LuFunction).GetMethod("TryGetCompatibleSignature");
+                var resultSignature = Expression.Parameter(typeof(Delegate));
+                var tryGetSignature = Expression.Call(Expression.Convert(Expression, typeof(LuFunction)),
                     tryGetCompatibleSignatureMethodInfo, Expression.Constant(targetType), resultSignature);
                 var lambdaExpression = CreateSignature(targetType, delegateExpression);
-                var addSignatureMethodInfo = typeof (LuFunction).GetMethod("AddSignature");
+                var addSignatureMethodInfo = typeof(LuFunction).GetMethod("AddSignature");
                 var addSignatureExpression =
                     Expression.Convert(
-                        Expression.Call(Expression.Convert(Expression, typeof (LuFunction)), addSignatureMethodInfo,
+                        Expression.Call(Expression.Convert(Expression, typeof(LuFunction)), addSignatureMethodInfo,
                             lambdaExpression), targetType);
                 var getOrAddExpression = Expression.Condition(tryGetSignature, Expression.Convert(resultSignature, targetType),
                     addSignatureExpression);
-                var blockExpression = Expression.Block(new[] {resultSignature}, getOrAddExpression);
+                var blockExpression = Expression.Block(new[] { resultSignature }, getOrAddExpression);
                 return blockExpression;
             }
             else

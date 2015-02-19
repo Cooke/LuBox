@@ -1,33 +1,35 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using LuBox.Compiler;
 using LuBox.Runtime;
 
 namespace LuBox
 {
-    public class LuTable
+    public class LuTable : IDynamicMetaObjectProvider
     {
         public static MethodInfo SetMethodInfo = typeof(LuTable).GetMethod("SetField");
         public static MethodInfo GetMethodInfo = typeof(LuTable).GetMethod("GetField");
 
-        private readonly IDictionary<object, object> _fields = new Dictionary<object, object>();
+        private readonly IDictionary<object, object> _fields;
         private readonly DynamicDictionaryWrapper _dynamic;
 
-        public LuTable()
+        public LuTable() : this(Enumerable.Empty<KeyValuePair<object, object>>())
         {
-            _fields["iter"] = new Func<IEnumerable, Func<object>>(x =>
-            {
-                var enumerator = x.GetEnumerator();
-                return (() => enumerator.MoveNext() ? enumerator.Current : null);
-            });
+        }
+
+        public LuTable(IEnumerable<KeyValuePair<object, object>> initials)
+        {
+            _fields = initials.ToDictionary(x => x.Key, x => x.Value);
             _dynamic = new DynamicDictionaryWrapper(_fields);
         }
 
         public dynamic Dynamic
         {
-            get { return _dynamic; }
+            get { return this; }
         }
 
         public bool HasField(object key)
@@ -35,9 +37,10 @@ namespace LuBox
             return _fields.ContainsKey(key);
         }
 
-        public void SetField(object key, object value)
+        public object SetField(object key, object value)
         {
             _fields[key] = value;
+            return value;
         }
 
         public object GetField(object key)
@@ -53,6 +56,46 @@ namespace LuBox
             }
             
             SetField(type.Name, new LuEnumWrapper(type));
+        }
+
+        public DynamicMetaObject GetMetaObject(Expression parameter)
+        {
+            return new LuTableDynamicMetaObject(parameter, BindingRestrictions.Empty, this);
+        }
+
+        private class LuTableDynamicMetaObject : DynamicMetaObject
+        {
+            public LuTableDynamicMetaObject(Expression expression, BindingRestrictions restrictions, object value) : base(expression, restrictions, value)
+            {
+            }
+
+            public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
+            {
+                var getExpression = Expression.Call(Expression.Convert(Expression, LimitType), GetMethodInfo, Expression.Constant(binder.Name));
+                var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+                return new DynamicMetaObject(getExpression, bindingRestrictions);
+            }
+
+            public override DynamicMetaObject BindSetMember(SetMemberBinder binder, DynamicMetaObject value)
+            {
+                var getExpression = Expression.Call(Expression.Convert(Expression, LimitType), SetMethodInfo, Expression.Constant(binder.Name), Expression.Convert(value.Expression, typeof(object)));
+                var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+                return new DynamicMetaObject(getExpression, bindingRestrictions);
+            }
+
+            public override DynamicMetaObject BindGetIndex(GetIndexBinder binder, DynamicMetaObject[] indexes)
+            {
+                var getExpression = Expression.Call(Expression.Convert(Expression, LimitType), GetMethodInfo, indexes[0].Expression);
+                var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+                return new DynamicMetaObject(getExpression, bindingRestrictions);
+            }
+
+            public override DynamicMetaObject BindSetIndex(SetIndexBinder binder, DynamicMetaObject[] indexes, DynamicMetaObject value)
+            {
+                var getExpression = Expression.Call(Expression.Convert(Expression, LimitType), SetMethodInfo, indexes[0].Expression, Expression.Convert(value.Expression, typeof(object)));
+                var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+                return new DynamicMetaObject(getExpression, bindingRestrictions);
+            }
         }
     }
 }

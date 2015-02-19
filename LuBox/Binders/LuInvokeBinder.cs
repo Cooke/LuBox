@@ -22,9 +22,8 @@ namespace LuBox.Runtime
             Sandboxer.ThrowIfReflectionType(target.LimitType);
 
             var methodInfo = target.LimitType.GetMethod("Invoke");
-
-            var restrictions = LuInvokeHelper.GetRestrictions(target, args);
-            var callArguments = LuInvokeHelper.GetCallArguments(args, methodInfo);
+            var callArguments = LuInvokeHelper.TransformArguments(args, methodInfo);
+            var restrictions = LuInvokeHelper.GetTypeRestrictions(target, args);
 
             return
                 new DynamicMetaObject(

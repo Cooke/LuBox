@@ -84,29 +84,37 @@ namespace LuBox.Compiler
             return leftExp;
         }
 
+        public Expression VisitVarSuffix(NuParser.VarSuffixContext suffix, Expression left)
+        {
+            left = ProcessNameAndArgs(suffix.nameAndArgs(), left);
+
+            if (suffix.NAME() != null)
+            {
+                left =
+                    Expression.Dynamic(new LuGetMemberBinder(suffix.NAME().GetText()),
+                        typeof(object), left);
+            }
+            else if (suffix.exp() != null)
+            {
+                left =
+                    Expression.Dynamic(new LuGetIndexBinder(new CallInfo(1)),
+                        typeof(object), left, VisitExp(suffix.exp()));
+            }
+            else
+            {
+                throw new ParseCanceledException();
+            }
+
+            return left;
+        }
+
         public override Expression VisitVar(NuParser.VarContext context)
         {            
             Expression left = _scope.Get(context.NAME().GetText());
             foreach (var suffix in context.varSuffix())
             {
                 left = ProcessNameAndArgs(suffix.nameAndArgs(), left);
-
-                if (suffix.NAME() != null)
-                {
-                    left =
-                        Expression.Dynamic(new LuGetMemberBinder(suffix.NAME().GetText()),
-                            typeof (object), left);
-                }
-                else if (suffix.exp() != null)
-                {
-                    left =
-                        Expression.Dynamic(new LuGetIndexBinder(new CallInfo(1)),
-                            typeof(object), left, VisitExp(suffix.exp()));
-                }
-                else
-                {
-                    throw new ParseCanceledException();
-                }
+                left = VisitVarSuffix(suffix, left);
             }
 
             return left;
@@ -458,15 +466,25 @@ namespace LuBox.Compiler
                 for (int i = 0; i < context.varSuffix().Count - 1; i++)
                 {
                     var suffix = context.varSuffix(i);
-
                     left = ProcessNameAndArgs(suffix.nameAndArgs(), left);
-                    left = Expression.Dynamic(new LuGetMemberBinder(suffix.NAME().GetText()), typeof (object),
-                        left);
+                    left = VisitVarSuffix(suffix, left);
                 }
 
                 var lastSuffix = context.varSuffix(context.varSuffix().Count - 1);
-                return Expression.Dynamic(new LuSetMemberBinder(lastSuffix.NAME().GetText()), typeof (object),
-                    left, expExpression);
+                if (lastSuffix.NAME() != null)
+                {
+                    return Expression.Dynamic(new LuSetMemberBinder(lastSuffix.NAME().GetText()), typeof (object),
+                        left, expExpression);
+                }
+                else if (lastSuffix.exp() != null)
+                {
+                    return Expression.Dynamic(new LuSetIndexBinder(new CallInfo(1)), typeof(object),
+                        left, VisitExp(lastSuffix.exp()), expExpression);
+                }
+                else
+                {
+                    throw new ParseCanceledException();
+                }
             }
             else
             {
