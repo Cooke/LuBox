@@ -33,20 +33,12 @@ namespace LuBox.Runtime
 
             Type[] argTypes = args.Select(x => x.LimitType).ToArray();
 
-            var orderSignatureMatches = signatures.OrderByDescending(x => AreArgumentTypesEqual(argTypes, x))
-                .ThenByDescending(x => (AreArgumentTypesAssignable(argTypes, x)))
+            var orderSignatureMatches = signatures
+                .OrderByDescending(x => (AreArgumentTypesAssignable(argTypes, x)))
                 .ThenBy(x => Math.Abs(x.GetParameters().Length - argTypes.Length))
                 .ThenBy(x => x.GetParameters().Length).ToArray();
 
             return orderSignatureMatches;
-        }
-
-        private static bool AreArgumentTypesEqual(Type[] argTypes, MethodInfo methodInfo)
-        {
-            var paramTypes = methodInfo.GetParameters().Select(x => x.ParameterType).ToArray();
-            return
-                paramTypes.Where((pType, pIndex) => pIndex >= argTypes.Length || pType == argTypes[pIndex]).Count() ==
-                paramTypes.Length;
         }
 
         public static bool AreArgumentTypesAssignable(Type[] argTypes, MethodInfo methodInfo)
@@ -100,39 +92,38 @@ namespace LuBox.Runtime
 
         public static IEnumerable<Expression> TransformArguments(DynamicMetaObject[] args, MethodInfo methodInfo)
         {
-            IEnumerable<Expression> callArguments = args.Select(x => x.Expression);
-
+            var callArguments = args.Select(x => x.Expression).ToArray();
             var parameterInfos = methodInfo.GetParameters();
-            ParameterInfo paramsParameterInfo =
-                parameterInfos.FirstOrDefault(x => x.GetCustomAttribute<ParamArrayAttribute>() != null);
-            if (paramsParameterInfo != null)
+
+            var newArguments = new List<Expression>();
+            for (int index = 0; index < parameterInfos.Length; index++)
             {
-                var paramsIndex = Array.IndexOf(parameterInfos, paramsParameterInfo);
-                Type elementType = paramsParameterInfo.ParameterType.GetElementType();
-                callArguments =
-                    args.Select(x => x.Expression)
-                        .Take(paramsIndex)
-                        .Concat(new Expression[]
-                                    {
-                                        Expression.NewArrayInit(elementType,
-                                            args.Select(x => Expression.Convert(x.Expression, elementType)).Skip(paramsIndex))
-                                    });
+                var parameterInfo = parameterInfos[index];
+                bool isParamsParameter = parameterInfo.GetCustomAttribute<ParamArrayAttribute>() != null;
+
+                if (isParamsParameter)
+                {
+                    var elementType = parameterInfo.ParameterType.GetElementType();
+
+                    if (index < callArguments.Length)
+                    {
+                        var paramsArgumentExpression = Expression.NewArrayInit(elementType,
+                            args.Select(x => Expression.Convert(x.Expression, elementType)).Skip(index));
+                        newArguments.Add(paramsArgumentExpression);
+                    }
+                    else
+                    {
+                        newArguments.Add(Expression.NewArrayInit(elementType));
+                    }
+                }
+                else if (index < callArguments.Length)
+                {
+                    var arg = callArguments[index];
+                    newArguments.Add(Expression.Convert(arg, parameterInfo.ParameterType));
+                }
             }
 
-            if (parameterInfos.Length > args.Length)
-            {
-                callArguments =
-                    callArguments.Concat(Enumerable.Repeat(Expression.Constant(null, typeof (object)),
-                        parameterInfos.Length - args.Length));
-            }
-            else
-            {
-                callArguments = callArguments.Take(parameterInfos.Length);
-            }
-
-            callArguments = callArguments.Select((x, i) => Expression.Convert(x, parameterInfos[i].ParameterType));
-
-            return callArguments;
+            return newArguments;
         }
     }
 }

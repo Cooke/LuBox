@@ -23,6 +23,11 @@ namespace LuBox.Runtime
                 return Defer(target);
             }
 
+            if (target.Value == null)
+            {
+                throw new LuRuntimeException("Target null reference error while getting member with name " + Name);
+            }
+
             const BindingFlags flags = BindingFlags.IgnoreCase | BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public;
             var members = target.LimitType.GetMember(Name, flags);
             if (members.Length != 1)

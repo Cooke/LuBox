@@ -56,6 +56,7 @@
     <Compile Include="LuTableTests.cs" />
     <Compile Include="MathLibraryTests.cs" />
     <Compile Include="LoopTests.cs" />
+    <Compile Include="MethodOverloadTests.cs" />
     <Compile Include="UnaryOperatorTests.cs" />
     <Compile Include="ArithmeticTests.cs" />
     <Compile Include="ConditionalTests.cs" />

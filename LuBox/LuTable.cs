@@ -96,6 +96,14 @@ namespace LuBox
                 var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
                 return new DynamicMetaObject(getExpression, bindingRestrictions);
             }
+
+            public override DynamicMetaObject BindInvokeMember(InvokeMemberBinder binder, DynamicMetaObject[] args)
+            {
+                var memberExpression = Expression.Call(Expression.Convert(Expression, LimitType), GetMethodInfo, Expression.Constant(binder.Name));
+                var invokeExpression = Expression.Dynamic(new LuInvokeBinder(new CallInfo(args.Length)), typeof(object), new[] { memberExpression }.Concat(args.Select(x => x.Expression)));
+                var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
+                return new DynamicMetaObject(invokeExpression, bindingRestrictions);
+            }
         }
     }
 }
