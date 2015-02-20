@@ -8,15 +8,31 @@ LuBox is a Lua inspired scripting language for embedding in .NET applications.
 3. Based on the Dynamic Language Runtime (DLR).
 
 ### Examples ###
-**Introduction**
+**Call CLR Objects**
 ```csharp
 var scriptEngine = new LuScriptEngine();
-scriptEngine.Globals.hello = "Hello";
-scriptEngine.Execute("hello = hello:ToUpper()");
-Console.WriteLine(scriptEngine.Globals.hello); // Output: HELLO
+dynamic environment = scriptEngine.CreateStandardEnvironment();
+
+environment.myVariable = "Hello";
+scriptEngine.Execute("myVariable = myVariable:ToUpper()", environment);
+
+Console.WriteLine(environment.myVariable);  // Output: HELLO
 ```
 
-**Events**
+**Call LuBox Function**
+```csharp
+var scriptEngine = new LuScriptEngine();
+dynamic environment = scriptEngine.CreateStandardEnvironment();
+
+scriptEngine.Execute(@"
+    function Add(left, right)
+        return left + right
+    end", environment);
+
+Console.WriteLine(environment.Add(1, 2));  // Output: 3
+```
+
+**Handle CLR Events**
 ```csharp
 public class Foo
 {
@@ -30,14 +46,34 @@ public class Foo
 ```
 ```csharp
 var scriptEngine = new LuScriptEngine();
-Foo foo = new Foo();
-scriptEngine.Globals.foo = foo;
-scriptEngine.Globals.console = Console.Out;
-scriptEngine.Execute(
-  @"
-  function handleBar(text)
-      console:WriteLine(text)
-  end
-  foo.BarFired:Add(handleBar)");
-foo.FireBar(); // Output: HELLO
+dynamic environment = scriptEngine.CreateStandardEnvironment();
+
+var foo = new Foo();
+environment.foo = foo;
+environment.console = Console.Out;
+
+scriptEngine.Execute(@"
+    function handleBar(text)
+        console:WriteLine(text)
+    end
+
+    foo.BarFired:Add(handleBar)", environment);
+
+ foo.FireBar(); // Output: BAR!
+```
+
+**Iterate CLR Enumerable**
+```csharp
+var scriptEngine = new LuScriptEngine();
+dynamic environment = scriptEngine.CreateStandardEnvironment();
+
+environment.list = new List<int> { 1, 2, 3, 4, 5 };
+scriptEngine.Execute(@"
+    sum = 0
+    for i in iter(list) do
+        sum = sum + i
+    end
+    ", environment);
+
+Console.WriteLine(environment.sum); // 15
 ```
