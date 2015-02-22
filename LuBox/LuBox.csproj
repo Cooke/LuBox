@@ -43,9 +43,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\LuSetIndexBinder.cs" />
+    <Compile Include="InternalTypes\LuMethodWrapper.cs" />
     <Compile Include="Library\LuBasicLibrary.cs" />
     <Compile Include="Library\LuMathLibrary.cs" />
-    <Compile Include="InternalTypes\LuOverloadWrapper.cs" />
+    <Compile Include="InternalTypes\LuDelegateWrapper.cs" />
     <Compile Include="LuTable.cs" />
     <Compile Include="LuSandboxException.cs" />
     <Compile Include="Compilation\EnvironmentScope.cs" />

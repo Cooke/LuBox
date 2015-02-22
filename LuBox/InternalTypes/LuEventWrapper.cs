@@ -1,3 +1,5 @@
+using LuBox.InternalTypes;
+
 namespace LuBox.Runtime
 {
     using System.Dynamic;

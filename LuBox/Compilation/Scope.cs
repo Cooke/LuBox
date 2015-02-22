@@ -39,7 +39,7 @@ namespace LuBox.Runtime
         {
             if (_localsByName.ContainsKey(key))
             {
-                return Expression.Assign(_localsByName[key], exp);
+                return Expression.Assign(_localsByName[key], Expression.Convert(exp, typeof(object)));
             }
 
             return _scope.Set(key, exp);

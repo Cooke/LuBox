@@ -9,6 +9,17 @@ namespace LuBox.Runtime
 
     internal class LuInvokeHelper
     {
+        public static BindingRestrictions CombineRestrictions(params BindingRestrictions[] restrictions)
+        {
+            var resultRestriction = BindingRestrictions.Empty;
+            foreach (var restriction in restrictions)
+            {
+                resultRestriction = resultRestriction.Merge(restriction);
+            }
+
+            return resultRestriction;
+        }
+
         public static BindingRestrictions GetTypeRestrictions(DynamicMetaObject target, DynamicMetaObject[] args)
         {
             var targetRestriction = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType);

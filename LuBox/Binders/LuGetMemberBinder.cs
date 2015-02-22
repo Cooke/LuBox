@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -30,24 +31,39 @@ namespace LuBox.Runtime
 
             const BindingFlags flags = BindingFlags.IgnoreCase | BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public;
             var members = target.LimitType.GetMember(Name, flags);
-            if (members.Length != 1)
-            {
-                throw new LuRuntimeException("Failed to find exactly one member with name " + Name);
-            }
-            
-            var member = members[0];
-            Sandboxer.ThrowIfReflectionMember(member);
 
-            if (member.MemberType == MemberTypes.Event)
+            if (members.Length == 0)
             {
-                return new DynamicMetaObject(
-                    Expression.New(typeof(LuEventWrapper).GetConstructor(new[] { typeof(EventInfo), typeof(object) }), Expression.Constant(member), target.Expression),
-                    BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+                throw new LuRuntimeException("There is no member with name " + Name);
             }
 
-            return new DynamicMetaObject(
-                RuntimeHelpers.EnsureObjectResult(Expression.MakeMemberAccess(Expression.Convert(target.Expression, member.DeclaringType), member)),
-                BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+            var firstMember = members.First();
+            var memberType = firstMember.MemberType;
+
+            Sandboxer.ThrowIfReflectionMember(firstMember);
+
+            switch (memberType)
+            {
+                case MemberTypes.Method:
+                    return new DynamicMetaObject(
+                        Expression.New(
+                            typeof (LuMethodWrapper).GetConstructor(new[] {typeof (MethodInfo[]), typeof (object)}),
+                            Expression.Constant(members.Cast<MethodInfo>().ToArray()), target.Expression),
+                        BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+                    break;
+                case MemberTypes.Event:
+                    return new DynamicMetaObject(
+                        Expression.New(typeof(LuEventWrapper).GetConstructor(new[] { typeof(EventInfo), typeof(object) }), Expression.Constant(firstMember), target.Expression),
+                        BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+                case MemberTypes.Field:
+                case MemberTypes.Property:
+                    return new DynamicMetaObject(
+                        RuntimeHelpers.EnsureObjectResult(
+                            Expression.MakeMemberAccess(Expression.Convert(target.Expression, firstMember.DeclaringType), firstMember)),
+                        BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+                default:
+                    throw new LuRuntimeException("Unsupported member type " + memberType);
+            }
         }
     }
 }

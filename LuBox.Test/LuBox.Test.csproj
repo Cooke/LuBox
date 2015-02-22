@@ -53,6 +53,8 @@
   <ItemGroup>
     <Compile Include="BinaryOperatorTests.cs" />
     <Compile Include="EnumTest.cs" />
+    <Compile Include="ClosureTests.cs" />
+    <Compile Include="LocalTests.cs" />
     <Compile Include="LuTableTests.cs" />
     <Compile Include="MathLibraryTests.cs" />
     <Compile Include="LoopTests.cs" />
@@ -67,7 +69,7 @@
     <Compile Include="FunctionTests.cs" />
     <Compile Include="LocalVariableTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MethodAndPropertiesTests.cs" />
+    <Compile Include="AccessClrMethodAndPropertyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LuBox\LuBox.csproj">
