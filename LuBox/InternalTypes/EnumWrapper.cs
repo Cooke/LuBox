@@ -6,11 +6,11 @@ using System.Linq.Expressions;
 
 namespace LuBox.Runtime
 {
-    public class LuEnumWrapper : IDynamicMetaObjectProvider
+    public class EnumWrapper : IDynamicMetaObjectProvider
     {
         private readonly Dictionary<string, object> _mapping;
 
-        public LuEnumWrapper(Type en)
+        public EnumWrapper(Type en)
         {
             var names = Enum.GetNames(en);
             var values = Enum.GetValues(en);
@@ -35,10 +35,10 @@ namespace LuBox.Runtime
 
             public override DynamicMetaObject BindGetMember(GetMemberBinder binder)
             {
-                var callExpression = Expression.Call(Expression.Convert(Expression, typeof (LuEnumWrapper)),
-                    typeof (LuEnumWrapper).GetMethod("GetValue"),
+                var callExpression = Expression.Call(Expression.Convert(Expression, typeof (EnumWrapper)),
+                    typeof (EnumWrapper).GetMethod("GetValue"),
                     Expression.Constant(binder.Name));
-                return new DynamicMetaObject(callExpression, BindingRestrictions.GetTypeRestriction(Expression, typeof(LuEnumWrapper)));
+                return new DynamicMetaObject(callExpression, BindingRestrictions.GetTypeRestriction(Expression, typeof(EnumWrapper)));
             }
         }
     }

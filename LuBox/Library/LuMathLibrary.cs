@@ -12,7 +12,7 @@ namespace LuBox.Library
             var dictionary = new Dictionary<object, object>
             {
                 {
-                    "random", new LuDelegateWrapper(new Delegate[]
+                    "random", new DelegateWrapper(new Delegate[]
                     {
                         new Func<double>(random.NextDouble),
                         new Func<int, int>(random.Next),

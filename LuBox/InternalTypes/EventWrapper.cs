@@ -6,12 +6,12 @@ namespace LuBox.Runtime
     using System.Linq.Expressions;
     using System.Reflection;
 
-    internal class LuEventWrapper : IDynamicMetaObjectProvider
+    internal class EventWrapper : IDynamicMetaObjectProvider
     {
         private readonly EventInfo _eventInfo;
         private readonly object _instance;
 
-        public LuEventWrapper(EventInfo eventInfo, object instance)
+        public EventWrapper(EventInfo eventInfo, object instance)
         {
             _eventInfo = eventInfo;
             _instance = instance;

@@ -6,12 +6,12 @@ using System.Reflection;
 
 namespace LuBox.Runtime
 {
-    internal class LuMethodWrapper : IDynamicMetaObjectProvider
+    internal class MethodWrapper : IDynamicMetaObjectProvider
     {
         private readonly MethodInfo[] _methodInfos;
         private readonly object _target;
 
-        public LuMethodWrapper(MethodInfo[] methodInfos, object target)
+        public MethodWrapper(MethodInfo[] methodInfos, object target)
         {
             _methodInfos = methodInfos;
             _target = target;
@@ -43,20 +43,20 @@ namespace LuBox.Runtime
 
             public override DynamicMetaObject BindInvoke(InvokeBinder binder, DynamicMetaObject[] args)
             {
-                var orderedSignatures = LuInvokeHelper.OrderSignatureMatches(args, _methodInfos);
+                var orderedSignatures = SignatureHelper.OrderSignatureMatches(args, _methodInfos);
                 var methodInfo = orderedSignatures.First();
 
-                var callArguments = LuInvokeHelper.TransformArguments(args, methodInfo);
-                var targetExpression = Expression.Property(Expression.Convert(Expression, typeof (LuMethodWrapper)), "Target");
+                var callArguments = SignatureHelper.TransformArguments(args, methodInfo);
+                var targetExpression = Expression.Property(Expression.Convert(Expression, typeof (MethodWrapper)), "Target");
 
                 var argRestrictrions = args.Select(x => BindingRestrictions.GetTypeRestriction(x.Expression, x.LimitType));
                 var targetRestriction = BindingRestrictions.GetTypeRestriction(targetExpression, _targetType);
-                var argRestriction = LuInvokeHelper.CombineRestrictions(argRestrictrions.ToArray());
-                var restriction = LuInvokeHelper.CombineRestrictions(argRestriction, targetRestriction);
+                var argRestriction = RestrictionHelper.CombineRestrictions(argRestrictrions.ToArray());
+                var restriction = RestrictionHelper.CombineRestrictions(argRestriction, targetRestriction);
 
                 return
                     new DynamicMetaObject(
-                        RuntimeHelpers.EnsureObjectResult(
+                        ResultHelper.EnsureObjectResult(
                             Expression.Call(Expression.Convert(targetExpression, _targetType), methodInfo, callArguments)),
                         restriction);
             }

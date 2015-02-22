@@ -30,7 +30,7 @@ namespace LuBox.Runtime
             //Expression delegateExpression = Expression.Convert(Expression.Property(Expression.Convert(Expression, typeof(LuFunction)), "Delegate"), _delegateType);
 
             //var signature = GetOrCreateSignature(funcType, delegateExpression);
-            //Expression invokeExpression = Expression.Invoke(signature, args.Select(x => RuntimeHelpers.EnsureObjectResult(x.Expression)));
+            //Expression invokeExpression = Expression.Invoke(signature, args.Select(x => ResultHelper.EnsureObjectResult(x.Expression)));
             //var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
 
             //return new DynamicMetaObject(invokeExpression, bindingRestrictions);

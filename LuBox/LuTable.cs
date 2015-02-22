@@ -55,7 +55,7 @@ namespace LuBox
                 throw new ArgumentException("The specified type is not allowed");
             }
             
-            SetField(type.Name, new LuEnumWrapper(type));
+            SetField(type.Name, new EnumWrapper(type));
         }
 
         public DynamicMetaObject GetMetaObject(Expression parameter)

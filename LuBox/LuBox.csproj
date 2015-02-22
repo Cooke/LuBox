@@ -43,24 +43,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\LuSetIndexBinder.cs" />
-    <Compile Include="InternalTypes\LuMethodWrapper.cs" />
+    <Compile Include="Binders\RestrictionHelper.cs" />
+    <Compile Include="InternalTypes\MethodWrapper.cs" />
     <Compile Include="Library\LuBasicLibrary.cs" />
     <Compile Include="Library\LuMathLibrary.cs" />
-    <Compile Include="InternalTypes\LuDelegateWrapper.cs" />
+    <Compile Include="InternalTypes\DelegateWrapper.cs" />
     <Compile Include="LuTable.cs" />
     <Compile Include="LuSandboxException.cs" />
     <Compile Include="Compilation\EnvironmentScope.cs" />
     <Compile Include="Binders\LuBoolConvertBinder.cs" />
     <Compile Include="Binders\LuConvertBinder.cs" />
-    <Compile Include="InternalTypes\LuEnumWrapper.cs" />
-    <Compile Include="InternalTypes\LuEventWrapper.cs" />
+    <Compile Include="InternalTypes\EnumWrapper.cs" />
+    <Compile Include="InternalTypes\EventWrapper.cs" />
     <Compile Include="Binders\LuEventWrapperMetaObject.cs" />
     <Compile Include="InternalTypes\LuFunction.cs" />
     <Compile Include="Binders\LuFunctionMetaObject.cs" />
     <Compile Include="Binders\LuGetIndexBinder.cs" />
     <Compile Include="Binders\LuGetMemberBinder.cs" />
     <Compile Include="Binders\LuInvokeBinder.cs" />
-    <Compile Include="Binders\LuInvokeHelper.cs" />
+    <Compile Include="Binders\SignatureHelper.cs" />
     <Compile Include="LuRuntimeException.cs" />
     <Compile Include="Binders\LuSetMemberBinder.cs" />
     <Compile Include="Compilation\Scope.cs" />
@@ -70,7 +71,7 @@
     <Compile Include="Binders\LuInvokeMemberBinder.cs" />
     <Compile Include="Compilation\Visitor.cs" />
     <Compile Include="Compilation\ParseTreeExtensions.cs" />
-    <Compile Include="Binders\RuntimeHelpers.cs" />
+    <Compile Include="Binders\ResultHelper.cs" />
     <Compile Include="GeneratedParserBase\NuBaseListener.cs" />
     <Compile Include="GeneratedParserBase\NuBaseVisitor.cs" />
     <Compile Include="GeneratedParserBase\NuLexer.cs" />

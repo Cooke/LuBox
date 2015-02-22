@@ -24,15 +24,15 @@ namespace LuBox.Runtime
 
             Sandboxer.ThrowIfReflectionType(target.LimitType);
 
-            var restrictions = LuInvokeHelper.GetTypeRestrictions(target, args);
+            var restrictions = RestrictionHelper.GetTypeRestrictions(target, args);
             var memberInfo = GetMemberInfo(target, args);
-            var callArguments = LuInvokeHelper.TransformArguments(args, memberInfo);
+            var callArguments = SignatureHelper.TransformArguments(args, memberInfo);
 
             Sandboxer.ThrowIfReflectionMember(memberInfo);
 
             return
                 new DynamicMetaObject(
-                    RuntimeHelpers.EnsureObjectResult(
+                    ResultHelper.EnsureObjectResult(
                         Expression.Call(Expression.Convert(target.Expression, target.LimitType), memberInfo,
                             callArguments)),
                     restrictions);
@@ -41,10 +41,10 @@ namespace LuBox.Runtime
         private MethodInfo GetMemberInfo(DynamicMetaObject target, DynamicMetaObject[] args)
         {
             MethodInfo[] methods = target.LimitType.GetMember(Name, MemberTypes.Method, BindingFlags.Instance | BindingFlags.Public).Cast<MethodInfo>().ToArray();
-            MethodInfo methodInfo = LuInvokeHelper.OrderSignatureMatches(args, methods).FirstOrDefault();
+            MethodInfo methodInfo = SignatureHelper.OrderSignatureMatches(args, methods).FirstOrDefault();
 
             if (methodInfo == null ||
-                !LuInvokeHelper.AreArgumentTypesAssignable(args.Select(x => x.LimitType).ToArray(), methodInfo))
+                !SignatureHelper.AreArgumentTypesAssignable(args.Select(x => x.LimitType).ToArray(), methodInfo))
             {
                 throw new LuRuntimeException("Could not find a matching member signature with name " + Name);
             }

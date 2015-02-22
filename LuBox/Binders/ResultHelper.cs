@@ -2,7 +2,7 @@ using System.Linq.Expressions;
 
 namespace LuBox.Runtime
 {
-    internal class RuntimeHelpers
+    internal class ResultHelper
     {
         public static Expression EnsureObjectResult(Expression expr)
         {

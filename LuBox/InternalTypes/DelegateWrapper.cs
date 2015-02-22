@@ -8,12 +8,12 @@ using LuBox.Runtime;
 
 namespace LuBox.InternalTypes
 {
-    internal class LuDelegateWrapper : IDynamicMetaObjectProvider
+    internal class DelegateWrapper : IDynamicMetaObjectProvider
     {
         private readonly Delegate[] _overloads;
         private readonly MethodInfo[] _methodInfos;
 
-        public LuDelegateWrapper(Delegate[] overloads)
+        public DelegateWrapper(Delegate[] overloads)
         {
             _overloads = overloads;
             _methodInfos = overloads.Select(x => x.Method).ToArray();
@@ -41,9 +41,9 @@ namespace LuBox.InternalTypes
 
         public class LuOverloadWrapperMetaObject : DynamicMetaObject
         {
-            private readonly LuDelegateWrapper _value;
+            private readonly DelegateWrapper _value;
 
-            public LuOverloadWrapperMetaObject(Expression parameter, LuDelegateWrapper value)
+            public LuOverloadWrapperMetaObject(Expression parameter, DelegateWrapper value)
                 : base(parameter, BindingRestrictions.Empty, value)
             {
                 _value = value;
@@ -51,27 +51,27 @@ namespace LuBox.InternalTypes
 
             public override DynamicMetaObject BindInvoke(InvokeBinder binder, DynamicMetaObject[] args)
             {
-                var orderedSignatures = LuInvokeHelper.OrderSignatureMatches(args, _value.MethodInfos);
+                var orderedSignatures = SignatureHelper.OrderSignatureMatches(args, _value.MethodInfos);
                 var methodInfo = orderedSignatures.First();
                 var index = Array.IndexOf(_value.MethodInfos, methodInfo);
 
-                var callArguments = LuInvokeHelper.TransformArguments(args, methodInfo);
+                var callArguments = SignatureHelper.TransformArguments(args, methodInfo);
 
                 var delegateExpression = Expression.ArrayIndex(
-                    Expression.MakeMemberAccess(Expression.Convert(Expression, typeof (LuDelegateWrapper)),
-                        typeof (LuDelegateWrapper).GetProperty("Overloads")), Expression.Constant(index));
+                    Expression.MakeMemberAccess(Expression.Convert(Expression, typeof (DelegateWrapper)),
+                        typeof (DelegateWrapper).GetProperty("Overloads")), Expression.Constant(index));
 
                 var argRestrictrions = args.Select(x => BindingRestrictions.GetTypeRestriction(x.Expression, x.LimitType));
                 var methodInfosrestriction = BindingRestrictions.GetExpressionRestriction(
-                    Expression.Call(Expression.Convert(Expression, typeof (LuDelegateWrapper)),
-                        typeof (LuDelegateWrapper).GetMethod("IsMatching"),
+                    Expression.Call(Expression.Convert(Expression, typeof (DelegateWrapper)),
+                        typeof (DelegateWrapper).GetMethod("IsMatching"),
                         Expression.Constant(_value.MethodInfos)));
-                var argRestriction = LuInvokeHelper.CombineRestrictions(argRestrictrions.ToArray());
-                var restriction = LuInvokeHelper.CombineRestrictions(argRestriction, methodInfosrestriction);
+                var argRestriction = RestrictionHelper.CombineRestrictions(argRestrictrions.ToArray());
+                var restriction = RestrictionHelper.CombineRestrictions(argRestriction, methodInfosrestriction);
 
                 return
                     new DynamicMetaObject(
-                        RuntimeHelpers.EnsureObjectResult(
+                        ResultHelper.EnsureObjectResult(
                             Expression.Invoke(Expression.Convert(delegateExpression, _value.Overloads[index].GetType()), callArguments)),
                         restriction);
             }

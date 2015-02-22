@@ -39,7 +39,7 @@ namespace LuBox.Runtime
             }
 
             return new DynamicMetaObject(                
-                RuntimeHelpers.EnsureObjectResult(
+                ResultHelper.EnsureObjectResult(
                     Expression.Assign(
                         Expression.MakeMemberAccess(Expression.Convert(target.Expression, member.DeclaringType), member), val)),
                 BindingRestrictions.GetTypeRestriction(target.Expression,

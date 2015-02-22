@@ -22,12 +22,12 @@ namespace LuBox.Runtime
             Sandboxer.ThrowIfReflectionType(target.LimitType);
 
             var methodInfo = target.LimitType.GetMethod("Invoke");
-            var callArguments = LuInvokeHelper.TransformArguments(args, methodInfo);
-            var restrictions = LuInvokeHelper.GetTypeRestrictions(target, args);
+            var callArguments = SignatureHelper.TransformArguments(args, methodInfo);
+            var restrictions = RestrictionHelper.GetTypeRestrictions(target, args);
 
             return
                 new DynamicMetaObject(
-                    RuntimeHelpers.EnsureObjectResult(
+                    ResultHelper.EnsureObjectResult(
                         Expression.Invoke(Expression.Convert(target.Expression, target.LimitType), callArguments)),
                     restrictions);
         }

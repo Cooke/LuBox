@@ -47,18 +47,18 @@ namespace LuBox.Runtime
                 case MemberTypes.Method:
                     return new DynamicMetaObject(
                         Expression.New(
-                            typeof (LuMethodWrapper).GetConstructor(new[] {typeof (MethodInfo[]), typeof (object)}),
+                            typeof (MethodWrapper).GetConstructor(new[] {typeof (MethodInfo[]), typeof (object)}),
                             Expression.Constant(members.Cast<MethodInfo>().ToArray()), target.Expression),
                         BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
                     break;
                 case MemberTypes.Event:
                     return new DynamicMetaObject(
-                        Expression.New(typeof(LuEventWrapper).GetConstructor(new[] { typeof(EventInfo), typeof(object) }), Expression.Constant(firstMember), target.Expression),
+                        Expression.New(typeof(EventWrapper).GetConstructor(new[] { typeof(EventInfo), typeof(object) }), Expression.Constant(firstMember), target.Expression),
                         BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
                 case MemberTypes.Field:
                 case MemberTypes.Property:
                     return new DynamicMetaObject(
-                        RuntimeHelpers.EnsureObjectResult(
+                        ResultHelper.EnsureObjectResult(
                             Expression.MakeMemberAccess(Expression.Convert(target.Expression, firstMember.DeclaringType), firstMember)),
                         BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
                 default:
