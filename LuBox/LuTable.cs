@@ -13,6 +13,8 @@ namespace LuBox
     {
         public static MethodInfo SetMethodInfo = typeof(LuTable).GetMethod("SetField");
         public static MethodInfo GetMethodInfo = typeof(LuTable).GetMethod("GetField");
+        public static ConstructorInfo EmptyConstructorInfo = typeof (LuTable).GetConstructor(new Type[0]);
+        public static ConstructorInfo ValuesConstructorInfo = typeof(LuTable).GetConstructor(new [] { typeof(IEnumerable<KeyValuePair<object, object>>) });
 
         private readonly IDictionary<object, object> _fields;
         private readonly DynamicDictionaryWrapper _dynamic;
@@ -85,7 +87,7 @@ namespace LuBox
 
             public override DynamicMetaObject BindGetIndex(GetIndexBinder binder, DynamicMetaObject[] indexes)
             {
-                var getExpression = Expression.Call(Expression.Convert(Expression, LimitType), GetMethodInfo, indexes[0].Expression);
+                var getExpression = Expression.Call(Expression.Convert(Expression, LimitType), GetMethodInfo, Expression.Convert(indexes[0].Expression, typeof(object)));
                 var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
                 return new DynamicMetaObject(getExpression, bindingRestrictions);
             }
@@ -103,6 +105,29 @@ namespace LuBox
                 var invokeExpression = Expression.Dynamic(new LuInvokeBinder(new CallInfo(args.Length)), typeof(object), new[] { memberExpression }.Concat(args.Select(x => x.Expression)));
                 var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
                 return new DynamicMetaObject(invokeExpression, bindingRestrictions);
+            }
+
+            public override DynamicMetaObject BindConvert(ConvertBinder binder)
+            {
+                var emptyConstructorInfo = binder.Type.GetConstructor(new Type[0]);
+                if (binder.Type != LimitType && emptyConstructorInfo != null && binder.Type.IsClass)
+                {
+                    var setProperties = binder.Type.GetProperties();
+                    var memberBindings = new List<MemberBinding>();
+                    foreach (var propertyInfo in setProperties)
+                    {
+                        var getExpression = Expression.Call(Expression.Convert(Expression, LimitType), GetMethodInfo, Expression.Constant(propertyInfo.Name));
+                        var propertyConvertExpression = Expression.Dynamic(new LuConvertBinder(propertyInfo.PropertyType, false), propertyInfo.PropertyType, getExpression);
+                        var bind  = Expression.Bind(propertyInfo, propertyConvertExpression);
+                        memberBindings.Add(bind);
+                    }
+
+                    return new DynamicMetaObject(Expression.MemberInit(Expression.New(binder.Type), memberBindings), BindingRestrictions.GetTypeRestriction(Expression, LimitType));
+                }
+                else
+                {
+                    return binder.FallbackConvert(this);
+                }
             }
         }
     }

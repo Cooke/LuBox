@@ -104,7 +104,7 @@ namespace LuBox.Runtime
                 else if (index < callArguments.Length)
                 {
                     var arg = callArguments[index];
-                    newArguments.Add(Expression.Convert(arg, parameterInfo.ParameterType));
+                    newArguments.Add(Expression.Dynamic(new LuConvertBinder(parameterInfo.ParameterType, false), parameterInfo.ParameterType, arg));
                 }
             }
 

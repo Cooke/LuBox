@@ -152,6 +152,8 @@ namespace LuBox.Compiler
                         return VisitNumber(context.number());
                     case NuParser.RULE_string:
                         return VisitString(context.@string());
+                    case NuParser.RULE_tableconstructor:
+                        return VisitTableconstructor(context.tableconstructor());
                     default:
                         throw new ParseCanceledException("Invalid expression");
                 }
@@ -160,6 +162,56 @@ namespace LuBox.Compiler
             {
                 return VisitTerminalExp(context);
             }
+        }
+
+        public override Expression VisitTableconstructor(NuParser.TableconstructorContext context)
+        {
+            if (context.fieldlist() != null)
+            {
+                var fieldsListExpression = VisitFieldlist(context.fieldlist());
+                return Expression.New(LuTable.ValuesConstructorInfo, fieldsListExpression);
+            }
+            else
+            {
+                return Expression.New(LuTable.EmptyConstructorInfo);
+            }
+        }
+
+        public override Expression VisitFieldlist(NuParser.FieldlistContext context)
+        {
+            System.Reflection.MethodInfo addMethod = typeof(Dictionary<object, object>).GetMethod("Add");
+
+            var elements = new List<ElementInit>();
+
+            int count = 0;
+            foreach (var fieldContext in context.field())
+            {
+                count++;
+                if (fieldContext.exp().Count == 2)
+                {
+                    elements.Add(Expression.ElementInit(
+                    addMethod,
+                    Expression.Convert(VisitExp(fieldContext.exp(0)), typeof(object)),
+                    Expression.Convert(VisitExp(fieldContext.exp(1)), typeof(object))));
+                }
+                else if (fieldContext.NAME() != null)
+                {
+                    elements.Add(Expression.ElementInit(
+                    addMethod,
+                    Expression.Constant(fieldContext.NAME().GetText(), typeof(object)),
+                    Expression.Convert(VisitExp(fieldContext.exp(0)), typeof(object))));
+                }
+                else
+                {
+                    elements.Add(Expression.ElementInit(
+                        addMethod,
+                        Expression.Constant(count, typeof(object)),
+                        Expression.Convert(VisitExp(fieldContext.exp(0)), typeof(object))));
+                }
+            }
+
+            NewExpression newDictionaryExpression = Expression.New(typeof(Dictionary<object, object>));
+            return Expression.ListInit(newDictionaryExpression, elements);
         }
 
         private static Expression VisitTerminalExp(NuParser.ExpContext context)

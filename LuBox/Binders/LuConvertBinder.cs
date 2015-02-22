@@ -18,7 +18,11 @@ namespace LuBox.Runtime
                 return Defer(target);
             }
 
-            return new DynamicMetaObject(Expression.Convert(target.Expression, Type), BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+            BindingRestrictions rest = target.Value == null
+                ? BindingRestrictions.GetInstanceRestriction(target.Expression, null)
+                : BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType);
+
+            return new DynamicMetaObject(Expression.Convert(target.Expression, Type), rest);
         }
     }
 }
