@@ -78,7 +78,27 @@ namespace LuBox.Test
                 end
                 ", environment);
 
-            Console.WriteLine(environment.sum); // 15
+            Console.WriteLine(environment.sum); // Output: 15
+        }
+
+        private class OptionsDto
+        {
+            public string StringProp { get; set; }
+
+            public OptionsDto NestedOptionsDtoProp { get; set; }
+        }
+
+        [TestMethod]
+        public void AutoConvertTableToDto()
+        {
+            var scriptEngine = new LuScriptEngine();
+            dynamic environment = scriptEngine.CreateStandardEnvironment();
+
+            environment.func = new Action<OptionsDto>(x => Console.WriteLine(x.StringProp + x.NestedOptionsDtoProp.StringProp));
+            scriptEngine.Execute(@"
+                func({ StringProp = 'Hello', NestedOptionsDtoProp = { StringProp = ' World!' } })
+                ", environment);
+            // Output: Hello World!
         }
     }
 }

@@ -45,6 +45,8 @@ namespace LuBox.Runtime
             switch (memberType)
             {
                 case MemberTypes.Method:
+                    // TODO optimize calling CLR objects with '.' notation by look-a-head and see that an 
+                    // invocation will be performed and skip returning an object as intermidiate value
                     return new DynamicMetaObject(
                         Expression.New(
                             typeof (MethodWrapper).GetConstructor(new[] {typeof (MethodInfo[]), typeof (object)}),

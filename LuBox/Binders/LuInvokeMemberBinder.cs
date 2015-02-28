@@ -30,12 +30,20 @@ namespace LuBox.Runtime
 
             Sandboxer.ThrowIfReflectionMember(memberInfo);
 
+            var callExpression = ResultHelper.EnsureObjectResult(
+                Expression.Call(Expression.Convert(target.Expression, target.LimitType), memberInfo,
+                    callArguments));
+
+            var temp = Expression.Variable(typeof (object));
+            var assign = Expression.Assign(temp, callExpression);
+            var symbolDocumentInfo = Expression.SymbolDocument("somename");
+            var debugInfoExpression = Expression.DebugInfo(symbolDocumentInfo, 1, 1, 10, 10);
+            var clearDebugInfo = Expression.ClearDebugInfo(symbolDocumentInfo);
+            var blockExpression = Expression.Block(new ParameterExpression[] { temp }, new Expression[] {debugInfoExpression, assign, clearDebugInfo, temp});
             return
                 new DynamicMetaObject(
-                    ResultHelper.EnsureObjectResult(
-                        Expression.Call(Expression.Convert(target.Expression, target.LimitType), memberInfo,
-                            callArguments)),
-                    restrictions);
+                blockExpression,
+                restrictions); ;
         }
 
         private MethodInfo GetMemberInfo(DynamicMetaObject target, DynamicMetaObject[] args)

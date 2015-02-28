@@ -74,6 +74,21 @@ namespace LuBox.Test
             AssertEval(10, "false or 10");
         }
 
+        [TestMethod]
+        public void ComparisonWithFloatAndDoubleInVariableShallWork()
+        {
+            _luScriptEngine.DefaultEnvironment.Dynamic.para = 0.5f;
+            AssertEval(true, "para < 5.5");
+        }
+
+        [TestMethod]
+        public void ComparisonWithTwoVariablesShallWork()
+        {
+            _luScriptEngine.DefaultEnvironment.Dynamic.left = 0.5f;
+            _luScriptEngine.DefaultEnvironment.Dynamic.right = 5.5f;
+            AssertEval(true, "left < right");
+        }
+
         private void AssertEval<T>(T expected, string expression)
         {
             Assert.AreEqual(expected, _luScriptEngine.Evaluate<T>(expression));

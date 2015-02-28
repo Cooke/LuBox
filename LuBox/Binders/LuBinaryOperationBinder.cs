@@ -11,36 +11,49 @@ namespace LuBox.Runtime
         {
         }
 
-        public override DynamicMetaObject FallbackBinaryOperation(DynamicMetaObject target, DynamicMetaObject arg,
+        public override DynamicMetaObject FallbackBinaryOperation(DynamicMetaObject left, DynamicMetaObject right,
             DynamicMetaObject errorSuggestion)
         {
-            if (!target.HasValue || !arg.HasValue)
+            if (!left.HasValue || !right.HasValue)
             {
-                return Defer(target, arg);
+                return Defer(left, right);
             }
 
-            var restrictions = target.Restrictions.Merge(arg.Restrictions)
+            var restrictions = left.Restrictions.Merge(right.Restrictions)
                 .Merge(BindingRestrictions.GetTypeRestriction(
-                    target.Expression, target.LimitType))
+                    left.Expression, left.LimitType))
                 .Merge(BindingRestrictions.GetTypeRestriction(
-                    arg.Expression, arg.LimitType));
+                    right.Expression, right.LimitType));
 
-            if (target.LimitType != arg.LimitType || Operation == ExpressionType.Divide)
+            if (left.LimitType != right.LimitType || Operation == ExpressionType.Divide)
             {
+                var leftExpression = UnBoxIfNeeded(left);
+                var rightExpression = UnBoxIfNeeded(right);
+
                 return
                     new DynamicMetaObject(
                         Expression.Convert(
-                            Expression.MakeBinary(Operation, Expression.Convert(target.Expression, typeof (double)),
-                                Expression.Convert(arg.Expression, typeof(double))), typeof (object)), restrictions);
+                            Expression.MakeBinary(Operation, Expression.Convert(leftExpression, typeof(double)),
+                                Expression.Convert(rightExpression, typeof(double))), typeof(object)), restrictions);
             }
             else
             {
                 return
                     new DynamicMetaObject(
                         Expression.Convert(
-                            Expression.MakeBinary(Operation, Expression.Convert(target.Expression, target.LimitType),
-                                Expression.Convert(arg.Expression, arg.LimitType)), typeof (object)), restrictions);
+                            Expression.MakeBinary(Operation, Expression.Convert(left.Expression, left.LimitType),
+                                Expression.Convert(right.Expression, right.LimitType)), typeof (object)), restrictions);
             }
+        }
+
+        private static Expression UnBoxIfNeeded(DynamicMetaObject left)
+        {
+            Expression leftExpression = left.Expression;
+            if (left.Expression.Type == typeof (object))
+            {
+                leftExpression = Expression.Unbox(left.Expression, left.LimitType);
+            }
+            return leftExpression;
         }
     }
 }

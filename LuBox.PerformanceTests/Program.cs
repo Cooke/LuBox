@@ -12,15 +12,22 @@ namespace LuBox.PerformanceTests
             var environment = engine.CreateStandardEnvironment();
             environment.SetField("callReceivers", new List<CallReceiver> { new CallReceiver(), new CallReceiver() });
 
+            var script1 = engine.CompileBind("for callReceiver in iter(callReceivers) do for i = 1, 1000000, 1 do callReceiver.GetSelf() end end", environment);
+            var script2 = engine.CompileBind("for callReceiver in iter(callReceivers) do for i = 1, 1000000, 1 do callReceiver:GetSelf() end end", environment);
+
+            // Warm up
+            script1();
+            script2();
+
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-            engine.Execute("for callReceiver in iter(callReceivers) do for i = 1, 1000000, 1 do callReceiver.GetSelf() end end", environment);
+            script1();
             stopwatch.Stop();
             Console.WriteLine("1 - Time: {0}", stopwatch.ElapsedMilliseconds);
 
             stopwatch = new Stopwatch();
             stopwatch.Start();
-            engine.Execute("for callReceiver in iter(callReceivers) do for i = 1, 1000000, 1 do callReceiver:GetSelf() end end", environment);
+            script2();
             stopwatch.Stop();
             Console.WriteLine("2 - Time: {0}", stopwatch.ElapsedMilliseconds);
 

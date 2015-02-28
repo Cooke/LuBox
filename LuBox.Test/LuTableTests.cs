@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LuBox.Test
 {
@@ -77,9 +78,18 @@ namespace LuBox.Test
         {
             var test = new Test();
             _engine.DefaultEnvironment.Dynamic.test = test;
-            _engine.Execute("test.Foo({ StringValue = 'geh', IntValue = 123 })");
+            _engine.Execute("test:Foo({ StringValue = 'geh', IntValue = 123 })");
             Assert.AreEqual(123, test.dto.IntValue);
             Assert.AreEqual("geh", test.dto.StringValue);
+        }
+
+        [TestMethod]
+        public void AutoConvertToDTOWithFunction()
+        {
+            var test = new Test();
+            _engine.DefaultEnvironment.Dynamic.test = test;
+            _engine.Execute("test:Foo({ Func = function() return 12 end })");
+            Assert.AreEqual(12, test.dto.Func());
         }
 
         public class Test
@@ -97,6 +107,8 @@ namespace LuBox.Test
             public string StringValue { get; set; }
 
             public int IntValue { get; set; }
+
+            public Func<int> Func { get; set; }
         }
     }
 }

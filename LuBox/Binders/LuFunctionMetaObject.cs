@@ -25,26 +25,24 @@ namespace LuBox.Runtime
 
             var restrictions = BindingRestrictions.GetTypeRestriction(delegateExpression, _delegateType);
             return new DynamicMetaObject(callExpression, restrictions);
-
-            //var funcType = Expression.GetFuncType(Enumerable.Repeat(typeof (object), args.Length + 1).ToArray());
-            //Expression delegateExpression = Expression.Convert(Expression.Property(Expression.Convert(Expression, typeof(LuFunction)), "Delegate"), _delegateType);
-
-            //var signature = GetOrCreateSignature(funcType, delegateExpression);
-            //Expression invokeExpression = Expression.Invoke(signature, args.Select(x => ResultHelper.EnsureObjectResult(x.Expression)));
-            //var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
-
-            //return new DynamicMetaObject(invokeExpression, bindingRestrictions);
         }
 
         public override DynamicMetaObject BindConvert(ConvertBinder binder)
         {
-            Type targetType = binder.Type;
-            Expression delegateExpression = Expression.Property(Expression.Convert(Expression, typeof(LuFunction)), "Delegate");
-
             BindingRestrictions restriction = BindingRestrictions.GetTypeRestriction(Expression, typeof(LuFunction));
 
-            var signature = GetOrCreateSignature(targetType, delegateExpression);
-            return new DynamicMetaObject(signature, restriction);
+            if (!binder.Type.IsAssignableFrom(LimitType))
+            {
+                Type targetType = binder.Type;
+                Expression delegateExpression = Expression.Property(Expression.Convert(Expression, typeof(LuFunction)), "Delegate");
+
+                var signature = GetOrCreateSignature(targetType, delegateExpression);
+                return new DynamicMetaObject(signature, restriction); 
+            }
+            else
+            {
+                return new DynamicMetaObject(Expression, restriction); 
+            }
         }
 
         private Expression GetOrCreateSignature(Type targetType, Expression delegateExpression)
@@ -91,9 +89,11 @@ namespace LuBox.Runtime
                 sourceParameterExpressions = targetParameterExpressions.Concat<Expression>(extraParaExpressions);
             }
 
+            Expression invokeExpression = Expression.Invoke(Expression.Convert(delegateExpression, _delegateType), sourceParameterExpressions.Select(x => Expression.Convert(x, typeof(object))));
+            var convertedInvokeExpression = targetMethodInfo.ReturnType == typeof(void) ? invokeExpression : Expression.Convert(invokeExpression, targetMethodInfo.ReturnType);
             LambdaExpression lambdaExpression = Expression.Lambda(
                 targetType,
-                Expression.Invoke(Expression.Convert(delegateExpression, _delegateType), sourceParameterExpressions.Select(x => Expression.Convert(x, typeof(object)))),
+                convertedInvokeExpression,
                 targetParameterExpressions);
             return lambdaExpression;
         }

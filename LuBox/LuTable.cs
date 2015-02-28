@@ -13,6 +13,7 @@ namespace LuBox
     {
         public static MethodInfo SetMethodInfo = typeof(LuTable).GetMethod("SetField");
         public static MethodInfo GetMethodInfo = typeof(LuTable).GetMethod("GetField");
+        public static MethodInfo HasMethodInfo = typeof(LuTable).GetMethod("HasField");
         public static ConstructorInfo EmptyConstructorInfo = typeof (LuTable).GetConstructor(new Type[0]);
         public static ConstructorInfo ValuesConstructorInfo = typeof(LuTable).GetConstructor(new [] { typeof(IEnumerable<KeyValuePair<object, object>>) });
 
@@ -112,17 +113,26 @@ namespace LuBox
                 var emptyConstructorInfo = binder.Type.GetConstructor(new Type[0]);
                 if (binder.Type != LimitType && emptyConstructorInfo != null && binder.Type.IsClass)
                 {
+                    var newExpression = Expression.New(binder.Type);
+                    var varExpression = Expression.Variable(binder.Type);
+                    var assignExpression = Expression.Assign(varExpression, newExpression);
+
                     var setProperties = binder.Type.GetProperties();
-                    var memberBindings = new List<MemberBinding>();
+                    var setExpressions = new List<Expression>();
                     foreach (var propertyInfo in setProperties)
                     {
-                        var getExpression = Expression.Call(Expression.Convert(Expression, LimitType), GetMethodInfo, Expression.Constant(propertyInfo.Name));
+                        var targetExpression = Expression.Convert(Expression, LimitType);
+                        var propertyNameConstExpression = Expression.Constant(propertyInfo.Name);
+                        var hasFieldExpression = Expression.Call(targetExpression, HasMethodInfo, propertyNameConstExpression);
+                        var getExpression = Expression.Call(targetExpression, GetMethodInfo, propertyNameConstExpression);
                         var propertyConvertExpression = Expression.Dynamic(new LuConvertBinder(propertyInfo.PropertyType, false), propertyInfo.PropertyType, getExpression);
-                        var bind  = Expression.Bind(propertyInfo, propertyConvertExpression);
-                        memberBindings.Add(bind);
+                        var ifAssignExpression = Expression.IfThen(hasFieldExpression,
+                            Expression.Assign(Expression.Property(varExpression, propertyInfo),
+                                propertyConvertExpression));
+                        setExpressions.Add(ifAssignExpression);
                     }
 
-                    return new DynamicMetaObject(Expression.MemberInit(Expression.New(binder.Type), memberBindings), BindingRestrictions.GetTypeRestriction(Expression, LimitType));
+                    return new DynamicMetaObject(Expression.Block(new[] { varExpression }, new Expression[] { assignExpression }.Concat(setExpressions).Concat(new[] { varExpression})), BindingRestrictions.GetTypeRestriction(Expression, LimitType));
                 }
                 else
                 {

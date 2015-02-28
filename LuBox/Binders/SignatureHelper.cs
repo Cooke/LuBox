@@ -57,6 +57,11 @@ namespace LuBox.Runtime
                 return true;
             }
 
+            if (pType.IsClass && pType.GetConstructor(new Type[0]) != null)
+            {
+                return argType == typeof(LuTable);
+            }
+
             if (pType == typeof (double))
             {
                 return (argType == typeof (int) || argType == typeof (float) || argType == typeof (long));

@@ -131,5 +131,21 @@ namespace LuBox.Test
             _luScriptEngine.Execute("if var then result = 1 end", _environment);
             Assert.AreEqual(1, _environment.Dynamic.result);
         }
+
+        [TestMethod]
+        public void NullVariableShallBeFalse()
+        {
+            _environment.Dynamic.var = null;
+            _luScriptEngine.Execute("if var then result = 1 end", _environment);
+            Assert.IsNull(_environment.Dynamic.result);
+        }
+
+        [TestMethod]
+        public void NullLocalVariableShallBeFalse()
+        {
+            _luScriptEngine.Execute("local var = nil;" +
+                                    "if var then result = 1 end", _environment);
+            Assert.IsNull(_environment.Dynamic.result);
+        }
     }
 }

@@ -154,6 +154,8 @@ namespace LuBox.Compiler
                         return VisitString(context.@string());
                     case NuParser.RULE_tableconstructor:
                         return VisitTableconstructor(context.tableconstructor());
+                    case NuParser.RULE_functiondef:
+                        return VisitFunctiondef(context.functiondef());
                     default:
                         throw new ParseCanceledException("Invalid expression");
                 }
@@ -162,6 +164,11 @@ namespace LuBox.Compiler
             {
                 return VisitTerminalExp(context);
             }
+        }
+
+        public override Expression VisitFunctiondef(NuParser.FunctiondefContext context)
+        {
+            return VisitFuncbody(context.funcbody());
         }
 
         public override Expression VisitTableconstructor(NuParser.TableconstructorContext context)
@@ -385,7 +392,6 @@ namespace LuBox.Compiler
             
             Expression innerBlock = VisitBlock(context.block(0));
             LabelTarget breakLabel = Expression.Label("break");
-
             BlockExpression forBlock = Expression.Block(
                 new[] {f, s, v},
                 Expression.Assign(f, fValueExp),
@@ -571,7 +577,7 @@ namespace LuBox.Compiler
         public override Expression VisitRetstat(NuParser.RetstatContext context)
         {
             var returnExp = VisitExp(context.explist().exp(0));
-            return Expression.Return(returnTargets.Peek(), returnExp);
+            return Expression.Return(returnTargets.Peek(), Expression.Convert(returnExp, typeof(object)));
         }
 
         public override Expression VisitChunk(NuParser.ChunkContext context)

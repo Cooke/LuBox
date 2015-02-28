@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Dynamic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LuBox.Test
 {
@@ -95,6 +97,53 @@ out = add(3, 9)
 ", _environment);
 
             Assert.AreEqual(12, _environment.Dynamic.@out);
+        }
+
+        [TestMethod]
+        public void LuFunctionShallNotBeConvertedIfNotNeeded()
+        {
+            _environment.Dynamic.invoke = new Func<object, object>(Invoke);
+            _luScriptEngine.Execute(@"
+function add() 
+    return 1 + 2
+end
+
+out = invoke(add)
+", _environment);
+
+            Assert.AreEqual(3, _environment.Dynamic.@out);
+        }
+
+        [TestMethod]
+        public void FunctionAsExpression()
+        {
+            _luScriptEngine.Execute(@"
+func = function() 
+    return 1 + 2
+end", _environment);
+
+            Assert.AreEqual(3, _environment.Dynamic.func());
+        }
+
+        [TestMethod]
+        public void FunctionAsExpressionInLocal()
+        {
+            _luScriptEngine.Execute(@"
+local func = function() 
+    return 1 + 2
+end
+
+out = func()", _environment);
+
+            Assert.AreEqual(3, _environment.Dynamic.@out);
+        }
+
+        private static object Invoke(object func)
+        {
+            dynamic dfunc = func;
+            
+            // Some superfluouse arguments that a LuFunction should handle by ignoring
+            return dfunc(123, 123);
         }
     }
 }
