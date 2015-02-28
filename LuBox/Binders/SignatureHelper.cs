@@ -62,6 +62,11 @@ namespace LuBox.Runtime
                 return argType == typeof(LuTable);
             }
 
+            if (typeof(Delegate).IsAssignableFrom(pType) && argType == typeof(LuFunction))
+            {
+                return true;
+            }
+
             if (pType == typeof (double))
             {
                 return (argType == typeof (int) || argType == typeof (float) || argType == typeof (long));
