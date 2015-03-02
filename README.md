@@ -1,7 +1,7 @@
 # LuBox
 LuBox is a Lua inspired scripting language for embedding in .NET applications.
 
-### The main characteristics of LuBox:
+### Characteristics ###
 
 1. Lightweigth API which is easy to embed.
 2. Sandboxed with restricted access to IO and reflection.
@@ -31,49 +31,12 @@ scriptEngine.Execute(@"
 
 Console.WriteLine(environment.Add(1, 2));  // Output: 3
 ```
+More examples at [the Wiki](https://github.com/Cooke/LuBox/wiki)
 
-**Handle CLR Events**
-```csharp
-public class Foo
-{
-    public event Action<string> BarFired;
+### Performance and memory management ###
+Since LuBox is implemented using the DLR the performance is typically close to regular .NET code after the first execution of a script. During the first execution however, or when rebinding due to changed types of variables, reflection is used and the execution time is usally in the order of milliseconds for a small script. 
 
-    public void FireBar()
-    {
-        BarFired("BAR!");
-    }
-}
-```
-```csharp
-var scriptEngine = new LuScriptEngine();
-dynamic environment = scriptEngine.CreateStandardEnvironment();
+All objects allocated in a LuBox script are regular CLR objects and are collected by the .NET garbage collector. 
 
-var foo = new Foo();
-environment.foo = foo;
-environment.console = Console.Out;
-
-scriptEngine.Execute(@"
-    function handleBar(text)
-        console:WriteLine(text)
-    end
-
-    foo.BarFired:Add(handleBar)", environment);
-
- foo.FireBar(); // Output: BAR!
-```
-
-**Iterate CLR Enumerable**
-```csharp
-var scriptEngine = new LuScriptEngine();
-dynamic environment = scriptEngine.CreateStandardEnvironment();
-
-environment.list = new List<int> { 1, 2, 3, 4, 5 };
-scriptEngine.Execute(@"
-    sum = 0
-    for i in iter(list) do
-        sum = sum + i
-    end
-    ", environment);
-
-Console.WriteLine(environment.sum); // 15
-```
+### Feature requests and bugs ###
+Please send a pull request with a unit test of the feature requested or the bug found. 
