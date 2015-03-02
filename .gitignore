@@ -6,3 +6,5 @@ obj
 *.exe
 *.pdb
 *.user
+
+*.nupkg

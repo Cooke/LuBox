@@ -1,0 +1,1 @@
+nuget pack LuBox.csproj -Prop Configuration=Release

@@ -9,13 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuBox.ParserGenerator", "Lu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuBox.Test", "LuBox.Test\LuBox.Test.csproj", "{1EC944A5-D491-441D-B3DF-7AC9A2C868DD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1AF22EAF-FD91-43F5-A89B-72D3034C3ECF}"
-	ProjectSection(SolutionItems) = preProject
-		Performance1.psess = Performance1.psess
-		Performance2.psess = Performance2.psess
-		Performance3.psess = Performance3.psess
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LuBox.PerformanceTests", "LuBox.PerformanceTests\LuBox.PerformanceTests.csproj", "{CCBF9274-3B5D-410D-AAF3-C67C6394FD68}"
 EndProject
 Global
@@ -43,8 +36,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal
