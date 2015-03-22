@@ -1,15 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Reflection.Emit;
+using LuBox.Runtime;
 using LuBox.Sandboxing;
-using Microsoft.CSharp.RuntimeBinder;
 
-namespace LuBox.Runtime
+namespace LuBox.Binders
 {
     internal class LuGetMemberBinder : GetMemberBinder
     {

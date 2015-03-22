@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\BinderProvider.cs" />
     <Compile Include="Binders\LuSetIndexBinder.cs" />
     <Compile Include="Binders\RestrictionHelper.cs" />
     <Compile Include="InternalTypes\MethodWrapper.cs" />

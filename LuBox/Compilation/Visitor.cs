@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
+using LuBox.Binders;
 using LuBox.Parser;
 using LuBox.Runtime;
 
@@ -14,11 +15,13 @@ namespace LuBox.Compiler
     internal class Visitor : NuBaseVisitor<Expression>
     {
         private IScope _scope;
-        private System.Collections.Generic.Stack<LabelTarget> returnTargets = new Stack<LabelTarget>(); 
+        private readonly BinderProvider _binderProvider;
+        private readonly Stack<LabelTarget> returnTargets = new Stack<LabelTarget>(); 
 
-        public Visitor(IScope scope)
+        public Visitor(IScope scope, BinderProvider binderProvider)
         {
             _scope = scope;
+            _binderProvider = binderProvider;
         }
 
         public override Expression VisitNumber(NuParser.NumberContext context)
@@ -71,9 +74,9 @@ namespace LuBox.Compiler
 
                 if (memberName != null)
                 {
-                    leftExp = Expression.Dynamic(
-                        new LuInvokeMemberBinder(memberName, false, new CallInfo(nameAndArgsContext.args().ChildCount)),
-                        typeof (object), args);
+                    var callInfo = new CallInfo(nameAndArgsContext.args().ChildCount);
+                    var binder = _binderProvider.GetInvokeMemberBinder(memberName, callInfo);
+                    leftExp = Expression.Dynamic(binder, typeof (object), args);
                 }
                 else
                 {
@@ -91,8 +94,7 @@ namespace LuBox.Compiler
             if (suffix.NAME() != null)
             {
                 left =
-                    Expression.Dynamic(new LuGetMemberBinder(suffix.NAME().GetText()),
-                        typeof(object), left);
+                    Expression.Dynamic(_binderProvider.GetGetMemberBinder(suffix.NAME().GetText()), typeof(object), left);
             }
             else if (suffix.exp() != null)
             {
@@ -531,7 +533,7 @@ namespace LuBox.Compiler
                 var lastSuffix = context.varSuffix(context.varSuffix().Count - 1);
                 if (lastSuffix.NAME() != null)
                 {
-                    return Expression.Dynamic(new LuSetMemberBinder(lastSuffix.NAME().GetText()), typeof (object),
+                    return Expression.Dynamic(_binderProvider.GetSetMemberBinder(lastSuffix.NAME().GetText()), typeof (object),
                         left, expExpression);
                 }
                 else if (lastSuffix.exp() != null)

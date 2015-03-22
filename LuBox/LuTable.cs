@@ -18,7 +18,6 @@ namespace LuBox
         public static ConstructorInfo ValuesConstructorInfo = typeof(LuTable).GetConstructor(new [] { typeof(IEnumerable<KeyValuePair<object, object>>) });
 
         private readonly IDictionary<object, object> _fields;
-        private readonly DynamicDictionaryWrapper _dynamic;
 
         public LuTable() : this(Enumerable.Empty<KeyValuePair<object, object>>())
         {
@@ -27,7 +26,6 @@ namespace LuBox
         public LuTable(IEnumerable<KeyValuePair<object, object>> initials)
         {
             _fields = initials.ToDictionary(x => x.Key, x => x.Value);
-            _dynamic = new DynamicDictionaryWrapper(_fields);
         }
 
         public dynamic Dynamic
@@ -125,7 +123,7 @@ namespace LuBox
                         var propertyNameConstExpression = Expression.Constant(propertyInfo.Name);
                         var hasFieldExpression = Expression.Call(targetExpression, HasMethodInfo, propertyNameConstExpression);
                         var getExpression = Expression.Call(targetExpression, GetMethodInfo, propertyNameConstExpression);
-                        var propertyConvertExpression = Expression.Dynamic(new LuConvertBinder(propertyInfo.PropertyType, false), propertyInfo.PropertyType, getExpression);
+                        var propertyConvertExpression = Expression.Dynamic(new LuConvertBinder(propertyInfo.PropertyType), propertyInfo.PropertyType, getExpression);
                         var ifAssignExpression = Expression.IfThen(hasFieldExpression,
                             Expression.Assign(Expression.Property(varExpression, propertyInfo),
                                 propertyConvertExpression));

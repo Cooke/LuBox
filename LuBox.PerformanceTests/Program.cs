@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 
 namespace LuBox.PerformanceTests
 {
@@ -8,12 +9,45 @@ namespace LuBox.PerformanceTests
     {
         static void Main(string[] args)
         {
+            //LoopInvokeTest();
+
             var engine = new LuScriptEngine();
             var environment = engine.CreateStandardEnvironment();
-            environment.SetField("callReceivers", new List<CallReceiver> { new CallReceiver(), new CallReceiver() });
+            environment.SetField("callReceiver", new CallReceiver());
+            var scriptBuilder = new StringBuilder();
+            for (int i = 0; i < 10000; i++)
+            {
+                scriptBuilder.AppendLine("callReceiver:CallVoid()");
+            }
 
-            var script1 = engine.CompileBind("for callReceiver in iter(callReceivers) do for i = 1, 1000000, 1 do callReceiver.GetSelf() end end", environment);
-            var script2 = engine.CompileBind("for callReceiver in iter(callReceivers) do for i = 1, 1000000, 1 do callReceiver:GetSelf() end end", environment);
+            var script = engine.CompileBind(scriptBuilder.ToString(), environment);
+
+            Console.WriteLine("Start?");
+            Console.ReadLine();
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            script();
+            stopwatch.Stop();
+            Console.WriteLine("1 - Time: {0}", stopwatch.ElapsedMilliseconds);
+
+            Console.ReadLine();
+        }
+
+        private static void LoopInvokeTest()
+        {
+            var engine = new LuScriptEngine();
+            var environment = engine.CreateStandardEnvironment();
+            environment.SetField("callReceivers", new List<CallReceiver> {new CallReceiver(), new CallReceiver()});
+
+            var script1 =
+                engine.CompileBind(
+                    "for callReceiver in iter(callReceivers) do for i = 1, 1000000, 1 do callReceiver.GetSelf() end end",
+                    environment);
+            var script2 =
+                engine.CompileBind(
+                    "for callReceiver in iter(callReceivers) do for i = 1, 1000000, 1 do callReceiver:GetSelf() end end",
+                    environment);
 
             // Warm up
             script1();
@@ -30,8 +64,6 @@ namespace LuBox.PerformanceTests
             script2();
             stopwatch.Stop();
             Console.WriteLine("2 - Time: {0}", stopwatch.ElapsedMilliseconds);
-
-            Console.ReadLine();
         }
 
         public class CallReceiver

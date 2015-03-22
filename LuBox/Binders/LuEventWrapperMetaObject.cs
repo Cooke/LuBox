@@ -42,7 +42,7 @@ namespace LuBox.Runtime
             BindingRestrictions eventRestriction = BindingRestrictions.GetInstanceRestriction(Expression.Property(Expression.Convert(Expression, typeof(EventWrapper)), "EventInfo"), _eventInfo);
             UnaryExpression instanceExpression = Expression.Convert(Expression.Property(Expression.Convert(Expression, typeof(EventWrapper)), "Instance"), _eventInfo.DeclaringType);
             DynamicMetaObject onlyArgument = args.Single();
-            Expression argExpression = Expression.Dynamic(new LuConvertBinder(_eventInfo.EventHandlerType, false), _eventInfo.EventHandlerType, onlyArgument.Expression);
+            Expression argExpression = Expression.Dynamic(new LuConvertBinder(_eventInfo.EventHandlerType), _eventInfo.EventHandlerType, onlyArgument.Expression);
             return new DynamicMetaObject(ResultHelper.EnsureObjectResult(Expression.Call(instanceExpression, methodInfo, argExpression)), eventRestriction);
         }
     }

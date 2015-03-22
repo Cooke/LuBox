@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using Antlr4.Runtime;
+using LuBox.Binders;
 using LuBox.Compiler;
 using LuBox.Library;
 using LuBox.Parser;
@@ -14,6 +15,7 @@ namespace LuBox
     {
         private readonly ParameterExpression _environmentParameter = Expression.Variable(typeof(LuTable));
         private readonly LuTable _defaultEnvironment;
+        private readonly BinderProvider _binderProvider = new BinderProvider();
 
         public LuScriptEngine()
         {
@@ -47,7 +49,7 @@ namespace LuBox
             var lexer = new NuLexer(new AntlrInputStream(expression));
             var parser = new NuParser(new CommonTokenStream(lexer));
             var globalScope = new EnvironmentScope(_environmentParameter);
-            var visitor = new Visitor(globalScope);
+            var visitor = new Visitor(globalScope, _binderProvider);
 
             Expression content = visitor.VisitExp(parser.exp());
 
@@ -93,7 +95,7 @@ namespace LuBox
             var lexer = new NuLexer(new AntlrInputStream(code));
             var parser = new NuParser(new CommonTokenStream(lexer));
             var globalScope = new EnvironmentScope(_environmentParameter);
-            var visitor = new Visitor(globalScope);
+            var visitor = new Visitor(globalScope, _binderProvider);
 
             Expression content = visitor.Visit(parser.chunk());
 

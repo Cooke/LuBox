@@ -6,8 +6,8 @@ namespace LuBox.Runtime
 
     internal class LuConvertBinder : ConvertBinder
     {
-        public LuConvertBinder(Type type, bool @explicit)
-            : base(type, @explicit)
+        public LuConvertBinder(Type type)
+            : base(type, false)
         {
         }
 

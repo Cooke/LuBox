@@ -1,12 +1,13 @@
-namespace LuBox.Runtime
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Reflection;
+using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using LuBox.Runtime;
 
+namespace LuBox.Binders
+{
     internal class LuFunctionMetaObject : DynamicMetaObject
     {
         private readonly Type _delegateType;
