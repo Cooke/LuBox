@@ -116,6 +116,10 @@ namespace LuBox.Runtime
                     var arg = callArguments[index];
                     newArguments.Add(Expression.Dynamic(new LuConvertBinder(parameterInfo.ParameterType), parameterInfo.ParameterType, arg));
                 }
+                else
+                {
+                    newArguments.Add(Expression.Default(parameterInfo.ParameterType));
+                }
             }
 
             return newArguments;

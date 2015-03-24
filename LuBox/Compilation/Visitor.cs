@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using LuBox.Binders;
@@ -390,7 +391,7 @@ namespace LuBox.Compiler
             ParameterExpression s = Expression.Variable(sValueExp.Type);
             ParameterExpression v = Expression.Variable(vValueExp.Type);
 
-            IEnumerable<ParameterExpression> varList = context.namelist().NAME().Select(x => _scope.CreateLocal(x.GetText(), typeof(object))).ToArray();
+            ParameterExpression[] varList = context.namelist().NAME().Select(x => _scope.CreateLocal(x.GetText(), typeof(object))).ToArray();
             
             Expression innerBlock = VisitBlock(context.block(0));
             LabelTarget breakLabel = Expression.Label("break");
@@ -401,9 +402,9 @@ namespace LuBox.Compiler
                 Expression.Assign(v, vValueExp),
                 Expression.Loop(
                     Expression.Block(
-                        varList.Take(1), // only support 1 var now
-                        Expression.Assign(varList.First(),
-                            Expression.Dynamic(new LuInvokeBinder(new CallInfo(2)), typeof (object), f, s, v)),
+                        varList, 
+                        AssignMultiRet(varList,
+                            Expression.Dynamic(new LuInvokeBinder(new CallInfo(3)), typeof (object), f, s, v)),
                         Expression.Assign(v, varList.First()),
                         Expression.IfThenElse(
                             Expression.Dynamic(new LuBoolConvertBinder(), typeof (bool), varList.First()), 
@@ -413,6 +414,29 @@ namespace LuBox.Compiler
 
             _scope = _scope.Parent;
             return forBlock;
+        }
+
+        private Expression AssignMultiRet(IEnumerable<ParameterExpression> varList, Expression right)
+        {
+            var temp = Expression.Variable(typeof (object));
+            return Expression.Block(
+                new[] { temp },
+                Expression.Assign(temp, right),
+                Expression.IfThenElse(
+                Expression.TypeIs(temp, typeof (LuMultiResult)),
+                Expression.Block(GetVarListAssignments(varList, Expression.Convert(temp, typeof(LuMultiResult))).ToArray()),
+                Expression.Assign(varList.First(), temp)));
+        }
+
+        private IEnumerable<Expression> GetVarListAssignments(IEnumerable<ParameterExpression> varList, Expression multiResultExpression)
+        {
+            int count = 0;
+            foreach (var var in varList)
+            {
+                yield return
+                    Expression.Assign(var, Expression.Call(multiResultExpression, LuMultiResult.GetMethodInfo, Expression.Constant(count)));
+                count++;
+            }
         }
 
         private Expression VisitNumericFor(NuParser.StatContext context)
@@ -595,6 +619,23 @@ namespace LuBox.Compiler
             }
 
             return Expression.Block(expressions);
+        }
+    }
+
+    internal class LuMultiResult
+    {
+        public static MethodInfo GetMethodInfo = typeof (LuMultiResult).GetMethod("Get");
+
+        private readonly object[] _values;
+
+        public LuMultiResult(IEnumerable<object> values)
+        {
+            _values = values.ToArray();
+        }
+
+        public object Get(int index)
+        {
+            return index < _values.Length ? _values[index] : null;
         }
     }
 }

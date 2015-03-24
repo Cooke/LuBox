@@ -92,6 +92,39 @@ namespace LuBox.Test
             Assert.AreEqual(12, test.dto.Func());
         }
 
+        [TestMethod]
+        public void IterateIndexValue()
+        {
+            _engine.DefaultEnvironment.Dynamic.sum = 0;
+            _table.SetField("one", 1);
+            _table.SetField("two", 2);
+            
+            _engine.Execute("for i,v in ipairs(table) do sum = sum + i end");
+            Assert.AreEqual(3, _engine.DefaultEnvironment.Dynamic.sum);
+        }
+
+        [TestMethod]
+        public void IterateIndexValueSum()
+        {
+            _engine.DefaultEnvironment.Dynamic.sum = 0;
+            _table.SetField("one", 1);
+            _table.SetField("two", 2);
+
+            _engine.Execute("for i,v in ipairs(table) do sum = sum + v end");
+            Assert.AreEqual(3, _engine.DefaultEnvironment.Dynamic.sum);
+        }
+
+        [TestMethod]
+        public void IterateKeyValue()
+        {
+            _engine.DefaultEnvironment.Dynamic.sum = 0;
+            _table.SetField("one", 1);
+            _table.SetField("two", 2);
+
+            _engine.Execute("for k,v in pairs(table) do sum = sum + v end");
+            Assert.AreEqual(3, _engine.DefaultEnvironment.Dynamic.sum);
+        }
+
         public class Test
         {
             public void Foo(DTO dto)

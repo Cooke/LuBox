@@ -46,16 +46,7 @@ namespace LuBox
 
         public T Evaluate<T>(string expression, LuTable environment)
         {
-            var lexer = new NuLexer(new AntlrInputStream(expression));
-            var parser = new NuParser(new CommonTokenStream(lexer));
-            var globalScope = new EnvironmentScope(_environmentParameter);
-            var visitor = new Visitor(globalScope, _binderProvider);
-
-            Expression content = visitor.VisitExp(parser.exp());
-
-            object foo = Expression.Lambda(content, _environmentParameter).Compile().DynamicInvoke(environment);
-
-            return (T)Convert.ChangeType(foo, typeof(T));
+            return (T)Convert.ChangeType(Evaluate(expression, environment), typeof (T));
         }
 
         public object Evaluate(string expression)
@@ -65,7 +56,15 @@ namespace LuBox
 
         public object Evaluate(string expression, LuTable environment)
         {
-            return Evaluate<object>(expression, environment);
+            var lexer = new NuLexer(new AntlrInputStream(expression));
+            var parser = new NuParser(new CommonTokenStream(lexer));
+            var globalScope = new EnvironmentScope(_environmentParameter);
+            var visitor = new Visitor(globalScope, _binderProvider);
+
+            Expression content = visitor.VisitExp(parser.exp());
+
+            object foo = Expression.Lambda(content, _environmentParameter).Compile().DynamicInvoke(environment);
+            return foo;
         }
 
         public void Execute(string code)
