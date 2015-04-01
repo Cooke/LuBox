@@ -52,8 +52,10 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BinaryOperatorTests.cs" />
+    <Compile Include="CommentTests.cs" />
     <Compile Include="EnumTest.cs" />
     <Compile Include="ClosureTests.cs" />
+    <Compile Include="ParsingOutputTests.cs" />
     <Compile Include="LocalTests.cs" />
     <Compile Include="LuTableTests.cs" />
     <Compile Include="MathLibraryTests.cs" />

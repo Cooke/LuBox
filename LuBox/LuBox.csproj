@@ -45,10 +45,13 @@
     <Compile Include="Binders\BinderProvider.cs" />
     <Compile Include="Binders\LuSetIndexBinder.cs" />
     <Compile Include="Binders\RestrictionHelper.cs" />
+    <Compile Include="Compilation\LuVisitorException.cs" />
+    <Compile Include="LuCompileException.cs" />
     <Compile Include="InternalTypes\MethodWrapper.cs" />
     <Compile Include="Library\LuBasicLibrary.cs" />
     <Compile Include="Library\LuMathLibrary.cs" />
     <Compile Include="InternalTypes\DelegateWrapper.cs" />
+    <Compile Include="LuCompileMessage.cs" />
     <Compile Include="LuTable.cs" />
     <Compile Include="LuSandboxException.cs" />
     <Compile Include="Compilation\EnvironmentScope.cs" />

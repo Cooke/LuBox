@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -8,16 +7,17 @@ using System.Reflection;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using LuBox.Binders;
+using LuBox.Compiler;
 using LuBox.Parser;
 using LuBox.Runtime;
 
-namespace LuBox.Compiler
+namespace LuBox.Compilation
 {
     internal class Visitor : NuBaseVisitor<Expression>
     {
         private IScope _scope;
         private readonly BinderProvider _binderProvider;
-        private readonly Stack<LabelTarget> returnTargets = new Stack<LabelTarget>(); 
+        private readonly Stack<LabelTarget> _returnTargets = new Stack<LabelTarget>(); 
 
         public Visitor(IScope scope, BinderProvider binderProvider)
         {
@@ -325,10 +325,10 @@ namespace LuBox.Compiler
             }
 
             var returnLabel = Expression.Label(typeof(object));
-            returnTargets.Push(returnLabel);
+            _returnTargets.Push(returnLabel);
             var block = Expression.Block(new[] { VisitBlock(context.block()), Expression.Label(returnLabel, Expression.Constant(null, typeof(object))) });
             _scope = _scope.Parent;
-            returnTargets.Pop();
+            _returnTargets.Pop();
 
             return Expression.New(typeof (LuFunction).GetConstructor(new[] {typeof (Delegate)}),
                 Expression.Lambda(block, parameters));
@@ -375,7 +375,7 @@ namespace LuBox.Compiler
             }
             else
             {
-                throw new ParseCanceledException();
+                throw new LuVisitorException();
             }
         }
 
@@ -593,6 +593,11 @@ namespace LuBox.Compiler
 
         public override Expression VisitBlock(NuParser.BlockContext context)
         {
+            if (context.ChildCount == 0)
+            {
+                return Expression.Empty();
+            }
+
             _scope = new Scope(_scope);
             var stats = context.children.Select(Visit);
             var blockExpression = Expression.Block(_scope.Locals, stats);
@@ -603,7 +608,7 @@ namespace LuBox.Compiler
         public override Expression VisitRetstat(NuParser.RetstatContext context)
         {
             var returnExp = VisitExp(context.explist().exp(0));
-            return Expression.Return(returnTargets.Peek(), Expression.Convert(returnExp, typeof(object)));
+            return Expression.Return(_returnTargets.Peek(), Expression.Convert(returnExp, typeof(object)));
         }
 
         public override Expression VisitChunk(NuParser.ChunkContext context)

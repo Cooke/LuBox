@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using LuBox.Compilation;
 using LuBox.Compiler;
 
 namespace LuBox.Library

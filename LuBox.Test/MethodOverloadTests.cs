@@ -35,8 +35,22 @@ namespace LuBox.Test
             Assert.AreEqual("string params object", result);
         }
 
+        [TestMethod]
+        public void ShallCallIntWithDouble()
+        {
+            var test = new Test();
+            _environment.Dynamic.test = test;
+            var result = _engine.Evaluate<int>("test:CallInt(8.3)", _environment);
+            Assert.AreEqual(8, result);
+        }
+
         public class Test
         {
+            public int CallInt(int integer)
+            {
+                return integer;
+            }
+
             public string Call(string messages)
             {
                 return "string";

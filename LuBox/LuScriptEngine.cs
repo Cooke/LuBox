@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using Antlr4.Runtime;
 using LuBox.Binders;
+using LuBox.Compilation;
 using LuBox.Compiler;
 using LuBox.Library;
 using LuBox.Parser;
@@ -61,10 +62,24 @@ namespace LuBox
             var globalScope = new EnvironmentScope(_environmentParameter);
             var visitor = new Visitor(globalScope, _binderProvider);
 
-            Expression content = visitor.VisitExp(parser.exp());
+            var parserErrorListener = new MemoryParserErrorListener();
+            parser.RemoveErrorListeners();
+            lexer.RemoveErrorListeners();
+            parser.RemoveParseListeners();
+            
+            parser.AddErrorListener(parserErrorListener);
 
-            object foo = Expression.Lambda(content, _environmentParameter).Compile().DynamicInvoke(environment);
-            return foo;
+            try
+            {
+                Expression content = visitor.VisitExp(parser.exp());
+
+                object foo = Expression.Lambda(content, _environmentParameter).Compile().DynamicInvoke(environment);
+                return foo;
+            }
+            catch (Exception)
+            {
+                throw new LuCompileException(parserErrorListener.Messages);
+            }
         }
 
         public void Execute(string code)
@@ -96,9 +111,34 @@ namespace LuBox
             var globalScope = new EnvironmentScope(_environmentParameter);
             var visitor = new Visitor(globalScope, _binderProvider);
 
-            Expression content = visitor.Visit(parser.chunk());
+            var parserErrorListener = new MemoryParserErrorListener();
+            parser.AddErrorListener(parserErrorListener);
 
-            return Expression.Lambda<Action<LuTable>>(content, _environmentParameter).Compile();
+            try
+            {
+                Expression content = visitor.Visit(parser.chunk());
+                return Expression.Lambda<Action<LuTable>>(content, _environmentParameter).Compile();
+            }
+            catch (Exception)
+            {
+                throw new LuCompileException(parserErrorListener.Messages);
+            }
+        }
+
+        private class MemoryParserErrorListener : IAntlrErrorListener<IToken>
+        {
+            private readonly List<LuCompileMessage> messages = new List<LuCompileMessage>();
+
+            public void SyntaxError(IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg,
+                RecognitionException e)
+            {
+                messages.Add(new LuCompileMessage(line, charPositionInLine, msg));
+            }
+
+            public IEnumerable<LuCompileMessage> Messages
+            {
+                get { return messages; }
+            }
         }
     }
 }

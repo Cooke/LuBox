@@ -67,19 +67,10 @@ namespace LuBox.Runtime
                 return true;
             }
 
-            if (pType == typeof (double))
+            Type[] numberTypes = { typeof(int), typeof(float), typeof(long), typeof(double)};
+            if (numberTypes.Contains(pType))
             {
-                return (argType == typeof (int) || argType == typeof (float) || argType == typeof (long));
-            }
-
-            if (pType == typeof (float))
-            {
-                return (argType == typeof(int) || argType == typeof(long));
-            }
-
-            if (pType == typeof(long))
-            {
-                return argType == typeof(int);
+                return numberTypes.Contains(argType);
             }
 
             return false;
