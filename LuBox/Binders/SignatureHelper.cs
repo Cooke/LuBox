@@ -9,6 +9,8 @@ namespace LuBox.Runtime
 
     internal static class SignatureHelper
     {
+        private static readonly Type[] NumberTypes = { typeof(int), typeof(float), typeof(long), typeof(double) };
+
         public static IEnumerable<MethodInfo> OrderSignatureMatches(DynamicMetaObject[] args, MethodInfo[] signatures)
         {
             if (signatures.Length == 1)
@@ -67,13 +69,18 @@ namespace LuBox.Runtime
                 return true;
             }
 
-            Type[] numberTypes = { typeof(int), typeof(float), typeof(long), typeof(double)};
-            if (numberTypes.Contains(pType))
+            
+            if (IsNumberType(pType))
             {
-                return numberTypes.Contains(argType);
+                return IsNumberType(argType);
             }
 
             return false;
+        }
+
+        public static bool IsNumberType(Type type)
+        {
+            return NumberTypes.Contains(type);
         }
 
         public static IEnumerable<Expression> TransformArguments(DynamicMetaObject[] args, MethodInfo methodInfo)

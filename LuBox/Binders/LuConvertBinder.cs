@@ -18,9 +18,7 @@ namespace LuBox.Runtime
                 return Defer(target);
             }
 
-            BindingRestrictions rest = target.Value == null
-                ? BindingRestrictions.GetInstanceRestriction(target.Expression, null)
-                : BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType);
+            var rest = RestrictionHelper.GetTypeOrNullRestriction(target);
 
             return new DynamicMetaObject(Expression.Convert(target.Expression, Type), rest);
         }

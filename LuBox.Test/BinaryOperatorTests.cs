@@ -89,6 +89,42 @@ namespace LuBox.Test
             AssertEval(true, "left < right");
         }
 
+        [TestMethod]
+        public void EnumShallNotBeEqualToNull()
+        {
+            _luScriptEngine.DefaultEnvironment.Dynamic.left = MyEnum.Value1;
+            AssertEval(false, "left == null");
+        }
+
+        [TestMethod]
+        public void EnumShallBeNotNull()
+        {
+            _luScriptEngine.DefaultEnvironment.Dynamic.left = MyEnum.Value1;
+            AssertEval(true, "left ~= null");
+        }
+
+        [TestMethod]
+        public void EnumSameValuesShallBeEqual()
+        {
+            _luScriptEngine.DefaultEnvironment.Dynamic.left = MyEnum.Value1;
+            _luScriptEngine.DefaultEnvironment.Dynamic.right = MyEnum.Value1;
+            AssertEval(true, "left == right");
+        }
+
+        [TestMethod]
+        public void EnumDifferentValuesShallNotBeEqual()
+        {
+            _luScriptEngine.DefaultEnvironment.Dynamic.left = MyEnum.Value1;
+            _luScriptEngine.DefaultEnvironment.Dynamic.right = MyEnum.Value2;
+            AssertEval(false, "left == right");
+        }
+
+        private enum MyEnum 
+        {
+            Value1,
+            Value2
+        }
+
         private void AssertEval<T>(T expected, string expression)
         {
             Assert.AreEqual(expected, _luScriptEngine.Evaluate<T>(expression));

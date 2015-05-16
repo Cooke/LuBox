@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Security.Cryptography.X509Certificates;
 using Antlr4.Runtime;
 using LuBox.Binders;
 using LuBox.Compilation;
@@ -40,22 +41,48 @@ namespace LuBox
             return new LuTable();
         }
 
+        public object Evaluate(string expression)
+        {
+            return CompileExpressionInternal<object>(expression)(_defaultEnvironment);
+        }
+
         public T Evaluate<T>(string expression)
         {
-            return Evaluate<T>(expression, _defaultEnvironment);
+            return CompileExpression<T>(expression)(_defaultEnvironment);
         }
 
         public T Evaluate<T>(string expression, LuTable environment)
         {
-            return (T)Convert.ChangeType(Evaluate(expression, environment), typeof (T));
+            return CompileExpression<T>(expression)(environment);
         }
 
-        public object Evaluate(string expression)
+        public void Execute(string code)
         {
-            return Evaluate(expression, _defaultEnvironment);
+            Compile(code)(_defaultEnvironment);
         }
 
-        public object Evaluate(string expression, LuTable environment)
+        public void Execute(string code, LuTable environment)
+        {
+            Compile(code)(environment);
+        }
+
+        public Func<T> CompileExpressionBind<T>(string code)
+        {
+            return CompileExpressionBind<T>(code, _defaultEnvironment);
+        }
+
+        public Func<T> CompileExpressionBind<T>(string code, LuTable environment)
+        {
+            var action = CompileExpression<T>(code);
+            return () => action(environment);
+        }
+
+        public Func<LuTable, T> CompileExpression<T>(string expression)
+        {
+            return CompileExpressionInternal<T>(expression);
+        }
+
+        private Func<LuTable, T> CompileExpressionInternal<T>(string expression)
         {
             var lexer = new NuLexer(new AntlrInputStream(expression));
             var parser = new NuParser(new CommonTokenStream(lexer));
@@ -66,31 +93,19 @@ namespace LuBox
             parser.RemoveErrorListeners();
             lexer.RemoveErrorListeners();
             parser.RemoveParseListeners();
-            
+
             parser.AddErrorListener(parserErrorListener);
 
             try
             {
-                Expression content = visitor.VisitExp(parser.exp());
-
-                object foo = Expression.Lambda(content, _environmentParameter).Compile().DynamicInvoke(environment);
-                return foo;
+                Expression body = Expression.Convert(visitor.VisitExp(parser.exp()), typeof(object));
+                var innerLambda = (Func<LuTable, object>) Expression.Lambda(body, _environmentParameter).Compile();
+                return x => (T) Convert.ChangeType(innerLambda(x), typeof(T));
             }
             catch (Exception)
             {
                 throw new LuCompileException(parserErrorListener.Messages);
             }
-        }
-
-        public void Execute(string code)
-        {
-            Compile(code)(_defaultEnvironment);
-        }
-
-
-        public void Execute(string code, LuTable environment)
-        {
-            Compile(code)(environment);
         }
 
         public Action CompileBind(string code)
