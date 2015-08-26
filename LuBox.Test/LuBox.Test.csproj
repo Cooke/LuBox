@@ -51,6 +51,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="AccessClrIndexerTests.cs" />
     <Compile Include="BinaryOperatorTests.cs" />
     <Compile Include="CommentTests.cs" />
     <Compile Include="EnumTest.cs" />

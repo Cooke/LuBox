@@ -1,6 +1,7 @@
 using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace LuBox.Runtime
 {
@@ -23,16 +24,28 @@ namespace LuBox.Runtime
                 throw new LuRuntimeException("Only one indexer is allowed");
             }
 
-            // TODO add support for more types of arrays
-            if (target.LimitType != typeof (int[]))
-            {
-                throw new LuRuntimeException("Only arrays of type int[] are allowed");
-            }
-            
-            var setMethodIfo = target.LimitType.GetMethod("SetValue", new[] { typeof(int) });
+            var instanceExpression = Expression.Convert(target.Expression, target.LimitType);
 
-            var indexExpression = Expression.Call(Expression.Convert(target.Expression, target.LimitType), setMethodIfo, indexes[0].Expression, value.Expression);
-            return new DynamicMetaObject(indexExpression, BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+            var indexerInfo = target.LimitType.GetProperty("Item");
+            if (indexerInfo != null)
+            {
+                var indexAccessExpression = Expression.MakeIndex(instanceExpression, indexerInfo, new[] {  indexes[0].Expression });
+                var assignExpression = Expression.Assign(indexAccessExpression, value.Expression);
+                return new DynamicMetaObject(assignExpression, BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+            }
+            else if (target.LimitType == typeof (int[]))
+            {
+                var setMethodIfo = target.LimitType.GetMethod("SetValue", new[] {typeof (int)});
+
+                var indexExpression = Expression.Call(instanceExpression,
+                    setMethodIfo, indexes[0].Expression, value.Expression);
+                return new DynamicMetaObject(indexExpression,
+                    BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+            }
+            else
+            {
+                throw new LuRuntimeException("Only custom indexer and arrays of int[] are allowed");
+            }
         }
     }
 }

@@ -24,16 +24,24 @@ namespace LuBox.Runtime
                 throw new LuRuntimeException("Only one indexer is allowed");
             }
 
-            // TODO add support for more types of arrays
-            if (target.LimitType != typeof(int[]))
+            var instanceExpression = Expression.Convert(target.Expression, target.LimitType);
+
+            var indexerInfo = target.LimitType.GetProperty("Item");
+            if (indexerInfo != null)
             {
-                throw new LuRuntimeException("Only arrays of type int[] are allowed");
+                var indexAccessExpression = Expression.MakeIndex(instanceExpression, indexerInfo, new[] { indexes[0].Expression });
+                return new DynamicMetaObject(indexAccessExpression, BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
             }
-
-            var getMethodIfo = target.LimitType.GetMethod("GetValue", new[] {typeof (int)});
-
-            var indexExpression = Expression.Call(Expression.Convert(target.Expression, target.LimitType), getMethodIfo, indexes.First().Expression);
-            return new DynamicMetaObject(indexExpression, BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+            else if (target.LimitType == typeof(int[]))
+            {
+                var getMethodIfo = target.LimitType.GetMethod("GetValue", new[] { typeof(int) });
+                var indexExpression = Expression.Call(instanceExpression, getMethodIfo, indexes.First().Expression);
+                return new DynamicMetaObject(indexExpression, BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+            }
+            else
+            {
+                throw new LuRuntimeException("Only custom indexer and arrays of int[] are allowed");
+            }
         }
     }
 }

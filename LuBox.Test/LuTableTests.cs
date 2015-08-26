@@ -46,6 +46,14 @@ namespace LuBox.Test
         }
 
         [TestMethod]
+        public void SetValueIndexOnInnerTable()
+        {
+            _engine.Execute("table.innerTable = {}");
+            _engine.Execute("table.innerTable[\"value\"] = 1");
+            Assert.AreEqual(1, ((LuTable)_table.GetField("innerTable")).GetField("value"));
+        }
+
+        [TestMethod]
         public void CreateEmptyTable()
         {
             _engine.Execute("table =  { }");
