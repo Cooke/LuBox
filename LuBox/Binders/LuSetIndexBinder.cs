@@ -29,9 +29,15 @@ namespace LuBox.Runtime
             var indexerInfo = target.LimitType.GetProperty("Item");
             if (indexerInfo != null)
             {
-                var indexAccessExpression = Expression.MakeIndex(instanceExpression, indexerInfo, new[] {  indexes[0].Expression });
-                var assignExpression = Expression.Assign(indexAccessExpression, value.Expression);
-                return new DynamicMetaObject(assignExpression, BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+                var indexAccessExpression = Expression.MakeIndex(instanceExpression, indexerInfo,
+                    new[]
+                    {
+                        Expression.Dynamic(new LuConvertBinder(indexes[0].LimitType), indexes[0].LimitType,
+                            indexes[0].Expression)
+                    });
+                var assignExpression = Expression.Assign(indexAccessExpression, Expression.Dynamic(new LuConvertBinder(indexerInfo.PropertyType), indexerInfo.PropertyType, value.Expression));
+                var restrictions = RestrictionHelper.GetTypeRestrictions(target, new[] {indexes[0], value});
+                return new DynamicMetaObject(assignExpression, restrictions);
             }
             else if (target.LimitType == typeof (int[]))
             {

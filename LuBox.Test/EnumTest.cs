@@ -26,6 +26,14 @@ namespace LuBox.Test
             Assert.AreEqual(Number.One, o);
         }
 
+        [TestMethod]
+        public void EnumWithCustomName()
+        {
+            _environment.AddEnum(typeof(Number), "Dummy");
+            var o = _luScriptEngine.Evaluate<Number>("Dummy.One", _environment);
+            Assert.AreEqual(Number.One, o);
+        }
+
         private enum Number
         {
             One,

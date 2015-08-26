@@ -52,12 +52,17 @@ namespace LuBox
 
         public void AddEnum(Type type)
         {
+            AddEnum(type, type.Name);
+        }
+
+        public void AddEnum(Type type, string name)
+        {
             if (!type.IsEnum)
             {
                 throw new ArgumentException("The specified type is not allowed");
             }
-            
-            SetField(type.Name, new EnumWrapper(type));
+
+            SetField(name, new EnumWrapper(type));
         }
 
         public DynamicMetaObject GetMetaObject(Expression parameter)
