@@ -125,11 +125,11 @@ varOrExp
     ;
 
 nameAndArgs
-    : (':' NAME)? args
+    : (colonOrQuestionMarkColon NAME)? args
     ;
 
 varSuffix
-    : nameAndArgs* ('[' exp ']' | '.' NAME)
+    : nameAndArgs* ('[' exp ']' | dotOrQuestionMarkDot NAME)
     ;
 
 /*
@@ -201,6 +201,12 @@ operatorUnary
 
 operatorPower
     : '^';
+
+dotOrQuestionMarkDot
+    : '.' | '?.';
+
+colonOrQuestionMarkColon
+    : ':' | '?:';
 
 number
     : INT | HEX | FLOAT | HEX_FLOAT

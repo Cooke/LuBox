@@ -56,6 +56,7 @@
     <Compile Include="CommentTests.cs" />
     <Compile Include="EnumTest.cs" />
     <Compile Include="ClosureTests.cs" />
+    <Compile Include="ConditionalInvokeGetTests.cs" />
     <Compile Include="ParsingOutputTests.cs" />
     <Compile Include="LocalTests.cs" />
     <Compile Include="LuTableTests.cs" />

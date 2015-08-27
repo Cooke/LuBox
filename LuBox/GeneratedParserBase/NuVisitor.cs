@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Development\NuBox\LuBox.Parser\Nu.g4 by ANTLR 4.3
+// Generated from C:\Development\LuBox\LuBox.Parser\Nu.g4 by ANTLR 4.3
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -87,6 +87,13 @@ public interface INuVisitor<Result> : IParseTreeVisitor<Result> {
 	Result VisitFunctioncall([NotNull] NuParser.FunctioncallContext context);
 
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context);
+
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="NuParser.operatorPower"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -127,6 +134,13 @@ public interface INuVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitOperatorAddSub([NotNull] NuParser.OperatorAddSubContext context);
+
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context);
 
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="NuParser.namelist"/>.

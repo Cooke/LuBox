@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using LuBox.Binders;
@@ -58,69 +59,96 @@ namespace LuBox.Compilation
                 leftExp = VisitVar(context.varOrExp().var());
             }
             
-            return ProcessNameAndArgs(context.nameAndArgs(), leftExp);
+            return ProcessNameAndArgs(context.nameAndArgs())(leftExp);
         }
 
-        private Expression ProcessNameAndArgs(IEnumerable<NuParser.NameAndArgsContext> nameAndArgsList, Expression leftExp)
+        private Func<Expression, Expression> ProcessNameAndArgs(IEnumerable<NuParser.NameAndArgsContext> nameAndArgsList)
         {
-            foreach (var nameAndArgsContext in nameAndArgsList)
+            if (!nameAndArgsList.Any())
             {
-                string memberName = nameAndArgsContext.NAME() != null ? nameAndArgsContext.NAME().GetText() : null;
-
-                IEnumerable<Expression> args = new[] {leftExp};
-                if (nameAndArgsContext.args().explist() != null)
-                {
-                    args = args.Concat(nameAndArgsContext.args().explist().exp().Select(VisitExp));
-                }
-
-                if (memberName != null)
-                {
-                    var callInfo = new CallInfo(nameAndArgsContext.args().ChildCount);
-                    var binder = _binderProvider.GetInvokeMemberBinder(memberName, callInfo);
-                    leftExp = Expression.Dynamic(binder, typeof (object), args);
-                }
-                else
-                {
-                    leftExp = Expression.Dynamic(new LuInvokeBinder(new CallInfo(args.Count())), typeof (object), args);
-                }
+                return x => x;
             }
 
-            return leftExp;
+            return leftExp =>
+            {
+                var rightEval = ProcessNameAndArgs(nameAndArgsList.Skip(1));
+                var nameAndArgsContext = nameAndArgsList.First();
+                var thisExp = DoProcessNameAndArgs(nameAndArgsContext, leftExp);
+                return rightEval(thisExp);
+            };
         }
 
-        public Expression VisitVarSuffix(NuParser.VarSuffixContext suffix, Expression left)
+        private Expression DoProcessNameAndArgs(NuParser.NameAndArgsContext nameAndArgsContext, Expression leftExp)
         {
-            left = ProcessNameAndArgs(suffix.nameAndArgs(), left);
+            string memberName = nameAndArgsContext.NAME() != null ? nameAndArgsContext.NAME().GetText() : null;
 
+            IEnumerable<Expression> args = new[] {leftExp};
+            if (nameAndArgsContext.args().explist() != null)
+            {
+                args = args.Concat(nameAndArgsContext.args().explist().exp().Select(VisitExp));
+            }
+
+            if (memberName != null)
+            {
+                var callInfo = new CallInfo(nameAndArgsContext.args().ChildCount);
+                var binder = _binderProvider.GetInvokeMemberBinder(memberName, callInfo);
+                return Expression.Dynamic(binder, typeof (object), args);
+            }
+            else
+            {
+                return Expression.Dynamic(new LuInvokeBinder(new CallInfo(args.Count())), typeof (object), args);
+            }
+        }
+
+        public Func<Expression, Expression> ProcessVarSuffix(NuParser.VarSuffixContext suffix)
+        {
+            return leftExp =>
+            {
+                var rightEval = ProcessNameAndArgs(suffix.nameAndArgs());
+                var thisExp = DoVisitVarSuffix(suffix, leftExp);
+                return rightEval(thisExp);
+            };
+
+        }
+
+        private Expression DoVisitVarSuffix(NuParser.VarSuffixContext suffix, Expression leftExp)
+        {
             if (suffix.NAME() != null)
             {
-                left =
-                    Expression.Dynamic(_binderProvider.GetGetMemberBinder(suffix.NAME().GetText()), typeof(object), left);
+                return Expression.Dynamic(_binderProvider.GetGetMemberBinder(suffix.NAME().GetText()), typeof (object),
+                    leftExp);
             }
             else if (suffix.exp() != null)
             {
-                left =
-                    Expression.Dynamic(new LuGetIndexBinder(new CallInfo(1)),
-                        typeof(object), left, VisitExp(suffix.exp()));
+                return Expression.Dynamic(new LuGetIndexBinder(new CallInfo(1)),
+                    typeof (object), leftExp, VisitExp(suffix.exp()));
             }
             else
             {
                 throw new ParseCanceledException();
             }
-
-            return left;
         }
 
         public override Expression VisitVar(NuParser.VarContext context)
-        {            
+        {
             Expression left = _scope.Get(context.NAME().GetText());
-            foreach (var suffix in context.varSuffix())
-            {
-                left = ProcessNameAndArgs(suffix.nameAndArgs(), left);
-                left = VisitVarSuffix(suffix, left);
-            }
+            return ProcessVarSuffixes(context.varSuffix())(left);
+        }
 
-            return left;
+        private Func<Expression, Expression> ProcessVarSuffixes(IEnumerable<NuParser.VarSuffixContext> varSuffix)
+        {
+            if (!varSuffix.Any())
+            {
+                return x => x;
+            }
+            
+            return leftExp =>
+            {
+                var rightEval = ProcessVarSuffixes(varSuffix.Skip(1));
+                var processNameAndArgs = ProcessNameAndArgs(varSuffix.First().nameAndArgs())(leftExp);
+                var thisExp = DoVisitVarSuffix(varSuffix.First(), processNameAndArgs);
+                return rightEval(thisExp);
+            };
         }
 
         public override Expression VisitExp(NuParser.ExpContext context)
@@ -542,28 +570,23 @@ namespace LuBox.Compilation
             return Expression.Block(assignmentExpression);
         }
 
-        private Expression CreateAssignmentExpression(NuParser.VarContext context, Expression expExpression)
+        private Expression CreateAssignmentExpression(NuParser.VarContext context, Expression rightExp)
         {
             if (context.varSuffix().Any())
             {
                 Expression left = _scope.Get(context.NAME().GetText());
-                for (int i = 0; i < context.varSuffix().Count - 1; i++)
-                {
-                    var suffix = context.varSuffix(i);
-                    left = ProcessNameAndArgs(suffix.nameAndArgs(), left);
-                    left = VisitVarSuffix(suffix, left);
-                }
+                left = ProcessVarSuffixes(context.varSuffix().Take(context.varSuffix().Count - 1))(left);
 
                 var lastSuffix = context.varSuffix(context.varSuffix().Count - 1);
                 if (lastSuffix.NAME() != null)
                 {
                     return Expression.Dynamic(_binderProvider.GetSetMemberBinder(lastSuffix.NAME().GetText()), typeof (object),
-                        left, expExpression);
+                        left, rightExp);
                 }
                 else if (lastSuffix.exp() != null)
                 {
                     return Expression.Dynamic(new LuSetIndexBinder(new CallInfo(1)), typeof(object),
-                        left, VisitExp(lastSuffix.exp()), expExpression);
+                        left, VisitExp(lastSuffix.exp()), rightExp);
                 }
                 else
                 {
@@ -572,7 +595,7 @@ namespace LuBox.Compilation
             }
             else
             {
-                return _scope.Set(context.NAME().GetText(), expExpression);
+                return _scope.Set(context.NAME().GetText(), rightExp);
             }
         }
 
@@ -588,7 +611,7 @@ namespace LuBox.Compilation
                 leftExp = VisitVar(context.varOrExp().var());
             }
 
-            return ProcessNameAndArgs(context.nameAndArgs(), leftExp);
+            return ProcessNameAndArgs(context.nameAndArgs())(leftExp);
         }
 
         public override Expression VisitBlock(NuParser.BlockContext context)

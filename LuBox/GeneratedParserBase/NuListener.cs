@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Development\NuBox\LuBox.Parser\Nu.g4 by ANTLR 4.3
+// Generated from C:\Development\LuBox\LuBox.Parser\Nu.g4 by ANTLR 4.3
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -118,6 +118,17 @@ public interface INuListener : IParseTreeListener {
 	void ExitFunctioncall([NotNull] NuParser.FunctioncallContext context);
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context);
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="NuParser.operatorPower"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -182,6 +193,17 @@ public interface INuListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitOperatorAddSub([NotNull] NuParser.OperatorAddSubContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context);
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="NuParser.namelist"/>.

@@ -49,7 +49,7 @@
   <ItemGroup>
     <Antlr4 Include="Nu.g4">
       <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>NuBox.Parser</CustomToolNamespace>
+      <CustomToolNamespace>LuBox.Parser</CustomToolNamespace>
     </Antlr4>
   </ItemGroup>
   <ItemGroup>

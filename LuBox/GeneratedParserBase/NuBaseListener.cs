@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Development\NuBox\LuBox.Parser\Nu.g4 by ANTLR 4.3
+// Generated from C:\Development\LuBox\LuBox.Parser\Nu.g4 by ANTLR 4.3
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -138,6 +138,19 @@ public partial class NuBaseListener : INuListener {
 	public virtual void ExitFunctioncall([NotNull] NuParser.FunctioncallContext context) { }
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context) { }
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="NuParser.operatorPower"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -214,6 +227,19 @@ public partial class NuBaseListener : INuListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitOperatorAddSub([NotNull] NuParser.OperatorAddSubContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context) { }
 
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="NuParser.namelist"/>.
