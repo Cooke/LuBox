@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Dynamic;
+using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace LuBox.Test
@@ -130,6 +131,42 @@ namespace LuBox.Test
             Assert.AreEqual(2, callCounter.Counter);
         }
 
+        [TestMethod]
+        public void CallOnIndexerColon1()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter['hi']:Call()", _environment);
+            Assert.AreEqual(1, callCounter.Counter);
+        }
+
+        [TestMethod]
+        public void CallOnIndexerDot()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter['hi'].Call()", _environment);
+            Assert.AreEqual(1, callCounter.Counter);
+        }
+
+        [TestMethod]
+        public void CallOnIndexerColonQuestionMark()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter['hi']?:Call()", _environment);
+            Assert.AreEqual(1, callCounter.Counter);
+        }
+
+        [TestMethod]
+        public void CallOnIndexerDotQuestionMark()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter['hi']?.Call()", _environment);
+            Assert.AreEqual(1, callCounter.Counter);
+        }
+
         private class CallCounter
         {
             private int counter;
@@ -144,6 +181,8 @@ namespace LuBox.Test
             {
                 get { return counter; }
             }
+
+            public CallCounter this[string str] => str == "hi" ? this : null;
         }
     }
 }

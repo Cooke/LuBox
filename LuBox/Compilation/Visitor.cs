@@ -157,8 +157,8 @@ namespace LuBox.Compilation
             }
             else if (suffix.exp() != null)
             {
-                return Expression.Dynamic(new LuGetIndexBinder(new CallInfo(1)),
-                    typeof (object), leftExp, VisitExp(suffix.exp()));
+                return outerRightEval(Expression.Dynamic(new LuGetIndexBinder(new CallInfo(1)),
+                    typeof (object), leftExp, VisitExp(suffix.exp())));
             }
             else
             {
@@ -647,13 +647,13 @@ namespace LuBox.Compilation
             if (context.varOrExp().exp() != null)
             {
                 leftExp = VisitExp(context.varOrExp().exp());
+                return ProcessNameAndArgs(context.nameAndArgs())(leftExp);
             }
             else
             {
-                leftExp = VisitVar(context.varOrExp().var());
+                var rightEval = ProcessNameAndArgs(context.nameAndArgs());
+                return VisitVar(context.varOrExp().var(), rightEval);
             }
-
-            return ProcessNameAndArgs(context.nameAndArgs())(leftExp);
         }
 
         public override Expression VisitBlock(NuParser.BlockContext context)
