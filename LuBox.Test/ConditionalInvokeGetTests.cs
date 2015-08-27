@@ -46,5 +46,104 @@ namespace LuBox.Test
             var field1 = _luScriptEngine.Evaluate<string>("field1?.ToString()", _environment);
             Assert.IsNull(field1);
         }
+
+        [TestMethod]
+        public void ShallReturnNullWhenNullDotNullDot()
+        {
+            var field1 = _luScriptEngine.Evaluate<string>("field1?.ToString()?.Test", _environment);
+            Assert.IsNull(field1);
+        }
+
+        [TestMethod]
+        public void ShallReturnNullWhenNotNullDotNullDot()
+        {
+            _environment.Dynamic.field1 = new Tuple<string>(null);
+            var field1 = _luScriptEngine.Evaluate<string>("field1?.Item1?.Test", _environment);
+            Assert.IsNull(field1);
+        }
+
+        [TestMethod]
+        public void ShallReturnNullWhenNotNullDotNullDotVarient()
+        {
+            _environment.Dynamic.field1 = new Tuple<string>(null);
+            var field1 = _luScriptEngine.Evaluate<string>("field1.Item1?.Test", _environment);
+            Assert.IsNull(field1);
+        }
+
+        [TestMethod]
+        public void ShallReturnNotNullWhenNotNullDotNotNullDot()
+        {
+            _environment.Dynamic.field1 = new Tuple<string>("hello");
+            var field1 = _luScriptEngine.Evaluate<string>("field1.Item1?.ToString()", _environment);
+            Assert.IsNotNull(field1);
+        }
+
+        [TestMethod]
+        public void ShallReturnNotNullWhenNotNullDotNotNullDotVarient()
+        {
+            _environment.Dynamic.field1 = new Tuple<string>("hello");
+            var field1 = _luScriptEngine.Evaluate<string>("field1.Item1.ToString()", _environment);
+            Assert.IsNotNull(field1);
+        }
+
+        [TestMethod]
+        public void ShallReturnNotNullWhenNotNullDotNotNullDotVarient2()
+        {
+            _environment.Dynamic.field1 = new Tuple<string>("hello");
+            var field1 = _luScriptEngine.Evaluate<string>("field1?.Item1?.ToString()", _environment);
+            Assert.IsNotNull(field1);
+        }
+
+        [TestMethod]
+        public void ShallOnlyCallOneTimePerSymbolReferenceTest()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter:Call():Call()", _environment);
+            Assert.AreEqual(2, callCounter.Counter);
+        }
+
+        [TestMethod]
+        public void ShallOnlyCallOneTimePerSymbolReferenceTestDot()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter.Call().Call()", _environment);
+            Assert.AreEqual(2, callCounter.Counter);
+        }
+
+        [TestMethod]
+        public void ShallOnlyCallOneTimePerSymbol()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter?:Call()?:Call()", _environment);
+            Assert.AreEqual(2, callCounter.Counter);
+        }
+
+        [TestMethod]
+        public void ShallOnlyCallOneTimePerSymbolDot()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter?.Call()?.Call()", _environment);
+            Assert.AreEqual(2, callCounter.Counter);
+        }
+
+        private class CallCounter
+        {
+            private int counter;
+
+            public CallCounter Call()
+            {
+                counter++;
+                return this;
+            }
+
+            public int Counter
+            {
+                get { return counter; }
+            }
+        }
     }
 }
