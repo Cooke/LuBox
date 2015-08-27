@@ -167,6 +167,60 @@ namespace LuBox.Test
             Assert.AreEqual(1, callCounter.Counter);
         }
 
+        [TestMethod]
+        public void CallOnIndexerColon2()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter['hi']:Call():Call()", _environment);
+            Assert.AreEqual(2, callCounter.Counter);
+        }
+
+        [TestMethod]
+        public void CallOnIndexerDot2()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter['hi'].Call().Call()", _environment);
+            Assert.AreEqual(2, callCounter.Counter);
+        }
+
+        [TestMethod]
+        public void CallOnIndexerColonQuestionMark2()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter['hi']?:Call()['hi']?.Call()", _environment);
+            Assert.AreEqual(2, callCounter.Counter);
+        }
+
+        [TestMethod]
+        public void CallOnIndexerDotQuestionMark2()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter['hi']?.Call()['hi']?.Call()", _environment);
+            Assert.AreEqual(2, callCounter.Counter);
+        }
+
+        [TestMethod]
+        public void CallOnIndexerDotQuestionMark3()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter['hi']?.Call()['ASDASD']?.Call()", _environment);
+            Assert.AreEqual(1, callCounter.Counter);
+        }
+
+        [TestMethod]
+        public void CallOnIndexerDotQuestionMark4()
+        {
+            var callCounter = new CallCounter();
+            _environment.Dynamic.callCounter = callCounter;
+            _luScriptEngine.Execute("callCounter['asdfasdf']?.Call()['hi']?.Call()", _environment);
+            Assert.AreEqual(0, callCounter.Counter);
+        }
+
         private class CallCounter
         {
             private int counter;
