@@ -514,8 +514,8 @@ namespace LuBox.Compilation
             _scope = new Scope(_scope);
 
             Expression varValueExp = VisitExp(context.exp(0));
-            Expression limitValueExp = VisitExp(context.exp(1));
-            Expression stepValueExp = context.exp(2) != null ? VisitExp(context.exp(2)) : Expression.Constant(1);
+            Expression limitValueExp = Expression.Dynamic(new LuConvertBinder(typeof(int)), typeof(int), VisitExp(context.exp(1)));
+            Expression stepValueExp = context.exp(2) != null ? (Expression)Expression.Dynamic(new LuConvertBinder(typeof(int)), typeof(int), VisitExp(context.exp(2))) : Expression.Constant(1);
 
             ParameterExpression var = _scope.CreateLocal(context.NAME().GetText(), varValueExp.Type);
             ParameterExpression limit = Expression.Variable(limitValueExp.Type);
@@ -532,9 +532,14 @@ namespace LuBox.Compilation
                 Expression.Loop(
                     Expression.Block(
                         Expression.IfThenElse(
-                            Expression.Convert(
-                                Expression.Dynamic(new LuBinaryOperationBinder(ExpressionType.LessThanOrEqual), typeof (object),
-                                    var, limit), typeof (bool)), innerBlock, Expression.Break(breakLabel)),
+                            Expression.Or(
+                                Expression.And(
+                                    Expression.GreaterThanOrEqual(step, Expression.Constant(0)),
+                                    Expression.GreaterThan(var, limit)),
+                                Expression.And(
+                                    Expression.LessThan(step, Expression.Constant(0)),
+                                    Expression.LessThan(var, limit))),
+                            Expression.Break(breakLabel), innerBlock),
                         Expression.AddAssign(var, step)),
                     breakLabel));
 

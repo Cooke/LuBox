@@ -52,6 +52,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AccessClrIndexerTests.cs" />
+    <Compile Include="AutoConvertTests.cs" />
     <Compile Include="BinaryOperatorTests.cs" />
     <Compile Include="CommentTests.cs" />
     <Compile Include="EnumTest.cs" />

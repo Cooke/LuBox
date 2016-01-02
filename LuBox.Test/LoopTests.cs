@@ -28,6 +28,14 @@ namespace LuBox.Test
         }
 
         [TestMethod]
+        public void NumericForDecrement()
+        {
+            _environment.Dynamic.counter = 0;
+            _luScriptEngine.Execute("for i=10, 1, -1 do counter = counter + 1 end", _environment);
+            Assert.AreEqual(10, _environment.Dynamic.counter);
+        }
+
+        [TestMethod]
         public void NumericForUseVariable()
         {
             _environment.Dynamic.counter = 0;

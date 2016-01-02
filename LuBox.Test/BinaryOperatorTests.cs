@@ -119,6 +119,14 @@ namespace LuBox.Test
             AssertEval(false, "left == right");
         }
 
+        [TestMethod]
+        public void EnumGreaterThan()
+        {
+            _luScriptEngine.DefaultEnvironment.Dynamic.left = MyEnum.Value1;
+            _luScriptEngine.DefaultEnvironment.Dynamic.right = MyEnum.Value2;
+            AssertEval(true, "left < right");
+        }
+
         private enum MyEnum 
         {
             Value1,

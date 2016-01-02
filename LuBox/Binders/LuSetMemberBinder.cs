@@ -30,11 +30,11 @@ namespace LuBox.Runtime
             Expression val = null;
             if (member.MemberType == MemberTypes.Property)
             {
-                val = Expression.Convert(value.Expression, ((PropertyInfo) member).PropertyType);
+                val = Expression.Convert(Expression.Convert(value.Expression, value.LimitType), ((PropertyInfo) member).PropertyType);
             }
             else if (member.MemberType == MemberTypes.Field)
             {
-                val = Expression.Convert(value.Expression,
+                val = Expression.Convert(Expression.Convert(value.Expression, value.LimitType),
                     ((FieldInfo) member).FieldType);
             }
 
@@ -42,8 +42,7 @@ namespace LuBox.Runtime
                 ResultHelper.EnsureObjectResult(
                     Expression.Assign(
                         Expression.MakeMemberAccess(Expression.Convert(target.Expression, member.DeclaringType), member), val)),
-                BindingRestrictions.GetTypeRestriction(target.Expression,
-                    target.LimitType));
+                BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType).Merge(BindingRestrictions.GetTypeRestriction(value.Expression, value.LimitType)));
         }
     }
 }

@@ -133,6 +133,22 @@ namespace LuBox.Test
             Assert.AreEqual(3, _engine.DefaultEnvironment.Dynamic.sum);
         }
 
+        [TestMethod]
+        public void SetWithIntKey()
+        {
+            _engine.Execute("table[1] = 123");
+
+            Assert.AreEqual(123, _engine.DefaultEnvironment.Dynamic.table[1]);
+        }
+
+        [TestMethod]
+        public void GetWithIntKey()
+        {
+            _table.SetField(2, 123);
+
+            Assert.AreEqual(123, _engine.Evaluate("table[2]"));
+        }
+
         public class Test
         {
             public void Foo(DTO dto)

@@ -43,12 +43,25 @@ namespace LuBox.Runtime
             }
             else
             {
+                var leftExpression = ConvertToComparableType(left);
+                var rightExpression = ConvertToComparableType(right);
                 return
                     new DynamicMetaObject(
                         Expression.Convert(
-                            Expression.MakeBinary(Operation, Expression.Convert(left.Expression, left.LimitType),
-                                Expression.Convert(right.Expression, right.LimitType)), typeof(object)), restrictions);
+                            Expression.MakeBinary(Operation,
+                                leftExpression,
+                                rightExpression), typeof (object)), restrictions);
             }
+        }
+
+        private Expression ConvertToComparableType(DynamicMetaObject left)
+        {
+            if (left.LimitType.IsEnum)
+            {
+                return Expression.Convert(left.Expression, typeof (int));
+            }
+
+            return Expression.Convert(left.Expression, left.LimitType);
         }
 
         private DynamicMetaObject EqualOperation(DynamicMetaObject left, DynamicMetaObject right,

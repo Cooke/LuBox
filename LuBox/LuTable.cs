@@ -99,7 +99,7 @@ namespace LuBox
 
             public override DynamicMetaObject BindSetIndex(SetIndexBinder binder, DynamicMetaObject[] indexes, DynamicMetaObject value)
             {
-                var getExpression = Expression.Call(Expression.Convert(Expression, LimitType), SetMethodInfo, indexes[0].Expression, Expression.Convert(value.Expression, typeof(object)));
+                var getExpression = Expression.Call(Expression.Convert(Expression, LimitType), SetMethodInfo, Expression.Convert(indexes[0].Expression, typeof(object)), Expression.Convert(value.Expression, typeof(object)));
                 var bindingRestrictions = BindingRestrictions.GetTypeRestriction(Expression, LimitType);
                 return new DynamicMetaObject(getExpression, bindingRestrictions);
             }
