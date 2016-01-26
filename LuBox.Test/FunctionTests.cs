@@ -138,6 +138,17 @@ out = func()", _environment);
             Assert.AreEqual(3, _environment.Dynamic.@out);
         }
 
+        [TestMethod]
+        public void FunctionConvertedToFunc()
+        {
+            var plusOne = _luScriptEngine.Evaluate<Func<int, int>>(@"
+function(input) 
+    return input + 1
+end", _environment);
+
+            Assert.AreEqual(3, plusOne(2));
+        }
+
         private static object Invoke(object func)
         {
             dynamic dfunc = func;

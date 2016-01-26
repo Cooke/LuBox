@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using Antlr4.Runtime;
@@ -100,7 +101,23 @@ namespace LuBox
             {
                 Expression body = Expression.Convert(visitor.VisitExp(parser.exp()), typeof(object));
                 var innerLambda = (Func<LuTable, object>) Expression.Lambda(body, _environmentParameter).Compile();
-                return x => (T) Convert.ChangeType(innerLambda(x), typeof(T));
+                return x =>
+                {
+                    var result = innerLambda(x);
+                    if (result is IConvertible)
+                    {
+                        return (T) Convert.ChangeType(result, typeof (T));
+                    }
+                    else if (result is IDynamicMetaObjectProvider)
+                    {
+                        dynamic dynResult = result;
+                        return (T) dynResult;
+                    }
+                    else
+                    {
+                        return (T) result;
+                    }
+                };
             }
             catch (Exception)
             {

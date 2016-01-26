@@ -1,3 +1,5 @@
+using System.Collections;
+
 namespace LuBox.Runtime
 {
     using System;
@@ -11,7 +13,7 @@ namespace LuBox.Runtime
     {
         private static readonly Type[] NumberTypes = { typeof(int), typeof(float), typeof(long), typeof(double) };
 
-        public static IEnumerable<MethodInfo> OrderSignatureMatches(DynamicMetaObject[] args, MethodInfo[] signatures)
+        public static IEnumerable<MethodBase> OrderSignatureMatches(DynamicMetaObject[] args, MethodBase[] signatures)
         {
             if (signatures.Length == 1)
             {
@@ -28,7 +30,7 @@ namespace LuBox.Runtime
             return orderSignatureMatches;
         }
 
-        public static bool AreArgumentTypesAssignable(Type[] argTypes, MethodInfo methodInfo)
+        public static bool AreArgumentTypesAssignable(Type[] argTypes, MethodBase methodInfo)
         {
             var paramTypes = methodInfo.GetParameters().ToArray();
             return
@@ -59,6 +61,11 @@ namespace LuBox.Runtime
                 return true;
             }
 
+            if ((pType.IsGenericType && pType.GetGenericTypeDefinition() == typeof(IEnumerable<>) || pType == typeof(IEnumerable)) && argType == typeof(LuTable))
+            {
+                return true;
+            }
+
             if (pType.IsClass && pType.GetConstructor(new Type[0]) != null)
             {
                 return argType == typeof(LuTable);
@@ -68,7 +75,6 @@ namespace LuBox.Runtime
             {
                 return true;
             }
-
             
             if (IsNumberType(pType))
             {
@@ -83,7 +89,7 @@ namespace LuBox.Runtime
             return NumberTypes.Contains(type);
         }
 
-        public static IEnumerable<Expression> TransformArguments(DynamicMetaObject[] args, MethodInfo methodInfo)
+        public static IEnumerable<Expression> TransformArguments(DynamicMetaObject[] args, MethodBase methodInfo)
         {
             var callArguments = args.Select(x => x.Expression).ToArray();
             var parameterInfos = methodInfo.GetParameters();

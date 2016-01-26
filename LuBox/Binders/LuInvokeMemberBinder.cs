@@ -49,7 +49,7 @@ namespace LuBox.Runtime
         private MethodInfo GetMemberInfo(DynamicMetaObject target, DynamicMetaObject[] args)
         {
             MethodInfo[] methods = target.LimitType.GetMember(Name, MemberTypes.Method, BindingFlags.Instance | BindingFlags.Public).Cast<MethodInfo>().ToArray();
-            MethodInfo methodInfo = SignatureHelper.OrderSignatureMatches(args, methods).FirstOrDefault();
+            MethodInfo methodInfo = (MethodInfo) SignatureHelper.OrderSignatureMatches(args, methods).FirstOrDefault();
 
             if (methodInfo == null ||
                 !SignatureHelper.AreArgumentTypesAssignable(args.Select(x => x.LimitType).ToArray(), methodInfo))

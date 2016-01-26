@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using LuBox.Compiler;
+using LuBox.InternalTypes;
 using LuBox.Runtime;
 
 namespace LuBox
@@ -28,6 +29,8 @@ namespace LuBox
         {
             _fields = initials.ToDictionary(x => x.Key, x => x.Value);
         }
+
+        internal IDictionary<object, object> Fields => _fields;
 
         public dynamic Dynamic
         {
@@ -63,6 +66,16 @@ namespace LuBox
             }
 
             SetField(name, new EnumWrapper(type));
+        }
+
+        public void AddClass(Type type, string name)
+        {
+            if (!type.IsClass)
+            {
+                throw new ArgumentException("The specified type is not allowed");
+            }
+
+            SetField(name, new ClassWrapper(type));
         }
 
         public DynamicMetaObject GetMetaObject(Expression parameter)
@@ -137,6 +150,17 @@ namespace LuBox
                     }
 
                     return new DynamicMetaObject(Expression.Block(new[] { varExpression }, new Expression[] { assignExpression }.Concat(setExpressions).Concat(new[] { varExpression})), BindingRestrictions.GetTypeRestriction(Expression, LimitType));
+                }
+                else if (binder.Type.IsGenericType && binder.Type.GetGenericTypeDefinition() == typeof (IEnumerable<>))
+                {
+                    // TODO here we only pick the values, this should probably be smarter and pick the keys also when the table isn't a pure sequence
+                    return
+                        new DynamicMetaObject(
+                            Expression.Convert(
+                                Expression.Property(
+                                    Expression.Property(Expression.Convert(Expression, typeof (LuTable)), nameof(Fields)),
+                                    "Values"), binder.Type),
+                            BindingRestrictions.GetTypeRestriction(Expression, LimitType));
                 }
                 else
                 {

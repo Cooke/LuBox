@@ -46,6 +46,7 @@
     <Compile Include="Binders\LuSetIndexBinder.cs" />
     <Compile Include="Binders\RestrictionHelper.cs" />
     <Compile Include="Compilation\LuVisitorException.cs" />
+    <Compile Include="InternalTypes\EnumWrapper.cs" />
     <Compile Include="LuCompileException.cs" />
     <Compile Include="InternalTypes\MethodWrapper.cs" />
     <Compile Include="Library\LuBasicLibrary.cs" />
@@ -57,7 +58,7 @@
     <Compile Include="Compilation\EnvironmentScope.cs" />
     <Compile Include="Binders\LuBoolConvertBinder.cs" />
     <Compile Include="Binders\LuConvertBinder.cs" />
-    <Compile Include="InternalTypes\EnumWrapper.cs" />
+    <Compile Include="InternalTypes\ClassWrapper.cs" />
     <Compile Include="InternalTypes\EventWrapper.cs" />
     <Compile Include="Binders\LuEventWrapperMetaObject.cs" />
     <Compile Include="InternalTypes\LuFunction.cs" />

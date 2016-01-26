@@ -44,7 +44,7 @@ namespace LuBox.Runtime
             public override DynamicMetaObject BindInvoke(InvokeBinder binder, DynamicMetaObject[] args)
             {
                 var orderedSignatures = SignatureHelper.OrderSignatureMatches(args, _methodInfos);
-                var methodInfo = orderedSignatures.First();
+                var methodInfo = (MethodInfo)orderedSignatures.First();
 
                 var callArguments = SignatureHelper.TransformArguments(args, methodInfo);
                 var targetExpression = Expression.Property(Expression.Convert(Expression, typeof (MethodWrapper)), "Target");

@@ -39,11 +39,12 @@ namespace LuBox.Runtime
 
         private DynamicMetaObject CreateDynamicEventOperation(DynamicMetaObject[] args, MethodInfo methodInfo)
         {
+            BindingRestrictions eventWrapperTypeRestriction = BindingRestrictions.GetTypeRestriction(Expression, typeof (EventWrapper));
             BindingRestrictions eventRestriction = BindingRestrictions.GetInstanceRestriction(Expression.Property(Expression.Convert(Expression, typeof(EventWrapper)), "EventInfo"), _eventInfo);
             UnaryExpression instanceExpression = Expression.Convert(Expression.Property(Expression.Convert(Expression, typeof(EventWrapper)), "Instance"), _eventInfo.DeclaringType);
             DynamicMetaObject onlyArgument = args.Single();
             Expression argExpression = Expression.Dynamic(new LuConvertBinder(_eventInfo.EventHandlerType), _eventInfo.EventHandlerType, onlyArgument.Expression);
-            return new DynamicMetaObject(ResultHelper.EnsureObjectResult(Expression.Call(instanceExpression, methodInfo, argExpression)), eventRestriction);
+            return new DynamicMetaObject(ResultHelper.EnsureObjectResult(Expression.Call(instanceExpression, methodInfo, argExpression)), RestrictionHelper.CombineRestrictions(eventWrapperTypeRestriction, eventRestriction));
         }
     }
 }

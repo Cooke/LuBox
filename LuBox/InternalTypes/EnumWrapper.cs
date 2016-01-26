@@ -4,7 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace LuBox.Runtime
+namespace LuBox.InternalTypes
 {
     public class EnumWrapper : IDynamicMetaObjectProvider
     {

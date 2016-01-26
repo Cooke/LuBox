@@ -55,6 +55,7 @@
     <Compile Include="AutoConvertTests.cs" />
     <Compile Include="BinaryOperatorTests.cs" />
     <Compile Include="CommentTests.cs" />
+    <Compile Include="ClassTests.cs" />
     <Compile Include="EnumTest.cs" />
     <Compile Include="ClosureTests.cs" />
     <Compile Include="ConditionalInvokeGetTests.cs" />
