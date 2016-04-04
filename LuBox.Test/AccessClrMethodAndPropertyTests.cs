@@ -120,6 +120,15 @@ namespace LuBox.Test
             Assert.AreEqual(getter, self);
         }
 
+        [TestMethod]
+        public void CallNoneExistingProperty()
+        {
+            var getter = new CallReceiver();
+            _environment.SetField("callReceiver", getter);
+            var self = _engine.Evaluate<CallReceiver>("callReceiver.DoesNotExist", _environment);
+            Assert.IsNull(self);
+        }
+
         public class CallReceiver
         {
             private string _called;

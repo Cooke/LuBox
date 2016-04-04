@@ -30,369 +30,6 @@ using IToken = Antlr4.Runtime.IToken;
 [System.CLSCompliant(false)]
 public interface INuListener : IParseTreeListener {
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.varlist"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterVarlist([NotNull] NuParser.VarlistContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.varlist"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitVarlist([NotNull] NuParser.VarlistContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.chunk"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterChunk([NotNull] NuParser.ChunkContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.chunk"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitChunk([NotNull] NuParser.ChunkContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorStrcat"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOperatorStrcat([NotNull] NuParser.OperatorStrcatContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorStrcat"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOperatorStrcat([NotNull] NuParser.OperatorStrcatContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.var"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterVar([NotNull] NuParser.VarContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.var"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitVar([NotNull] NuParser.VarContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.args"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterArgs([NotNull] NuParser.ArgsContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.args"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitArgs([NotNull] NuParser.ArgsContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.block"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterBlock([NotNull] NuParser.BlockContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.block"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitBlock([NotNull] NuParser.BlockContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.tableconstructor"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterTableconstructor([NotNull] NuParser.TableconstructorContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.tableconstructor"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitTableconstructor([NotNull] NuParser.TableconstructorContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.functioncall"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterFunctioncall([NotNull] NuParser.FunctioncallContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.functioncall"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitFunctioncall([NotNull] NuParser.FunctioncallContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorPower"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOperatorPower([NotNull] NuParser.OperatorPowerContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorPower"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOperatorPower([NotNull] NuParser.OperatorPowerContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.fieldsep"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterFieldsep([NotNull] NuParser.FieldsepContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.fieldsep"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitFieldsep([NotNull] NuParser.FieldsepContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.parlist"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterParlist([NotNull] NuParser.ParlistContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.parlist"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitParlist([NotNull] NuParser.ParlistContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.varSuffix"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterVarSuffix([NotNull] NuParser.VarSuffixContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.varSuffix"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitVarSuffix([NotNull] NuParser.VarSuffixContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.retstat"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterRetstat([NotNull] NuParser.RetstatContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.retstat"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitRetstat([NotNull] NuParser.RetstatContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorAddSub"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOperatorAddSub([NotNull] NuParser.OperatorAddSubContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorAddSub"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOperatorAddSub([NotNull] NuParser.OperatorAddSubContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.namelist"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterNamelist([NotNull] NuParser.NamelistContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.namelist"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitNamelist([NotNull] NuParser.NamelistContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorMulDivMod"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOperatorMulDivMod([NotNull] NuParser.OperatorMulDivModContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorMulDivMod"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOperatorMulDivMod([NotNull] NuParser.OperatorMulDivModContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorOr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOperatorOr([NotNull] NuParser.OperatorOrContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorOr"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOperatorOr([NotNull] NuParser.OperatorOrContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.number"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterNumber([NotNull] NuParser.NumberContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.number"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitNumber([NotNull] NuParser.NumberContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.label"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterLabel([NotNull] NuParser.LabelContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.label"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitLabel([NotNull] NuParser.LabelContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.functiondef"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterFunctiondef([NotNull] NuParser.FunctiondefContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.functiondef"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitFunctiondef([NotNull] NuParser.FunctiondefContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorAnd"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOperatorAnd([NotNull] NuParser.OperatorAndContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorAnd"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOperatorAnd([NotNull] NuParser.OperatorAndContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.varOrExp"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterVarOrExp([NotNull] NuParser.VarOrExpContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.varOrExp"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitVarOrExp([NotNull] NuParser.VarOrExpContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.stat"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterStat([NotNull] NuParser.StatContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.stat"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitStat([NotNull] NuParser.StatContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.field"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterField([NotNull] NuParser.FieldContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.field"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitField([NotNull] NuParser.FieldContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.exp"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterExp([NotNull] NuParser.ExpContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.exp"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitExp([NotNull] NuParser.ExpContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.prefixexp"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterPrefixexp([NotNull] NuParser.PrefixexpContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.prefixexp"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitPrefixexp([NotNull] NuParser.PrefixexpContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.funcbody"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterFuncbody([NotNull] NuParser.FuncbodyContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.funcbody"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitFuncbody([NotNull] NuParser.FuncbodyContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.fieldlist"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterFieldlist([NotNull] NuParser.FieldlistContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.fieldlist"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitFieldlist([NotNull] NuParser.FieldlistContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.nameAndArgs"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterNameAndArgs([NotNull] NuParser.NameAndArgsContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.nameAndArgs"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitNameAndArgs([NotNull] NuParser.NameAndArgsContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorComparison"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterOperatorComparison([NotNull] NuParser.OperatorComparisonContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorComparison"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitOperatorComparison([NotNull] NuParser.OperatorComparisonContext context);
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.string"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterString([NotNull] NuParser.StringContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.string"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitString([NotNull] NuParser.StringContext context);
-
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="NuParser.operatorUnary"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -415,6 +52,83 @@ public interface INuListener : IParseTreeListener {
 	void ExitFuncname([NotNull] NuParser.FuncnameContext context);
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.lambdaArgs"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLambdaArgs([NotNull] NuParser.LambdaArgsContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.lambdaArgs"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLambdaArgs([NotNull] NuParser.LambdaArgsContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorAnd"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOperatorAnd([NotNull] NuParser.OperatorAndContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorAnd"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOperatorAnd([NotNull] NuParser.OperatorAndContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.fieldsep"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFieldsep([NotNull] NuParser.FieldsepContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.fieldsep"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFieldsep([NotNull] NuParser.FieldsepContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.string"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterString([NotNull] NuParser.StringContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.string"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitString([NotNull] NuParser.StringContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.functioncall"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFunctioncall([NotNull] NuParser.FunctioncallContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.functioncall"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFunctioncall([NotNull] NuParser.FunctioncallContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.parlist"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterParlist([NotNull] NuParser.ParlistContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.parlist"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitParlist([NotNull] NuParser.ParlistContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.chunk"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterChunk([NotNull] NuParser.ChunkContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.chunk"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitChunk([NotNull] NuParser.ChunkContext context);
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="NuParser.explist"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -424,5 +138,313 @@ public interface INuListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitExplist([NotNull] NuParser.ExplistContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.retstat"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterRetstat([NotNull] NuParser.RetstatContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.retstat"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitRetstat([NotNull] NuParser.RetstatContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.varOrExp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterVarOrExp([NotNull] NuParser.VarOrExpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.varOrExp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitVarOrExp([NotNull] NuParser.VarOrExpContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.number"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterNumber([NotNull] NuParser.NumberContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.number"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitNumber([NotNull] NuParser.NumberContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.prefixexp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterPrefixexp([NotNull] NuParser.PrefixexpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.prefixexp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitPrefixexp([NotNull] NuParser.PrefixexpContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.lambda"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLambda([NotNull] NuParser.LambdaContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.lambda"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLambda([NotNull] NuParser.LambdaContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.nameAndArgs"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterNameAndArgs([NotNull] NuParser.NameAndArgsContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.nameAndArgs"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitNameAndArgs([NotNull] NuParser.NameAndArgsContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.namelist"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterNamelist([NotNull] NuParser.NamelistContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.namelist"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitNamelist([NotNull] NuParser.NamelistContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.functiondef"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFunctiondef([NotNull] NuParser.FunctiondefContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.functiondef"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFunctiondef([NotNull] NuParser.FunctiondefContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.block"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterBlock([NotNull] NuParser.BlockContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.block"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitBlock([NotNull] NuParser.BlockContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorComparison"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOperatorComparison([NotNull] NuParser.OperatorComparisonContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorComparison"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOperatorComparison([NotNull] NuParser.OperatorComparisonContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.varlist"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterVarlist([NotNull] NuParser.VarlistContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.varlist"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitVarlist([NotNull] NuParser.VarlistContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.exp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExp([NotNull] NuParser.ExpContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.exp"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExp([NotNull] NuParser.ExpContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.funcbody"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFuncbody([NotNull] NuParser.FuncbodyContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.funcbody"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFuncbody([NotNull] NuParser.FuncbodyContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.stat"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterStat([NotNull] NuParser.StatContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.stat"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitStat([NotNull] NuParser.StatContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorPower"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOperatorPower([NotNull] NuParser.OperatorPowerContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorPower"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOperatorPower([NotNull] NuParser.OperatorPowerContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorOr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOperatorOr([NotNull] NuParser.OperatorOrContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorOr"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOperatorOr([NotNull] NuParser.OperatorOrContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.var"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterVar([NotNull] NuParser.VarContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.var"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitVar([NotNull] NuParser.VarContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorAddSub"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOperatorAddSub([NotNull] NuParser.OperatorAddSubContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorAddSub"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOperatorAddSub([NotNull] NuParser.OperatorAddSubContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorMulDivMod"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOperatorMulDivMod([NotNull] NuParser.OperatorMulDivModContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorMulDivMod"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOperatorMulDivMod([NotNull] NuParser.OperatorMulDivModContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.label"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterLabel([NotNull] NuParser.LabelContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.label"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitLabel([NotNull] NuParser.LabelContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.fieldlist"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterFieldlist([NotNull] NuParser.FieldlistContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.fieldlist"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitFieldlist([NotNull] NuParser.FieldlistContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorStrcat"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterOperatorStrcat([NotNull] NuParser.OperatorStrcatContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorStrcat"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitOperatorStrcat([NotNull] NuParser.OperatorStrcatContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.args"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterArgs([NotNull] NuParser.ArgsContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.args"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitArgs([NotNull] NuParser.ArgsContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.field"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterField([NotNull] NuParser.FieldContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.field"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitField([NotNull] NuParser.FieldContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.varSuffix"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterVarSuffix([NotNull] NuParser.VarSuffixContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.varSuffix"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitVarSuffix([NotNull] NuParser.VarSuffixContext context);
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.tableconstructor"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterTableconstructor([NotNull] NuParser.TableconstructorContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.tableconstructor"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitTableconstructor([NotNull] NuParser.TableconstructorContext context);
 }
 } // namespace LuBox.Parser

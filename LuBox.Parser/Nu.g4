@@ -106,6 +106,7 @@ exp
 	| exp operatorComparison exp					
 	| exp operatorAnd exp							
 	| exp operatorOr exp	
+	| lambda
 	;
 
 var
@@ -131,6 +132,14 @@ nameAndArgs
 varSuffix
     : nameAndArgs* ('[' exp ']' | dotOrQuestionMarkDot NAME)
     ;
+
+lambdaArgs
+    : NAME | '(' namelist ')'
+	;
+
+lambda
+    : lambdaArgs '=>' exp 
+	;
 
 /*
 var

@@ -66,6 +66,24 @@ namespace LuBox.Runtime
                 return true;
             }
 
+            // Need to add constrains checks
+            if (pType.IsGenericParameter)
+            {
+                return true;
+            }
+
+            if (pType.IsGenericType)
+            {
+                if (
+                    argType.GetInterfaces()
+                        .Where(x => x.IsGenericType)
+                        .Select(x => x.GetGenericTypeDefinition())
+                        .Contains(pType.GetGenericTypeDefinition()))
+                {
+                    return true;
+                }
+            }
+
             if (pType.IsClass && pType.GetConstructor(new Type[0]) != null)
             {
                 return argType == typeof(LuTable);
@@ -127,6 +145,75 @@ namespace LuBox.Runtime
             }
 
             return newArguments;
+        }
+
+        public static Type[] GetGenericTypeArguments(MethodInfo methodInfo, Type[] args)
+        {
+            var genericArguments = methodInfo.GetGenericArguments();
+            var parameters = methodInfo.GetParameters();
+
+            return genericArguments.Select(x => GetGenericArgumentType(args, parameters, x)).ToArray();
+        }
+
+        private static Type GetGenericArgumentType(Type[] args, ParameterInfo[] parameters, Type genericArgument)
+        {
+            for (int index = 0; index < parameters.Length; index++)
+            {
+                var parameterInfo = parameters[index];
+                var arg = args[index];
+
+                var parameterType = parameterInfo.ParameterType;
+                if (parameterType.IsGenericType)
+                {
+                    Type genericArgumentType;
+                    if (FindGenericTypeArgument(genericArgument, parameterType, arg, out genericArgumentType))
+                    {
+                        return genericArgumentType;
+                    }
+                }
+                else if (parameterType.IsGenericParameter && parameterType == genericArgument)
+                {
+                    return arg;
+                }
+            }
+
+            throw new Exception("BAD");
+        }
+
+        private static bool FindGenericTypeArgument(Type genericArgument, Type parameterType, Type argumentType, out Type genericArgumentType)
+        {
+            // Simplyficatino
+            var argGenericMatch =
+                argumentType.GetInterfaces()
+                    .First(
+                        x =>
+                            x.IsGenericType &&
+                            x.GetGenericTypeDefinition() == parameterType.GetGenericTypeDefinition());
+
+            var genericTypeArgumentIndex = Array.IndexOf(parameterType.GenericTypeArguments, genericArgument);
+            if (genericTypeArgumentIndex != -1)
+            {
+                
+                    genericArgumentType = argGenericMatch.GenericTypeArguments[genericTypeArgumentIndex];
+                    return true;
+            }
+            else
+            {
+                for (int index = 0; index < parameterType.GenericTypeArguments.Length; index++)
+                {
+                    var paramGenericTypeArgument = parameterType.GenericTypeArguments[index];
+                    var argGenericTypeArgument = argGenericMatch.GenericTypeArguments[index];
+
+                    if (FindGenericTypeArgument(genericArgument, paramGenericTypeArgument, argGenericTypeArgument,
+                        out genericArgumentType))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            genericArgumentType = null;
+            return false;
         }
     }
 }

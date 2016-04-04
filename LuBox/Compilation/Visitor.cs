@@ -93,7 +93,7 @@ namespace LuBox.Compilation
             if (memberName != null)
             {
                 var callInfo = new CallInfo(nameAndArgsContext.args().ChildCount);
-                var binder = _binderProvider.GetInvokeMemberBinder(memberName, callInfo);
+                var binder = _binderProvider.GetInvokeMemberBinder(_scope.Get("__ExtensionMethodTypes__"), memberName, callInfo);
                 var rightExp = Expression.Dynamic(binder, typeof(object), args);
 
                 if (nameAndArgsContext.colonOrQuestionMarkColon().GetText() == "?:")
@@ -229,6 +229,8 @@ namespace LuBox.Compilation
                         return VisitTableconstructor(context.tableconstructor());
                     case NuParser.RULE_functiondef:
                         return VisitFunctiondef(context.functiondef());
+                    case NuParser.RULE_lambda:
+                        return VisitLambda(context.lambda());
                     default:
                         throw new ParseCanceledException("Invalid expression");
                 }
@@ -378,6 +380,34 @@ namespace LuBox.Compilation
                 default:
                     throw new ParseCanceledException("Invalid operator");
             }
+        }
+
+        public override Expression VisitLambda(NuParser.LambdaContext context)
+        {
+            _scope = new Scope(_scope);
+
+            var parameters = new List<ParameterExpression>();
+            if (context.lambdaArgs().namelist() != null)
+            {
+                foreach (var paraName in context.lambdaArgs().namelist().NAME().Select(x => x.GetText()))
+                {
+                    var parameterExpression = _scope.CreateLocal(paraName);
+                    parameters.Add(parameterExpression);
+                }
+            }
+            else
+            {
+                var parameterExpression = _scope.CreateLocal(context.lambdaArgs().NAME().GetText());
+                parameters.Add(parameterExpression);
+            }
+
+            var visitExp = VisitExp(context.exp());
+
+            _scope = _scope.Parent;
+
+            return Expression.New(typeof(LuFunction).GetConstructor(new[] { typeof(Delegate) }),
+                Expression.Lambda(visitExp, parameters));
+            //return Expression.Lambda(block, parameters);
         }
 
         public override Expression VisitFuncbody(NuParser.FuncbodyContext context)

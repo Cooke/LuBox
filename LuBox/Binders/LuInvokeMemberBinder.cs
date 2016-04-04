@@ -10,8 +10,11 @@ namespace LuBox.Runtime
 {
     internal class LuInvokeMemberBinder : InvokeMemberBinder
     {
-        public LuInvokeMemberBinder(string name, bool ignoreCase, CallInfo callInfo) : base(name, ignoreCase, callInfo)
+        private readonly Type[] _extensionMethodTypes;
+
+        public LuInvokeMemberBinder(Type[] extensionMethodTypes, string name, bool ignoreCase, CallInfo callInfo) : base(name, ignoreCase, callInfo)
         {
+            _extensionMethodTypes = extensionMethodTypes;
         }
 
         public override DynamicMetaObject FallbackInvokeMember(DynamicMetaObject target, DynamicMetaObject[] args,
@@ -24,37 +27,59 @@ namespace LuBox.Runtime
 
             Sandboxer.ThrowIfReflectionType(target.LimitType);
 
-            var restrictions = RestrictionHelper.GetTypeRestrictions(target, args);
             var memberInfo = GetMemberInfo(target, args);
-            var callArguments = SignatureHelper.TransformArguments(args, memberInfo);
 
             Sandboxer.ThrowIfReflectionMember(memberInfo);
 
-            var callExpression = ResultHelper.EnsureObjectResult(
-                Expression.Call(Expression.Convert(target.Expression, target.LimitType), memberInfo,
-                    callArguments));
+            Expression callExpression;
+            if (!memberInfo.IsStatic)
+            {
+                var callArguments = SignatureHelper.TransformArguments(args, memberInfo);
 
-            var temp = Expression.Variable(typeof (object));
-            var assign = Expression.Assign(temp, callExpression);
-            var symbolDocumentInfo = Expression.SymbolDocument("somename");
-            var debugInfoExpression = Expression.DebugInfo(symbolDocumentInfo, 1, 1, 10, 10);
-            var clearDebugInfo = Expression.ClearDebugInfo(symbolDocumentInfo);
-            var blockExpression = Expression.Block(new ParameterExpression[] { temp }, new Expression[] {debugInfoExpression, assign, clearDebugInfo, temp});
+                callExpression = ResultHelper.EnsureObjectResult(
+                    Expression.Call(Expression.Convert(target.Expression, target.LimitType), memberInfo,
+                        callArguments));
+            }
+            else
+            {
+                // Extension method
+                var callArguments = SignatureHelper.TransformArguments(new[] {target}.Concat(args).ToArray(), memberInfo);
+                callExpression = ResultHelper.EnsureObjectResult(Expression.Call(memberInfo, callArguments));
+            }
+
+
+            var restrictions = RestrictionHelper.GetTypeRestrictions(target, args);
             return
                 new DynamicMetaObject(
-                blockExpression,
-                restrictions); ;
+                    callExpression,
+                    restrictions);
         }
 
         private MethodInfo GetMemberInfo(DynamicMetaObject target, DynamicMetaObject[] args)
         {
-            MethodInfo[] methods = target.LimitType.GetMember(Name, MemberTypes.Method, BindingFlags.Instance | BindingFlags.Public).Cast<MethodInfo>().ToArray();
-            MethodInfo methodInfo = (MethodInfo) SignatureHelper.OrderSignatureMatches(args, methods).FirstOrDefault();
+            var methods = target.LimitType.GetMember(Name, MemberTypes.Method, BindingFlags.Instance | BindingFlags.Public).Cast<MethodBase>();
+
+            MethodInfo methodInfo = (MethodInfo)SignatureHelper.OrderSignatureMatches(args, methods.ToArray()).FirstOrDefault();
+
+            if (methodInfo == null)
+            {
+                var linqMethods = _extensionMethodTypes.SelectMany(x => x.GetMember(Name, MemberTypes.Method, BindingFlags.Static | BindingFlags.Public)).Cast<MethodBase>();
+
+                args = new[] { target }.Concat(args).ToArray();
+                methodInfo = (MethodInfo)SignatureHelper.OrderSignatureMatches(args, linqMethods.ToArray()).FirstOrDefault();
+            }
 
             if (methodInfo == null ||
                 !SignatureHelper.AreArgumentTypesAssignable(args.Select(x => x.LimitType).ToArray(), methodInfo))
             {
                 throw new LuRuntimeException("Could not find a matching member signature with name " + Name);
+            }
+
+            if (methodInfo.IsGenericMethodDefinition)
+            {
+                var genericTypeArguments = SignatureHelper.GetGenericTypeArguments(methodInfo, args.Select(x => x.LimitType).ToArray());
+
+                return methodInfo.MakeGenericMethod(genericTypeArguments);
             }
 
             return methodInfo;

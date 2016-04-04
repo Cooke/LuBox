@@ -26,6 +26,11 @@ namespace LuBox.Runtime
 
             var instanceExpression = Expression.Convert(target.Expression, target.LimitType);
 
+            if (target.Value == null)
+            {
+                return new DynamicMetaObject(Expression.Constant(null), BindingRestrictions.GetInstanceRestriction(target.Expression, null));
+            }
+
             var indexerInfo = target.LimitType.GetProperty("Item");
             if (indexerInfo != null)
             {

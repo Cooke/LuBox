@@ -34,435 +34,6 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 [System.CLSCompliant(false)]
 public partial class NuBaseListener : INuListener {
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.varlist"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterVarlist([NotNull] NuParser.VarlistContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.varlist"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitVarlist([NotNull] NuParser.VarlistContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.chunk"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterChunk([NotNull] NuParser.ChunkContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.chunk"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitChunk([NotNull] NuParser.ChunkContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorStrcat"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOperatorStrcat([NotNull] NuParser.OperatorStrcatContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorStrcat"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOperatorStrcat([NotNull] NuParser.OperatorStrcatContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.var"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterVar([NotNull] NuParser.VarContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.var"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitVar([NotNull] NuParser.VarContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.args"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterArgs([NotNull] NuParser.ArgsContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.args"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitArgs([NotNull] NuParser.ArgsContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.block"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterBlock([NotNull] NuParser.BlockContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.block"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitBlock([NotNull] NuParser.BlockContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.tableconstructor"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTableconstructor([NotNull] NuParser.TableconstructorContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.tableconstructor"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTableconstructor([NotNull] NuParser.TableconstructorContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.functioncall"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFunctioncall([NotNull] NuParser.FunctioncallContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.functioncall"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFunctioncall([NotNull] NuParser.FunctioncallContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorPower"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOperatorPower([NotNull] NuParser.OperatorPowerContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorPower"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOperatorPower([NotNull] NuParser.OperatorPowerContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.fieldsep"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFieldsep([NotNull] NuParser.FieldsepContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.fieldsep"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFieldsep([NotNull] NuParser.FieldsepContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.parlist"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterParlist([NotNull] NuParser.ParlistContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.parlist"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitParlist([NotNull] NuParser.ParlistContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.varSuffix"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterVarSuffix([NotNull] NuParser.VarSuffixContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.varSuffix"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitVarSuffix([NotNull] NuParser.VarSuffixContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.retstat"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterRetstat([NotNull] NuParser.RetstatContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.retstat"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitRetstat([NotNull] NuParser.RetstatContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorAddSub"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOperatorAddSub([NotNull] NuParser.OperatorAddSubContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorAddSub"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOperatorAddSub([NotNull] NuParser.OperatorAddSubContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.namelist"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterNamelist([NotNull] NuParser.NamelistContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.namelist"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitNamelist([NotNull] NuParser.NamelistContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorMulDivMod"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOperatorMulDivMod([NotNull] NuParser.OperatorMulDivModContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorMulDivMod"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOperatorMulDivMod([NotNull] NuParser.OperatorMulDivModContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorOr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOperatorOr([NotNull] NuParser.OperatorOrContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorOr"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOperatorOr([NotNull] NuParser.OperatorOrContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.number"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterNumber([NotNull] NuParser.NumberContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.number"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitNumber([NotNull] NuParser.NumberContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.label"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLabel([NotNull] NuParser.LabelContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.label"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLabel([NotNull] NuParser.LabelContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.functiondef"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFunctiondef([NotNull] NuParser.FunctiondefContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.functiondef"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFunctiondef([NotNull] NuParser.FunctiondefContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorAnd"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOperatorAnd([NotNull] NuParser.OperatorAndContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorAnd"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOperatorAnd([NotNull] NuParser.OperatorAndContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.varOrExp"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterVarOrExp([NotNull] NuParser.VarOrExpContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.varOrExp"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitVarOrExp([NotNull] NuParser.VarOrExpContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.stat"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterStat([NotNull] NuParser.StatContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.stat"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitStat([NotNull] NuParser.StatContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.field"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterField([NotNull] NuParser.FieldContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.field"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitField([NotNull] NuParser.FieldContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.exp"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterExp([NotNull] NuParser.ExpContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.exp"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitExp([NotNull] NuParser.ExpContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.prefixexp"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterPrefixexp([NotNull] NuParser.PrefixexpContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.prefixexp"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitPrefixexp([NotNull] NuParser.PrefixexpContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.funcbody"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFuncbody([NotNull] NuParser.FuncbodyContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.funcbody"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFuncbody([NotNull] NuParser.FuncbodyContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.fieldlist"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterFieldlist([NotNull] NuParser.FieldlistContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.fieldlist"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitFieldlist([NotNull] NuParser.FieldlistContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.nameAndArgs"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterNameAndArgs([NotNull] NuParser.NameAndArgsContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.nameAndArgs"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitNameAndArgs([NotNull] NuParser.NameAndArgsContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.operatorComparison"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterOperatorComparison([NotNull] NuParser.OperatorComparisonContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.operatorComparison"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitOperatorComparison([NotNull] NuParser.OperatorComparisonContext context) { }
-
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="NuParser.@string"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterString([NotNull] NuParser.StringContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="NuParser.@string"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitString([NotNull] NuParser.StringContext context) { }
-
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="NuParser.operatorUnary"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -489,6 +60,97 @@ public partial class NuBaseListener : INuListener {
 	public virtual void ExitFuncname([NotNull] NuParser.FuncnameContext context) { }
 
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.lambdaArgs"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLambdaArgs([NotNull] NuParser.LambdaArgsContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.lambdaArgs"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLambdaArgs([NotNull] NuParser.LambdaArgsContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorAnd"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOperatorAnd([NotNull] NuParser.OperatorAndContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorAnd"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOperatorAnd([NotNull] NuParser.OperatorAndContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.fieldsep"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFieldsep([NotNull] NuParser.FieldsepContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.fieldsep"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFieldsep([NotNull] NuParser.FieldsepContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.@string"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterString([NotNull] NuParser.StringContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.@string"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitString([NotNull] NuParser.StringContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.functioncall"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFunctioncall([NotNull] NuParser.FunctioncallContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.functioncall"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFunctioncall([NotNull] NuParser.FunctioncallContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.parlist"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterParlist([NotNull] NuParser.ParlistContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.parlist"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitParlist([NotNull] NuParser.ParlistContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.chunk"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterChunk([NotNull] NuParser.ChunkContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.chunk"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitChunk([NotNull] NuParser.ChunkContext context) { }
+
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="NuParser.explist"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -500,6 +162,370 @@ public partial class NuBaseListener : INuListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitExplist([NotNull] NuParser.ExplistContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.retstat"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterRetstat([NotNull] NuParser.RetstatContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.retstat"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitRetstat([NotNull] NuParser.RetstatContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.dotOrQuestionMarkDot"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitDotOrQuestionMarkDot([NotNull] NuParser.DotOrQuestionMarkDotContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.varOrExp"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterVarOrExp([NotNull] NuParser.VarOrExpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.varOrExp"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitVarOrExp([NotNull] NuParser.VarOrExpContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.number"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterNumber([NotNull] NuParser.NumberContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.number"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitNumber([NotNull] NuParser.NumberContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.prefixexp"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterPrefixexp([NotNull] NuParser.PrefixexpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.prefixexp"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitPrefixexp([NotNull] NuParser.PrefixexpContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.lambda"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLambda([NotNull] NuParser.LambdaContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.lambda"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLambda([NotNull] NuParser.LambdaContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.nameAndArgs"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterNameAndArgs([NotNull] NuParser.NameAndArgsContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.nameAndArgs"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitNameAndArgs([NotNull] NuParser.NameAndArgsContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.namelist"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterNamelist([NotNull] NuParser.NamelistContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.namelist"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitNamelist([NotNull] NuParser.NamelistContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.functiondef"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFunctiondef([NotNull] NuParser.FunctiondefContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.functiondef"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFunctiondef([NotNull] NuParser.FunctiondefContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.block"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterBlock([NotNull] NuParser.BlockContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.block"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitBlock([NotNull] NuParser.BlockContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorComparison"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOperatorComparison([NotNull] NuParser.OperatorComparisonContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorComparison"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOperatorComparison([NotNull] NuParser.OperatorComparisonContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.varlist"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterVarlist([NotNull] NuParser.VarlistContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.varlist"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitVarlist([NotNull] NuParser.VarlistContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.exp"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExp([NotNull] NuParser.ExpContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.exp"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExp([NotNull] NuParser.ExpContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.funcbody"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFuncbody([NotNull] NuParser.FuncbodyContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.funcbody"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFuncbody([NotNull] NuParser.FuncbodyContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.stat"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterStat([NotNull] NuParser.StatContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.stat"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitStat([NotNull] NuParser.StatContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorPower"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOperatorPower([NotNull] NuParser.OperatorPowerContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorPower"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOperatorPower([NotNull] NuParser.OperatorPowerContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorOr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOperatorOr([NotNull] NuParser.OperatorOrContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorOr"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOperatorOr([NotNull] NuParser.OperatorOrContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.var"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterVar([NotNull] NuParser.VarContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.var"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitVar([NotNull] NuParser.VarContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorAddSub"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOperatorAddSub([NotNull] NuParser.OperatorAddSubContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorAddSub"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOperatorAddSub([NotNull] NuParser.OperatorAddSubContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorMulDivMod"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOperatorMulDivMod([NotNull] NuParser.OperatorMulDivModContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorMulDivMod"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOperatorMulDivMod([NotNull] NuParser.OperatorMulDivModContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.label"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterLabel([NotNull] NuParser.LabelContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.label"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitLabel([NotNull] NuParser.LabelContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.fieldlist"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterFieldlist([NotNull] NuParser.FieldlistContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.fieldlist"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitFieldlist([NotNull] NuParser.FieldlistContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.colonOrQuestionMarkColon"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitColonOrQuestionMarkColon([NotNull] NuParser.ColonOrQuestionMarkColonContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.operatorStrcat"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterOperatorStrcat([NotNull] NuParser.OperatorStrcatContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.operatorStrcat"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitOperatorStrcat([NotNull] NuParser.OperatorStrcatContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.args"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterArgs([NotNull] NuParser.ArgsContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.args"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitArgs([NotNull] NuParser.ArgsContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.field"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterField([NotNull] NuParser.FieldContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.field"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitField([NotNull] NuParser.FieldContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.varSuffix"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterVarSuffix([NotNull] NuParser.VarSuffixContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.varSuffix"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitVarSuffix([NotNull] NuParser.VarSuffixContext context) { }
+
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="NuParser.tableconstructor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterTableconstructor([NotNull] NuParser.TableconstructorContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="NuParser.tableconstructor"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitTableconstructor([NotNull] NuParser.TableconstructorContext context) { }
 
 	/// <inheritdoc/>
 	/// <remarks>The default implementation does nothing.</remarks>

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using Antlr4.Runtime;
@@ -18,11 +19,20 @@ namespace LuBox
     {
         private readonly ParameterExpression _environmentParameter = Expression.Variable(typeof(LuTable));
         private readonly LuTable _defaultEnvironment;
-        private readonly BinderProvider _binderProvider = new BinderProvider();
+        private readonly BinderProvider _binderProvider;
 
-        public LuScriptEngine()
+        public LuScriptEngine() : this(new Type[0])
+        {
+        }
+
+        public LuScriptEngine(params Type[] ext) : this((IEnumerable<Type>)ext)
+        {
+        }
+
+        public LuScriptEngine(IEnumerable<Type> extensionMethodTyps)
         {
             _defaultEnvironment = CreateStandardEnvironment();
+            _binderProvider = new BinderProvider(extensionMethodTyps.ToArray());
         }
 
         public LuTable DefaultEnvironment

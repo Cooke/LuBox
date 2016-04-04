@@ -1,6 +1,8 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using LuBox.Runtime;
 
@@ -8,11 +10,17 @@ namespace LuBox.Binders
 {
     internal class BinderProvider
     {
+        private readonly Type[] _extensionMethodTypes;
         private readonly ConcurrentDictionary<InvokeMemberBinderCacheKey, LuInvokeMemberBinder> _invokeMemberBinders = new ConcurrentDictionary<InvokeMemberBinderCacheKey, LuInvokeMemberBinder>();
         private readonly ConcurrentDictionary<string, LuGetMemberBinder> _getMemberBinders = new ConcurrentDictionary<string, LuGetMemberBinder>();
         private readonly ConcurrentDictionary<string, LuSetMemberBinder> _setMemberBinders = new ConcurrentDictionary<string, LuSetMemberBinder>();
 
-        public LuInvokeMemberBinder GetInvokeMemberBinder(string memberName, CallInfo callInfo)
+        public BinderProvider(Type[] extensionMethodTypes)
+        {
+            _extensionMethodTypes = extensionMethodTypes;
+        }
+
+        public LuInvokeMemberBinder GetInvokeMemberBinder(Expression extensionMethodTypesExp, string memberName, CallInfo callInfo)
         {
             var cacheKey = new InvokeMemberBinderCacheKey(memberName, callInfo);
 
@@ -21,7 +29,7 @@ namespace LuBox.Binders
 
             if (binder == null)
             {
-                binder = new LuInvokeMemberBinder(memberName, false, callInfo);
+                binder = new LuInvokeMemberBinder(_extensionMethodTypes, memberName, false, callInfo);
                 _invokeMemberBinders.TryAdd(cacheKey, binder);
             }
 

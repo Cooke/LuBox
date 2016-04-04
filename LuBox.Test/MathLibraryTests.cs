@@ -31,7 +31,7 @@ namespace LuBox.Test
         public void RandomWithOneArgumentShallReturnUpToArgument()
         {
             var result = _luScriptEngine.Evaluate<double>("math.random(100)");
-            Assert.IsTrue(result > 0 && result <= 100);
+            Assert.IsTrue(result >= 0 && result <= 100);
         }
 
         [TestMethod]

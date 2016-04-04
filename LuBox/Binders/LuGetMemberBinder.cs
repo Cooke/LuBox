@@ -28,16 +28,18 @@ namespace LuBox.Binders
             const BindingFlags flags = BindingFlags.IgnoreCase | BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public;
             var members = target.LimitType.GetMember(Name, flags);
 
+            var bindingRestrictions = BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType);
+
             if (members.Length == 0)
             {
-                throw new LuRuntimeException("There is no member with name " + Name);
+                return new DynamicMetaObject(Expression.Constant(null), bindingRestrictions);
             }
 
             var firstMember = members.First();
             var memberType = firstMember.MemberType;
 
             Sandboxer.ThrowIfReflectionMember(firstMember);
-
+            
             switch (memberType)
             {
                 case MemberTypes.Method:
@@ -47,18 +49,18 @@ namespace LuBox.Binders
                         Expression.New(
                             typeof (MethodWrapper).GetConstructor(new[] {typeof (MethodInfo[]), typeof (object)}),
                             Expression.Constant(members.Cast<MethodInfo>().ToArray()), target.Expression),
-                        BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+                        bindingRestrictions);
                     break;
                 case MemberTypes.Event:
                     return new DynamicMetaObject(
                         Expression.New(typeof(EventWrapper).GetConstructor(new[] { typeof(EventInfo), typeof(object) }), Expression.Constant(firstMember), target.Expression),
-                        BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+                        bindingRestrictions);
                 case MemberTypes.Field:
                 case MemberTypes.Property:
                     return new DynamicMetaObject(
                         ResultHelper.EnsureObjectResult(
                             Expression.MakeMemberAccess(Expression.Convert(target.Expression, firstMember.DeclaringType), firstMember)),
-                        BindingRestrictions.GetTypeRestriction(target.Expression, target.LimitType));
+                        bindingRestrictions);
                 default:
                     throw new LuRuntimeException("Unsupported member type " + memberType);
             }

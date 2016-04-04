@@ -48,6 +48,13 @@ namespace LuBox.Test
             _engine.Execute("testDummy['apa'] = myFunc", _environment);
         }
 
+        [TestMethod]
+        public void IndexingNilObject()
+        {
+            var result = _engine.Evaluate<object>("testDummy['apan']", _environment);
+            Assert.IsNull(result);
+        }
+
         public class TestDummy
         {
             private Dictionary<string, string> _dictionary = new Dictionary<string, string>();
